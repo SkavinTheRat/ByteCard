@@ -5,17 +5,12 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import {
-  Inter_400Regular,
-  Inter_500Medium,
-  Inter_600SemiBold,
-  useFonts as useInterFonts,
-} from '@expo-google-fonts/inter';
-import {
-  JetBrainsMono_400Regular,
-  JetBrainsMono_700Bold,
-  useFonts as useMonoFonts,
-} from '@expo-google-fonts/jetbrains-mono';
+import { useFonts } from 'expo-font';
+import { Inter_400Regular } from '@expo-google-fonts/inter/400Regular';
+import { Inter_500Medium } from '@expo-google-fonts/inter/500Medium';
+import { Inter_600SemiBold } from '@expo-google-fonts/inter/600SemiBold';
+import { JetBrainsMono_400Regular } from '@expo-google-fonts/jetbrains-mono/400Regular';
+import { JetBrainsMono_700Bold } from '@expo-google-fonts/jetbrains-mono/700Bold';
 import { useSettingsStore } from '@/store/settingsStore';
 import { colors } from '@/theme';
 import { ToastHost } from '@/components/ToastHost';
@@ -25,12 +20,10 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 void SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
 export default function RootLayout() {
-  const [interLoaded, interError] = useInterFonts({
+  const [fontsReady, fontFailed] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
     Inter_600SemiBold,
-  });
-  const [monoLoaded, monoError] = useMonoFonts({
     JetBrainsMono_400Regular,
     JetBrainsMono_700Bold,
   });
@@ -45,9 +38,6 @@ export default function RootLayout() {
   useEffect(() => {
     void initialize();
   }, [initialize]);
-
-  const fontsReady = interLoaded && monoLoaded;
-  const fontFailed = Boolean(interError || monoError);
 
   useEffect(() => {
     if (fontFailed) {
