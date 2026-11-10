@@ -22,7 +22,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getCardDef, type RawAnswer } from '@/cards';
-import type { Deck } from '@/types';
+import type { Card, Deck } from '@/types';
 import { zh } from '@/i18n/zh';
 import { useSessionStore } from '@/store/sessionStore';
 import { colors, space, stroke, type } from '@/theme';
@@ -38,6 +38,24 @@ type StudySessionProps = {
   onFinish: () => void;
   onExit: () => void;
 };
+
+function formatUserAnswer(card: Card, draft: unknown): string {
+  if (typeof draft === 'string') {
+    return draft;
+  }
+  if (!Array.isArray(draft)) {
+    return '';
+  }
+  const options = card.options;
+  if (!options) {
+    return '';
+  }
+  return draft
+    .filter((item): item is number => typeof item === 'number')
+    .map((index) => options[index])
+    .filter((item): item is string => Boolean(item))
+    .join('；');
+}
 
 export function StudySession({ deck, onFinish, onExit }: StudySessionProps) {
   const insets = useSafeAreaInsets();
@@ -175,10 +193,12 @@ export function StudySession({ deck, onFinish, onExit }: StudySessionProps) {
           )}
           {phase === 'revealed' && result ? (
             <AnswerPanel
+              card={currentCard}
               elapsedMs={elapsedMs}
               explain={currentCard.explain}
               result={result}
               tags={currentCard.tags}
+              userAnswer={formatUserAnswer(currentCard, draft)}
             />
           ) : null}
         </ScrollView>

@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { memo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { zh } from '@/i18n/zh';
 import { colors, fonts, radius, space, stroke, type } from '@/theme';
@@ -79,7 +80,7 @@ function Marker({
   return <Text style={styles.letter}>{String.fromCharCode(65 + index)}</Text>;
 }
 
-export function OptionButton({
+export const OptionButton = memo(function OptionButton({
   index,
   label,
   state,
@@ -118,7 +119,7 @@ export function OptionButton({
       <Text style={[styles.label, { color: palette.color }]}>{label}</Text>
     </Pressable>
   );
-}
+});
 
 const styles = StyleSheet.create({
   button: {

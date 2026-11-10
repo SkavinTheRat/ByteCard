@@ -1,6 +1,6 @@
 # ByteCard
 
-ByteCard 是一个面向 408 与 AI/Agent 学习的移动端知识卡片 App。本仓库已完成提示词包阶段 00–03：Expo 脚手架、SQLite 数据层、100 张内置题库，以及单选、多选、填空三种题型的刷卡答题 MVP。
+ByteCard 是一个面向 408 与 AI/Agent 学习的移动端知识卡片 App。本仓库已完成提示词包阶段 00–07：Expo 脚手架、SQLite 数据层、100 张内置题库、三种题型、SM-2、统计、错题本、AI 讲解、引导、提醒与发布前配置。
 
 ## 运行
 
@@ -26,5 +26,16 @@ npm test
 
 ## 当前范围
 
-- 已完成：深色主题骨架、今日/统计/我的 Tab、SQLite 迁移与幂等 seed、UPSERT 题库更新、三题型注册表、作答落库、解析面板、会话结束页。
-- 尚未实现：SM-2、完整统计、AI 讲解、提醒、APK 签名与 ColorOS 真机专项适配，对应提示词阶段 04 之后。
+- 已完成：每日交错队列、SM-2、热力格与柱状图、学科正确率、错题回顾、设置、Mock/DeepSeek 讲解、缓存、引导和本地每日提醒。
+- 尚未完成：EAS 云端登录与实际 APK 构建、ColorOS 专项真机验收。对应后续提示词阶段 08 之后。
+
+## Android APK
+
+```bash
+npm i -g eas-cli
+eas login
+eas build:configure
+eas build -p android --profile preview
+```
+
+`eas.json` 已配置 `preview` 为 APK。发布前检查见 `CHECKLIST.md`。

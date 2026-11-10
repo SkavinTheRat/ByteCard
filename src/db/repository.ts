@@ -1,10 +1,35 @@
-import type { Card, DailyStat, Deck } from '@/types';
+import type { Card, Deck } from '@/types';
 import { isSupportedType } from '@/cards';
 import { initializeDatabase } from './migrate';
 import { getDatabase } from './database';
 import { mapCard, mapDeck, type CardRow, type DeckRow } from './mappers';
 import type { GradeResult } from '@/cards/registry';
 import { todayKey } from '@/utils/date';
+import { schedule, type SM2State } from '@/srs/sm2';
+import { getQueueCounts } from './queueRepository';
+
+export {
+  advanceAllDueByOneDay,
+  buildTodayQueue,
+  getNextDueSummary,
+  getQueueCounts,
+  interleaveByDeck,
+} from './queueRepository';
+export {
+  getDailySeries,
+  getDeckAccuracy,
+  getStatsOverview,
+  getStreak,
+  getWrongCard,
+  getWrongCards,
+  requeueWrongCard,
+} from './statsRepository';
+export type {
+  DeckAccuracy,
+  StatsOverview,
+  WrongCardItem,
+} from './statsRepository';
+export { clearAICache, getAICache, saveAICache } from './aiRepository';
 
 const CARD_SELECT = `
   SELECT c.id, c.deck_id, c.type, c.question, c.code, c.options,
@@ -57,24 +82,6 @@ export async function listCardsByDeck(deckId: string): Promise<Card[]> {
   return rows.map(mapCard).filter((card) => isSupportedType(card.type));
 }
 
-export async function buildTodayQueue(opts: {
-  newLimit: number;
-  reviewLimit: number;
-}): Promise<Card[]> {
-  const db = await getDatabase();
-  const rows = await db.getAllAsync<CardRow>(
-    `${CARD_SELECT}
-     JOIN review_states s ON s.card_id = c.id
-     JOIN decks d ON d.id = c.deck_id
-     WHERE s.status = 'new' AND d.enabled = 1
-       AND (c.source = 'seed' OR c.verified_at IS NOT NULL)
-     ORDER BY d.sort_order ASC, c.sort_order ASC
-     LIMIT ?`,
-    Math.min(opts.newLimit, opts.newLimit + opts.reviewLimit),
-  );
-  return rows.map(mapCard).filter((card) => isSupportedType(card.type));
-}
-
 export async function submitAnswer(input: {
   cardId: string;
   deckId: string;
@@ -91,28 +98,54 @@ export async function submitAnswer(input: {
 }> {
   const db = await getDatabase();
   const now = new Date();
-  const failed = input.quality < 3;
-  const intervalDays = failed ? 0 : 1;
-  const dueAt = new Date(
-    now.getTime() + (failed ? 10 * 60 * 1000 : 24 * 60 * 60 * 1000),
-  ).toISOString();
-  const status = failed ? 'lapsed' : 'learning';
+  let result = schedule(
+    { ease: 2.5, intervalDays: 0, reps: 0, lapses: 0 },
+    input.quality,
+    now,
+  );
   await db.withTransactionAsync(async () => {
+    const current = await db.getFirstAsync<{
+      ease: number;
+      interval_days: number;
+      reps: number;
+      lapses: number;
+    }>(
+      `SELECT ease, interval_days, reps, lapses
+       FROM review_states WHERE card_id = ?`,
+      input.cardId,
+    );
+    const state: SM2State = current
+      ? {
+          ease: current.ease,
+          intervalDays: current.interval_days,
+          reps: current.reps,
+          lapses: current.lapses,
+        }
+      : { ease: 2.5, intervalDays: 0, reps: 0, lapses: 0 };
+    result = schedule(state, input.quality, now);
     await db.runAsync(
-      `UPDATE review_states
-       SET due_at = ?, last_quality = ?, last_reviewed_at = ?,
-           interval_days = ?, status = ?,
-           reps = CASE WHEN ? = 1 THEN reps + 1 ELSE 0 END,
-           lapses = CASE WHEN ? = 1 THEN lapses + 1 ELSE lapses END
-       WHERE card_id = ?`,
-      dueAt,
+      `INSERT INTO review_states (
+        card_id, ease, interval_days, reps, lapses, due_at,
+        last_quality, last_reviewed_at, status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(card_id) DO UPDATE SET
+        ease = excluded.ease,
+        interval_days = excluded.interval_days,
+        reps = excluded.reps,
+        lapses = excluded.lapses,
+        due_at = excluded.due_at,
+        last_quality = excluded.last_quality,
+        last_reviewed_at = excluded.last_reviewed_at,
+        status = excluded.status`,
+      input.cardId,
+      result.ease,
+      result.intervalDays,
+      result.reps,
+      result.lapses,
+      result.nextDueAt.toISOString(),
       input.quality,
       now.toISOString(),
-      intervalDays,
-      status,
-      failed ? 0 : 1,
-      failed ? 1 : 0,
-      input.cardId,
+      result.status,
     );
     await db.runAsync(
       `INSERT INTO review_logs (
@@ -129,27 +162,38 @@ export async function submitAnswer(input: {
       now.toISOString(),
     );
   });
-  return { nextDueAt: dueAt, intervalDays, ease: 2.5, status };
+  return {
+    nextDueAt: result.nextDueAt.toISOString(),
+    intervalDays: result.intervalDays,
+    ease: result.ease,
+    status: result.status,
+  };
 }
 
 export async function getTodayStats(): Promise<{
   done: number;
   correct: number;
   goal: number;
+  due: number;
+  newCards: number;
+  cleared: boolean;
 }> {
   const db = await getDatabase();
   const row = await db.getFirstAsync<{ done: number; correct: number }>(
-    `SELECT COUNT(*) AS done, SUM(is_correct) AS correct
+    `SELECT COUNT(DISTINCT card_id) AS done,
+            SUM(is_correct) AS correct
      FROM review_logs WHERE day = ?`,
     todayKey(),
   );
-  const goalRow = await db.getFirstAsync<{ value: string }>(
-    "SELECT value FROM settings WHERE key = 'daily_new_limit'",
-  );
+  const counts = await getQueueCounts();
+  const done = row?.done ?? 0;
   return {
-    done: row?.done ?? 0,
+    done,
     correct: row?.correct ?? 0,
-    goal: Number(goalRow?.value ?? 15),
+    goal: done + counts.total,
+    due: counts.due,
+    newCards: counts.newCards,
+    cleared: counts.total === 0,
   };
 }
 
@@ -184,18 +228,6 @@ export async function getLibrarySummary(): Promise<{
     'SELECT COUNT(*) AS count FROM decks',
   );
   return { cards: cardRow?.count ?? 0, decks: deckRow?.count ?? 0 };
-}
-
-export async function getDailySeries(
-  days: 7 | 30,
-): Promise<DailyStat[]> {
-  const db = await getDatabase();
-  return db.getAllAsync<DailyStat>(
-    `SELECT day, COUNT(*) AS done, SUM(is_correct) AS correct
-     FROM review_logs
-     GROUP BY day ORDER BY day DESC LIMIT ?`,
-    days,
-  );
 }
 
 export async function resetProgress(): Promise<void> {

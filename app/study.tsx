@@ -33,7 +33,7 @@ export default function StudyScreen() {
     try {
       const [deckRows, cards] = await Promise.all([
         listDecks(),
-        buildTodayQueue({ newLimit: 15, reviewLimit: 80 }),
+        buildTodayQueue(),
       ]);
       setDecks(deckRows);
       if (cards.length === 0) {

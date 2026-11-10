@@ -16,6 +16,9 @@ type Dashboard = {
   decks: number;
   done: number;
   goal: number;
+  due: number;
+  newCards: number;
+  cleared: boolean;
 };
 
 export default function TodayScreen() {
@@ -40,6 +43,9 @@ export default function TodayScreen() {
         decks: summary.decks,
         done: stats.done,
         goal: stats.goal,
+        due: stats.due,
+        newCards: stats.newCards,
+        cleared: stats.cleared,
       });
     } catch (error: unknown) {
       console.warn('首页数据读取失败', error);
@@ -85,12 +91,17 @@ export default function TodayScreen() {
         <>
           <View style={styles.center}>
             <ProgressRing done={dashboard.done} target={dashboard.goal} />
-            <Text style={styles.subtitle}>{zh.today.subtitle}</Text>
+            <Text style={styles.subtitle}>
+              {dashboard.cleared ? zh.today.cleared : zh.today.subtitle}
+            </Text>
+            <Text style={styles.queueStatus}>
+              {zh.today.queueStatus(dashboard.due, dashboard.newCards)}
+            </Text>
           </View>
           <View style={styles.footer}>
             <PrimaryButton
               label={dashboard.done > 0 ? zh.today.resume : zh.today.start}
-              disabled={dashboard.cards === 0}
+              disabled={dashboard.cards === 0 || dashboard.cleared}
               onPress={() => router.push('/study')}
             />
             <Text style={styles.library}>
@@ -120,6 +131,7 @@ const styles = StyleSheet.create({
   date: { ...type.caption, color: colors.textDim, paddingTop: space.sm },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: space.md },
   subtitle: { ...type.small, color: colors.textDim },
+  queueStatus: { ...type.micro, color: colors.textDim },
   footer: { gap: space.md, paddingBottom: space.xl },
   library: { ...type.micro, color: colors.textMute, textAlign: 'center' },
   centered: { flex: 1, alignItems: 'center', justifyContent: 'center' },

@@ -1,8 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Tabs } from 'expo-router';
+import { Redirect, Tabs } from 'expo-router';
 import type { ColorValue } from 'react-native';
 import { zh } from '@/i18n/zh';
 import { colors, fonts, type } from '@/theme';
+import { useSettingsStore } from '@/store/settingsStore';
 
 type TabIconProps = {
   color: ColorValue;
@@ -31,6 +32,14 @@ function MeIcon({ color, focused }: TabIconProps) {
 }
 
 export default function TabsLayout() {
+  const ready = useSettingsStore((state) => state.ready);
+  const onboarded = useSettingsStore((state) => state.onboarded);
+  if (!ready) {
+    return null;
+  }
+  if (!onboarded) {
+    return <Redirect href="/onboarding" />;
+  }
   return (
     <Tabs
       screenOptions={{

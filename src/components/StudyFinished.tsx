@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { PrimaryButton } from './PrimaryButton';
 import { Screen } from './Screen';
+import { getNextDueSummary } from '@/db/repository';
 import { zh } from '@/i18n/zh';
 import { colors, space, type } from '@/theme';
 
@@ -32,6 +34,16 @@ export function StudyFinished({
   onHome,
 }: StudyFinishedProps) {
   const accuracy = total > 0 ? correct / total : 0;
+  const [tomorrow, setTomorrow] = useState<number | null>(null);
+
+  useEffect(() => {
+    void getNextDueSummary()
+      .then((summary) => setTomorrow(summary.tomorrow))
+      .catch((error: unknown) => {
+        console.warn('下次复习摘要读取失败', error);
+      });
+  }, []);
+
   return (
     <Screen>
       <View style={styles.content}>
@@ -44,6 +56,13 @@ export function StudyFinished({
             {empty ? zh.study.emptyTitle : evaluation(accuracy)}
           </Text>
           {empty ? <Text style={styles.emptyBody}>{zh.study.emptyBody}</Text> : null}
+          {tomorrow !== null ? (
+            <Text style={styles.nextReview}>
+              {tomorrow > 0
+                ? zh.study.nextReview(tomorrow)
+                : zh.study.nextReviewEmpty}
+            </Text>
+          ) : null}
           {unsaved > 0 ? (
             <Text style={styles.unsaved}>{zh.study.unsaved(unsaved)}</Text>
           ) : null}
@@ -68,6 +87,7 @@ const styles = StyleSheet.create({
   score: { ...type.display, color: colors.primary },
   message: { ...type.title, color: colors.text, textAlign: 'center' },
   emptyBody: { ...type.small, color: colors.textDim, textAlign: 'center' },
+  nextReview: { ...type.caption, color: colors.textDim },
   unsaved: { ...type.caption, color: colors.warning },
   actions: { gap: space.md },
 });

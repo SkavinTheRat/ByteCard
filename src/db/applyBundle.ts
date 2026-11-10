@@ -60,7 +60,7 @@ function cardParams(card: Card, sortOrder: number): (string | number | null)[] {
     card.type,
     card.question,
     card.code ?? null,
-    card.type === 'fill' ? null : JSON.stringify(card.options),
+    card.options === null ? null : JSON.stringify(card.options),
     JSON.stringify(card.answer),
     JSON.stringify({}),
     card.explain,

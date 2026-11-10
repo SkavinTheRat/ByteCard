@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
+import { memo } from 'react';
 import type { Card } from '@/types';
 import { zh } from '@/i18n/zh';
 import { colors, fonts, radius, space, stroke, type } from '@/theme';
@@ -11,7 +12,7 @@ type KnowledgeCardProps = {
   total: number;
 };
 
-export function KnowledgeCard({
+export const KnowledgeCard = memo(function KnowledgeCard({
   card,
   deckCode,
   accent,
@@ -44,7 +45,7 @@ export function KnowledgeCard({
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   card: {

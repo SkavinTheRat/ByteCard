@@ -40,6 +40,7 @@ export const singleDefinition: CardDefinition<SingleCard> = {
   schemaVersion: 1,
   validate,
   AnswerView: SingleAnswerView,
+  answerText: standardAnswer,
   grade({ card, raw, elapsedMs }): GradeResult {
     const correct = raw.kind === 'index' && raw.value === card.answer.index;
     if (!correct) {

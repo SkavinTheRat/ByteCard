@@ -50,6 +50,7 @@ export const multiDefinition: CardDefinition<MultiCard> = {
   schemaVersion: 1,
   validate,
   AnswerView: MultiAnswerView,
+  answerText: (card) => labels(card, card.answer.indices),
   grade({ card, raw, elapsedMs }): GradeResult {
     const selected =
       raw.kind === 'indices' ? [...new Set(raw.value)].sort() : [];

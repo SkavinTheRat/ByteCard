@@ -33,6 +33,7 @@ export const fillDefinition: CardDefinition<FillCard> = {
   schemaVersion: 1,
   validate,
   AnswerView: FillAnswerView,
+  answerText: (card) => card.answer.accept[0] ?? '',
   grade({ card, raw, elapsedMs }): GradeResult {
     const input = raw.kind === 'text' ? raw.value : '';
     const match = matchFillAnswer(input, card.answer.accept);

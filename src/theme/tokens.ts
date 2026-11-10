@@ -30,6 +30,12 @@ export const colors = {
   dangerSoft: '#F871711A',
   successSoft: '#34D3991A',
   backdrop: '#0A0D13F2',
+  heat: {
+    low: '#0E7490',
+    medium: '#22D3EE',
+    high: '#67E8F9',
+    max: '#A5F3FC',
+  },
 } as const;
 
 export const fonts = {

@@ -30,6 +30,7 @@ export interface CardDefinition<C extends Card = Card> {
   schemaVersion: number;
   validate(card: unknown): string[];
   AnswerView: ComponentType<AnswerViewProps<C>>;
+  answerText(card: C): string;
   grade(input: {
     card: C;
     raw: RawAnswer;

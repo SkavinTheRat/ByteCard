@@ -15,6 +15,7 @@ type SessionState = {
   doneCount: number;
   correctCount: number;
   unsavedCount: number;
+  aiRequestCount: number;
   start: (queue: Card[]) => void;
   selectOption: (index: number) => void;
   setDraft: (draft: unknown) => void;
@@ -22,7 +23,10 @@ type SessionState = {
   submit: (raw: RawAnswer) => Promise<void>;
   next: () => void;
   end: () => void;
+  consumeAIRequest: () => boolean;
 };
+
+export const MAX_AI_REQUESTS = 30;
 
 const initialSession = {
   queue: [] as Card[],
@@ -35,6 +39,7 @@ const initialSession = {
   doneCount: 0,
   correctCount: 0,
   unsavedCount: 0,
+  aiRequestCount: 0,
 };
 
 export const useSessionStore = create<SessionState>((set, get) => ({
@@ -109,4 +114,12 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     });
   },
   end: () => set({ index: get().queue.length }),
+  consumeAIRequest: () => {
+    const count = get().aiRequestCount;
+    if (count >= MAX_AI_REQUESTS) {
+      return false;
+    }
+    set({ aiRequestCount: count + 1 });
+    return true;
+  },
 }));

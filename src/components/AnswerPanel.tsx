@@ -5,6 +5,8 @@ import Animated, {
   LinearTransition,
 } from 'react-native-reanimated';
 import type { GradeResult } from '@/cards';
+import type { Card } from '@/types';
+import { useAIExplanation } from '@/hooks/useAIExplanation';
 import { zh } from '@/i18n/zh';
 import { colors, radius, space, stroke, type } from '@/theme';
 
@@ -13,6 +15,8 @@ type AnswerPanelProps = {
   explain: string;
   tags: string[];
   elapsedMs: number;
+  card: Card;
+  userAnswer: string;
 };
 
 export function AnswerPanel({
@@ -20,7 +24,10 @@ export function AnswerPanel({
   explain,
   tags,
   elapsedMs,
+  card,
+  userAnswer,
 }: AnswerPanelProps) {
+  const ai = useAIExplanation(card, userAnswer);
   const near = result.matchedBy === 'near';
   const tone = result.isCorrect
     ? colors.success
@@ -62,7 +69,7 @@ export function AnswerPanel({
         </Text>
       ) : null}
       <Text style={styles.explain}>{explain}</Text>
-      <View style={styles.footer}>
+      <View style={styles.tagsRow}>
         <View style={styles.tags}>
           {tags.map((tag) => (
             <View key={tag} style={styles.tag}>
@@ -70,16 +77,53 @@ export function AnswerPanel({
             </View>
           ))}
         </View>
+      </View>
+      <View style={styles.aiActions}>
         <Pressable
-          accessibilityLabel={zh.study.aiComingSoon}
           accessibilityRole="button"
-          disabled
+          disabled={ai.loading || ai.limitReached}
           hitSlop={8}
-          style={styles.aiButton}
+          onPress={() => void ai.run('rephrase')}
         >
-          <Text style={styles.aiText}>{zh.study.aiRename}</Text>
+          <Text style={[styles.aiText, (ai.loading || ai.limitReached) && styles.disabled]}>
+            {ai.loading ? zh.ai.thinking : zh.ai.rephrase}
+          </Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          disabled={ai.loading || ai.limitReached}
+          hitSlop={8}
+          onPress={() => void ai.run('example')}
+        >
+          <Text style={[styles.aiText, (ai.loading || ai.limitReached) && styles.disabled]}>
+            {zh.ai.example}
+          </Text>
         </Pressable>
       </View>
+      {ai.limitReached ? <Text style={styles.aiError}>{zh.ai.limit}</Text> : null}
+      {ai.error ? (
+        <View style={styles.aiBox}>
+          <Text style={styles.aiError}>{ai.error}</Text>
+          <Pressable accessibilityRole="button" hitSlop={8} onPress={ai.retry}>
+            <Text style={styles.aiText}>{zh.ai.retry}</Text>
+          </Pressable>
+        </View>
+      ) : null}
+      {ai.text ? (
+        <View style={styles.aiBox}>
+          <View style={styles.aiHeader}>
+            <Text style={styles.aiLabel}>{zh.ai.supplement}</Text>
+            <Text style={styles.aiSource}>
+              {ai.source === 'cached'
+                ? zh.ai.cached
+                : ai.source === 'deepseek'
+                  ? zh.ai.deepseek
+                  : zh.ai.offline}
+            </Text>
+          </View>
+          <Text style={styles.aiBody}>{ai.text}</Text>
+        </View>
+      ) : null}
     </Animated.View>
   );
 }
@@ -103,12 +147,7 @@ const styles = StyleSheet.create({
   feedback: { ...type.small },
   correctAnswer: { ...type.small, color: colors.success },
   explain: { ...type.small, color: colors.text },
-  footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.sm,
-    flexWrap: 'wrap',
-  },
+  tagsRow: { flexDirection: 'row', alignItems: 'center' },
   tags: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -123,6 +162,22 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
   },
   tagText: { ...type.micro, color: colors.textDim },
-  aiButton: { opacity: 0.45 },
+  aiActions: { flexDirection: 'row', gap: space.lg },
   aiText: { ...type.micro, color: colors.primary },
+  disabled: { color: colors.textMute },
+  aiBox: {
+    backgroundColor: colors.surfaceAlt,
+    borderColor: colors.border,
+    borderWidth: stroke.hair,
+    borderRadius: radius.md,
+    borderLeftWidth: 2,
+    borderLeftColor: colors.info,
+    padding: space.md,
+    gap: space.sm,
+  },
+  aiHeader: { flexDirection: 'row', justifyContent: 'space-between' },
+  aiLabel: { ...type.micro, color: colors.info },
+  aiSource: { ...type.micro, color: colors.textMute },
+  aiBody: { ...type.small, color: colors.text },
+  aiError: { ...type.caption, color: colors.danger },
 });
