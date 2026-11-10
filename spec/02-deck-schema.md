@@ -48,7 +48,7 @@
 {
   "id": "ds-001",                  // 全局唯一，建议 `${deckId}-${三位序号}`
   "deckId": "ds",
-  "type": "single",                // single | multi | fill
+  "type": "single",                // single | multi | fill | judge
   "question": "在长度为 n 的顺序表中删除第 i 个元素（1≤i≤n），平均需要移动多少个元素？",
   "code": null,                    // 可选：需要展示的代码/公式片段
   "options": ["(n-1)/2", "n/2", "(n-i)/2", "n-i"],
@@ -59,7 +59,7 @@
 }
 ```
 
-### 三种卡型的字段规则
+### 四种卡型的字段规则
 
 | 字段 | `single`（单选） | `multi`（多选） | `fill`（填空） |
 | --- | --- | --- | --- |

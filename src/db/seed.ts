@@ -38,11 +38,11 @@ export function loadBundledDeck(): DeckBundle {
 export async function seedIfNeeded(): Promise<boolean> {
   const startedAt = Date.now();
   const { applyDeckBundle } = await import('./applyBundle');
-  const applied = await applyDeckBundle(loadBundledDeck());
+  const applied = await applyDeckBundle(loadBundledDeck(), { source: 'bundled' });
   if (applied) {
     console.info(`[ByteCard] 题库 seed 完成：${Date.now() - startedAt}ms`);
   }
-  return applied;
+  return applied !== null;
 }
 
 export { validateDecks } from './validateDecks';

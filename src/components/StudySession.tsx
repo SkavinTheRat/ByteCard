@@ -8,7 +8,6 @@ import {
 import {
   KeyboardAvoidingView,
   ScrollView,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
@@ -25,13 +24,14 @@ import { getCardDef, type RawAnswer } from '@/cards';
 import type { Card, Deck } from '@/types';
 import { zh } from '@/i18n/zh';
 import { useSessionStore } from '@/store/sessionStore';
-import { colors, space, stroke, type } from '@/theme';
+import { colors, space } from '@/theme';
 import { AnswerPanel } from './AnswerPanel';
 import { EndSessionSheet } from './EndSessionSheet';
 import { KnowledgeCard } from './KnowledgeCard';
 import { PrimaryButton } from './PrimaryButton';
 import { StudyHeader } from './StudyHeader';
 import { UnsupportedCard } from './UnsupportedCard';
+import { studySessionStyles as styles } from './StudySessionStyles';
 
 type StudySessionProps = {
   deck: Deck;
@@ -68,6 +68,7 @@ export function StudySession({ deck, onFinish, onExit }: StudySessionProps) {
   const setDraft = useSessionStore((state) => state.setDraft);
   const submit = useSessionStore((state) => state.submit);
   const next = useSessionStore((state) => state.next);
+  const endSession = useSessionStore((state) => state.end);
   const [closeOpen, setCloseOpen] = useState(false);
   const [elapsedMs, setElapsedMs] = useState(0);
   const [animating, setAnimating] = useState(false);
@@ -90,6 +91,7 @@ export function StudySession({ deck, onFinish, onExit }: StudySessionProps) {
 
   const advance = useCallback(() => {
     if (index + 1 >= queue.length) {
+      endSession();
       onFinish();
     } else {
       next();
@@ -99,7 +101,7 @@ export function StudySession({ deck, onFinish, onExit }: StudySessionProps) {
     cardY.value = 0;
     cardOpacity.value = 1;
     setAnimating(false);
-  }, [cardOpacity, cardX, cardY, index, next, onFinish, queue.length]);
+  }, [cardOpacity, cardX, cardY, endSession, index, next, onFinish, queue.length]);
 
   function moveNext() {
     if (animating || phase !== 'revealed') {
@@ -112,7 +114,7 @@ export function StudySession({ deck, onFinish, onExit }: StudySessionProps) {
         if (finished) {
           runOnJS(advance)();
         }
-      });
+});
       return;
     }
     cardX.value = withSequence(
@@ -136,6 +138,7 @@ export function StudySession({ deck, onFinish, onExit }: StudySessionProps) {
     if (doneCount > 0) {
       setCloseOpen(true);
     } else {
+      endSession();
       onExit();
     }
   }
@@ -184,11 +187,23 @@ export function StudySession({ deck, onFinish, onExit }: StudySessionProps) {
               result={result}
               onDraftChange={setDraft}
               onSubmit={(raw: RawAnswer) => void submit(raw)}
+              onInputFocus={() => {
+                setTimeout(() => {
+                  scrollRef.current?.scrollToEnd({ animated: true });
+                }, 180);
+              }}
             />
           ) : (
             <UnsupportedCard
               card={currentCard}
-              onSkip={() => (isLast ? onFinish() : next())}
+            onSkip={() => {
+              if (isLast) {
+                endSession();
+                onFinish();
+              } else {
+                next();
+              }
+            }}
             />
           )}
           {phase === 'revealed' && result ? (
@@ -221,6 +236,7 @@ export function StudySession({ deck, onFinish, onExit }: StudySessionProps) {
         visible={closeOpen}
         onEnd={() => {
           setCloseOpen(false);
+          endSession();
           onFinish();
         }}
         onKeepLearning={() => setCloseOpen(false)}
@@ -228,21 +244,3 @@ export function StudySession({ deck, onFinish, onExit }: StudySessionProps) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.bg },
-  flex: { flex: 1 },
-  headerWrap: { paddingHorizontal: space.lg, paddingTop: space.sm },
-  content: {
-    padding: space.lg,
-    gap: space.md,
-    paddingBottom: space.xxxl,
-  },
-  bottom: {
-    paddingHorizontal: space.lg,
-    paddingTop: space.md,
-    borderTopWidth: stroke.hair,
-    borderTopColor: colors.border,
-    backgroundColor: colors.bg,
-  },
-});

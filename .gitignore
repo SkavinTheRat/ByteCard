@@ -39,3 +39,8 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# generated card pipeline artifacts
+/tools/gen-cards/out/
+/tools/gen-cards/dist-*/
+/dist-export/

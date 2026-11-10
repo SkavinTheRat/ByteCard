@@ -1,4 +1,4 @@
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 3;
 
 export const CREATE_DECKS = `
 CREATE TABLE IF NOT EXISTS decks (
@@ -83,5 +83,9 @@ export const DEFAULT_SETTINGS: ReadonlyArray<readonly [string, string]> = [
   ['ai_model', 'deepseek-chat'],
   ['reminder_enabled', 'false'],
   ['reminder_time', '20:30'],
+  ['reminder_tip_shown', 'false'],
+  ['deck_remote_url', ''],
+  ['deck_checked_at', ''],
+  ['ai_gen_limit', '10'],
   ['onboarded', 'false'],
 ];

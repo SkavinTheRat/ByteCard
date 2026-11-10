@@ -18,8 +18,10 @@ export {
 export {
   getDailySeries,
   getDeckAccuracy,
+  getDeckTagAccuracy,
   getStatsOverview,
   getStreak,
+  getUnsupportedCardCount,
   getWrongCard,
   getWrongCards,
   requeueWrongCard,
@@ -29,17 +31,37 @@ export type {
   StatsOverview,
   WrongCardItem,
 } from './statsRepository';
-export { clearAICache, getAICache, saveAICache } from './aiRepository';
+export {
+  clearAICache,
+  clearAICards,
+  deleteAICards,
+  getAICache,
+  getAICardStats,
+  getAIGenerationUsage,
+  getAIExportCards,
+  getExistingQuestions,
+  insertVerifiedAICard,
+  listAICards,
+  recordAIGeneration,
+  saveAICache,
+  type AICardSummary,
+} from './aiRepository';
+export {
+  getLibrarySummary,
+  getSetting,
+  resetProgress,
+  setSetting,
+} from './settingsRepository';
 
 const CARD_SELECT = `
   SELECT c.id, c.deck_id, c.type, c.question, c.code, c.options,
-         c.answer, c.explain, c.tags, c.difficulty
+         c.answer, c.payload, c.explain, c.tags, c.difficulty,
+         c.source, c.verified_at, c.sort_order
   FROM cards c`;
 
 export async function initDatabase(): Promise<void> {
   await initializeDatabase();
 }
-
 export async function listDecks(): Promise<Deck[]> {
   const db = await getDatabase();
   const rows = await db.getAllAsync<DeckRow>(
@@ -195,50 +217,4 @@ export async function getTodayStats(): Promise<{
     newCards: counts.newCards,
     cleared: counts.total === 0,
   };
-}
-
-export async function getSetting(key: string): Promise<string | null> {
-  const db = await getDatabase();
-  const row = await db.getFirstAsync<{ value: string }>(
-    'SELECT value FROM settings WHERE key = ?',
-    key,
-  );
-  return row?.value ?? null;
-}
-
-export async function setSetting(key: string, value: string): Promise<void> {
-  const db = await getDatabase();
-  await db.runAsync(
-    `INSERT INTO settings (key, value) VALUES (?, ?)
-     ON CONFLICT(key) DO UPDATE SET value = excluded.value`,
-    key,
-    value,
-  );
-}
-
-export async function getLibrarySummary(): Promise<{
-  cards: number;
-  decks: number;
-}> {
-  const db = await getDatabase();
-  const cardRow = await db.getFirstAsync<{ count: number }>(
-    'SELECT COUNT(*) AS count FROM cards',
-  );
-  const deckRow = await db.getFirstAsync<{ count: number }>(
-    'SELECT COUNT(*) AS count FROM decks',
-  );
-  return { cards: cardRow?.count ?? 0, decks: deckRow?.count ?? 0 };
-}
-
-export async function resetProgress(): Promise<void> {
-  const db = await getDatabase();
-  await db.withTransactionAsync(async () => {
-    await db.runAsync('DELETE FROM review_logs');
-    await db.runAsync('DELETE FROM review_states');
-    await db.runAsync(
-      `INSERT INTO review_states (card_id, due_at, status)
-       SELECT id, ?, 'new' FROM cards`,
-      new Date().toISOString(),
-    );
-  });
 }

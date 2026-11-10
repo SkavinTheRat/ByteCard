@@ -8,9 +8,9 @@ export type Deck = {
   enabled: boolean;
 };
 
-export type CardType = 'single' | 'multi' | 'fill';
+export type CardType = 'single' | 'multi' | 'fill' | 'judge';
 
-type CardBase = {
+export type CardBase = {
   id: string;
   deckId: string;
   question: string;
@@ -18,6 +18,10 @@ type CardBase = {
   explain: string;
   tags: string[];
   difficulty: 1 | 2 | 3;
+  payload?: Record<string, unknown>;
+  source?: 'seed' | 'ai';
+  verifiedAt?: string;
+  sortOrder?: number;
 };
 
 export type SingleCard = CardBase & {
@@ -38,7 +42,13 @@ export type FillCard = CardBase & {
   answer: { accept: string[]; hint?: string };
 };
 
-export type Card = SingleCard | MultiCard | FillCard;
+export type JudgeCard = CardBase & {
+  type: 'judge';
+  options: null;
+  answer: { value: boolean };
+};
+
+export type Card = SingleCard | MultiCard | FillCard | JudgeCard;
 
 export type ReviewState = {
   cardId: string;
@@ -72,7 +82,7 @@ export type DailyStat = {
 
 export type DeckBundle = {
   version: number;
-  removed: string[];
+  removed?: string[];
   minAppVersion?: string;
   decks: Deck[];
   cards: Card[];

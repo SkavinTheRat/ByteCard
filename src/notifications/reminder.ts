@@ -22,7 +22,7 @@ async function ensureChannel(): Promise<void> {
   }
   await Notifications.setNotificationChannelAsync(CHANNEL_ID, {
     name: zh.reminder.channelName,
-    importance: Notifications.AndroidImportance.DEFAULT,
+    importance: Notifications.AndroidImportance.HIGH,
     vibrationPattern: [0, 120],
     enableVibrate: true,
   });

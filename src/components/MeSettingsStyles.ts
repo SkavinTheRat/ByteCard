@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, radius, space, type } from '@/theme';
+import { colors, radius, space, stroke, type } from '@/theme';
 
 export const meStyles = StyleSheet.create({
   content: {
@@ -22,4 +22,13 @@ export const meStyles = StyleSheet.create({
     overflow: 'hidden',
   },
   error: { ...type.caption, color: colors.danger },
+  guide: {
+    paddingHorizontal: space.lg,
+    paddingVertical: space.md,
+    borderTopWidth: stroke.hair,
+    borderTopColor: colors.border,
+    gap: space.sm,
+  },
+  guideToggle: { ...type.micro, color: colors.primary },
+  guideBody: { ...type.caption, color: colors.textDim },
 });

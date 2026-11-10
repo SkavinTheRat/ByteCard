@@ -22,6 +22,7 @@ export type AnswerViewProps<C extends Card = Card> = {
   onDraftChange: (draft: unknown) => void;
   onSubmit: (raw: RawAnswer) => void;
   result: GradeResult | null;
+  onInputFocus?: () => void;
 };
 
 export interface CardDefinition<C extends Card = Card> {

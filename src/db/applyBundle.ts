@@ -1,6 +1,12 @@
 import type { Card, DeckBundle } from '@/types';
 import { getDatabase } from './database';
 
+export type ApplyBundleResult = {
+  added: number;
+  updated: number;
+  removed: number;
+};
+
 function placeholders(count: number): string {
   return Array.from({ length: count }, () => '?').join(', ');
 }
@@ -14,15 +20,20 @@ async function appliedVersion(): Promise<number> {
   return Number(row?.value ?? 0);
 }
 
-async function deleteRemoved(removed: string[]): Promise<void> {
+async function deleteRemoved(removed: string[]): Promise<number> {
   if (removed.length === 0) {
-    return;
+    return 0;
   }
   const db = await getDatabase();
+  const existing = await db.getFirstAsync<{ count: number }>(
+    `SELECT COUNT(*) AS count FROM cards WHERE id IN (${placeholders(removed.length)})`,
+    ...removed,
+  );
   await db.runAsync(
     `DELETE FROM cards WHERE id IN (${placeholders(removed.length)})`,
     ...removed,
   );
+  return existing?.count ?? 0;
 }
 
 async function upsertDecks(decks: DeckBundle['decks']): Promise<void> {
@@ -62,7 +73,7 @@ function cardParams(card: Card, sortOrder: number): (string | number | null)[] {
     card.code ?? null,
     card.options === null ? null : JSON.stringify(card.options),
     JSON.stringify(card.answer),
-    JSON.stringify({}),
+    JSON.stringify(card.payload ?? {}),
     card.explain,
     JSON.stringify(card.tags),
     card.difficulty,
@@ -120,17 +131,30 @@ async function writeVersion(version: number): Promise<void> {
   );
 }
 
-export async function applyDeckBundle(bundle: DeckBundle): Promise<boolean> {
+export async function applyDeckBundle(
+  bundle: DeckBundle,
+  options: { source: 'bundled' | 'remote' } = { source: 'bundled' },
+): Promise<ApplyBundleResult | null> {
   if (bundle.version <= (await appliedVersion())) {
-    return false;
+    return null;
   }
   const db = await getDatabase();
+  const existingRows = await db.getAllAsync<{ id: string }>(
+    'SELECT id FROM cards',
+  );
+  const existingIds = new Set(existingRows.map((row) => row.id));
+  const added = bundle.cards.filter((card) => !existingIds.has(card.id)).length;
+  const updated = bundle.cards.length - added;
+  let removed = 0;
   await db.withTransactionAsync(async () => {
-    await deleteRemoved(bundle.removed);
+    removed = await deleteRemoved(bundle.removed ?? []);
     await upsertDecks(bundle.decks);
     await upsertCards(bundle.cards);
     await ensureReviewStates();
     await writeVersion(bundle.version);
   });
-  return true;
+  console.info(
+    `[ByteCard] ${options.source} 题库合并：+${added} ~${updated} -${removed}`,
+  );
+  return { added, updated, removed };
 }

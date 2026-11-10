@@ -45,7 +45,7 @@ function validateCard(card: unknown): string[] {
   return errors;
 }
 
-const quota: Record<string, number> = {
+const minimumCards: Record<string, number> = {
   ds: 20,
   co: 18,
   os: 18,
@@ -93,19 +93,19 @@ export function validateDecks(input: unknown): string[] {
     }
   }
 
-  for (const [deckId, expected] of Object.entries(quota)) {
+  for (const [deckId, expected] of Object.entries(minimumCards)) {
     const actual = cards.filter(
       (card) => isRecord(card) && card.deckId === deckId,
     ).length;
-    if (actual !== expected) {
-      errors.push(`${deckId}: 应有 ${expected} 张，实际 ${actual} 张`);
+    if (actual < expected) {
+      errors.push(`${deckId}: 至少应有 ${expected} 张，实际 ${actual} 张`);
     }
   }
   const hard = cards.filter(
     (card) => isRecord(card) && card.difficulty === 3,
   ).length;
-  if (hard < 15 || hard > 25) {
-    errors.push(`难度 3 的卡片应有约 20 张，实际 ${hard} 张`);
+  if (hard < 15) {
+    errors.push(`难度 3 的卡片至少应有 15 张，实际 ${hard} 张`);
   }
   return errors;
 }

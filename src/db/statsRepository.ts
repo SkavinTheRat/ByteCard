@@ -6,7 +6,8 @@ import { getDatabase } from './database';
 
 const CARD_COLUMNS = `
   c.id, c.deck_id, c.type, c.question, c.code, c.options,
-  c.answer, c.explain, c.tags, c.difficulty`;
+  c.answer, c.payload, c.explain, c.tags, c.difficulty,
+  c.source, c.verified_at, c.sort_order`;
 
 export type StatsOverview = {
   streak: number;
@@ -108,6 +109,39 @@ export async function getDeckAccuracy(): Promise<DeckAccuracy[]> {
   }));
 }
 
+export async function getDeckTagAccuracy(deckId: string): Promise<
+  Array<{ tag: string; done: number; correct: number }>
+> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<{ tags: string; done: number; correct: number }>(
+    `SELECT c.tags, COUNT(l.id) AS done, COALESCE(SUM(l.is_correct), 0) AS correct
+     FROM cards c
+     JOIN review_logs l ON l.card_id = c.id
+     WHERE c.deck_id = ?
+     GROUP BY c.id`,
+    deckId,
+  );
+  const result = new Map<string, { tag: string; done: number; correct: number }>();
+  for (const row of rows) {
+    let tags: string[] = [];
+    try {
+      const parsed: unknown = JSON.parse(row.tags);
+      if (Array.isArray(parsed)) {
+        tags = parsed.filter((tag): tag is string => typeof tag === 'string');
+      }
+    } catch {
+      // 坏标签不参与薄弱知识点计算。
+    }
+    for (const tag of tags) {
+      const current = result.get(tag) ?? { tag, done: 0, correct: 0 };
+      current.done += row.done;
+      current.correct += row.correct;
+      result.set(tag, current);
+    }
+  }
+  return [...result.values()];
+}
+
 type WrongRow = CardRow & {
   lapses: number;
   last_wrong_at: string | null;
@@ -163,4 +197,10 @@ export async function requeueWrongCard(cardId: string): Promise<void> {
     new Date().toISOString(),
     cardId,
   );
+}
+
+export async function getUnsupportedCardCount(): Promise<number> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<{ type: string }>('SELECT type FROM cards');
+  return rows.filter((row) => !isSupportedType(row.type)).length;
 }

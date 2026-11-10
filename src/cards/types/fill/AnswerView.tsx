@@ -11,6 +11,7 @@ export function FillAnswerView({
   draft,
   onDraftChange,
   onSubmit,
+  onInputFocus,
 }: AnswerViewProps<FillCard>) {
   const value = draftToText(draft);
   const answered = phase === 'revealed';
@@ -29,6 +30,7 @@ export function FillAnswerView({
         style={styles.input}
         value={value}
         onChangeText={onDraftChange}
+        onFocus={onInputFocus}
       />
       {card.answer.hint ? (
         <Text style={styles.hint}>{zh.study.fillHint(card.answer.hint)}</Text>

@@ -1,9 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import type { DeckAccuracy } from '@/db/repository';
 import { zh } from '@/i18n/zh';
 import { colors, radius, space, stroke, type } from '@/theme';
 
-export function DeckAccuracyRow({ item }: { item: DeckAccuracy }) {
+export function DeckAccuracyRow({
+  item,
+  onGenerate,
+}: {
+  item: DeckAccuracy;
+  onGenerate?: () => void;
+}) {
   const percent = Math.round(item.accuracy * 100);
   return (
     <View style={styles.row}>
@@ -11,6 +18,11 @@ export function DeckAccuracyRow({ item }: { item: DeckAccuracy }) {
         <Text style={[styles.code, { color: item.accent }]}>{item.code}</Text>
         <Text style={styles.name}>{item.name}</Text>
         <Text style={styles.percent}>{percent}%</Text>
+        {onGenerate ? (
+          <Pressable accessibilityLabel={zh.aiCard.title} hitSlop={8} onPress={onGenerate}>
+            <Ionicons color={item.accent} name="add-circle-outline" size={20} />
+          </Pressable>
+        ) : null}
       </View>
       <View style={styles.track}>
         <View

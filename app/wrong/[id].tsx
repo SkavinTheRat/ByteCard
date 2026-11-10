@@ -98,6 +98,21 @@ export default function WrongCardDetailScreen() {
               label={zh.wrong.requeue}
               onPress={() => void requeue()}
             />
+            <Pressable
+              accessibilityRole="button"
+              onPress={() =>
+                router.push({
+                  pathname: '/ai-card',
+                  params: {
+                    deckId: item.card.deckId,
+                    point: item.card.tags[0] ?? '',
+                  },
+                })
+              }
+              style={styles.secondary}
+            >
+              <Text style={styles.secondaryText}>{zh.wrong.generateSimilar}</Text>
+            </Pressable>
           </View>
         </>
       )}
@@ -131,9 +146,20 @@ const styles = StyleSheet.create({
   bottom: {
     paddingHorizontal: space.lg,
     paddingTop: space.md,
+    gap: space.sm,
     borderTopWidth: stroke.hair,
     borderTopColor: colors.border,
   },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   error: { ...type.body, color: colors.danger },
+  secondary: {
+    minHeight: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: stroke.hair,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    backgroundColor: colors.surface,
+  },
+  secondaryText: { ...type.small, color: colors.textDim },
 });

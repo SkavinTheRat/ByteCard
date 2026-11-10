@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { LoadingSkeleton } from '@/components/LoadingSkeleton';
@@ -8,8 +8,10 @@ import { Screen } from '@/components/Screen';
 import { getLibrarySummary, getTodayStats } from '@/db/repository';
 import { zh } from '@/i18n/zh';
 import { useSettingsStore } from '@/store/settingsStore';
-import { colors, space, type } from '@/theme';
+import { colors, radius, space, stroke, type } from '@/theme';
 import { formatChineseDate } from '@/utils/date';
+import { useRemoteDeckUpdate } from '@/hooks/useRemoteDeckUpdate';
+import { Ionicons } from '@expo/vector-icons';
 
 type Dashboard = {
   cards: number;
@@ -25,6 +27,7 @@ export default function TodayScreen() {
   const ready = useSettingsStore((state) => state.ready);
   const initializationError = useSettingsStore((state) => state.error);
   const initialize = useSettingsStore((state) => state.initialize);
+  const remote = useRemoteDeckUpdate(ready);
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
   const [loadError, setLoadError] = useState(false);
 
@@ -59,6 +62,12 @@ export default function TodayScreen() {
     }, [load]),
   );
 
+  useEffect(() => {
+    if (remote.result?.status === 'updated') {
+      void load();
+    }
+  }, [load, remote.result]);
+
   function retry() {
     setDashboard(null);
     void initialize();
@@ -66,6 +75,22 @@ export default function TodayScreen() {
 
   return (
     <Screen>
+      {remote.result?.status === 'updated' ? (
+        <View style={styles.updateBanner}>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push('/deck-update')}
+            style={styles.updateCopy}
+          >
+            <Text style={styles.updateText}>
+              {zh.today.deckUpdated(remote.result.added)}
+            </Text>
+          </Pressable>
+          <Pressable accessibilityLabel={zh.common.dismiss} onPress={remote.dismiss}>
+            <Ionicons color={colors.textDim} name="close" size={18} />
+          </Pressable>
+        </View>
+      ) : null}
       <View style={styles.header}>
         <View>
           <Text style={styles.eyebrow}>{zh.today.eyebrow}</Text>
@@ -136,4 +161,15 @@ const styles = StyleSheet.create({
   library: { ...type.micro, color: colors.textMute, textAlign: 'center' },
   centered: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   error: { ...type.body, color: colors.danger, textAlign: 'center' },
+  updateBanner: {
+    minHeight: 44,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: space.md,
+    borderWidth: stroke.hair,
+    borderColor: colors.primaryDim,
+    borderRadius: radius.sm,
+  },
+  updateCopy: { flex: 1 },
+  updateText: { ...type.caption, color: colors.primary },
 });

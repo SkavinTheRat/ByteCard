@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { PixelRatio, StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Stack, useRouter, useSegments } from 'expo-router';
@@ -38,6 +38,10 @@ export default function RootLayout() {
   useEffect(() => {
     void initialize();
   }, [initialize]);
+
+  useEffect(() => {
+    console.info(`[ByteCard] 字体缩放 ${PixelRatio.getFontScale().toFixed(2)}`);
+  }, []);
 
   useEffect(() => {
     if (fontFailed) {
@@ -82,8 +86,14 @@ export default function RootLayout() {
             />
             <Stack.Screen
               name="study"
-            options={{ animation: 'slide_from_bottom', gestureEnabled: false }}
+              options={{ animation: 'slide_from_bottom', gestureEnabled: false }}
             />
+            <Stack.Screen
+              name="ai-card"
+              options={{ animation: 'slide_from_bottom', gestureEnabled: false }}
+            />
+            <Stack.Screen name="ai-cards" />
+            <Stack.Screen name="deck-update" />
           </Stack>
           <ToastHost />
         </ErrorBoundary>

@@ -6,7 +6,8 @@ import { mapCard, type CardRow } from './mappers';
 
 const CARD_SELECT = `
   SELECT c.id, c.deck_id, c.type, c.question, c.code, c.options,
-         c.answer, c.explain, c.tags, c.difficulty
+         c.answer, c.payload, c.explain, c.tags, c.difficulty,
+         c.source, c.verified_at, c.sort_order
   FROM cards c`;
 
 type QueueSettings = {

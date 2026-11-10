@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native';
+import { PixelRatio, Text, View } from 'react-native';
 import Constants from 'expo-constants';
 import { meStyles as styles } from './MeSettingsStyles';
 import { SettingsRow } from './SettingsRow';
@@ -12,6 +12,9 @@ type Props = {
   onClearAI: () => void;
   onShiftDue: () => void;
   onRegenerate: () => void;
+  onAICards: () => void;
+  aiGeneration: string;
+  onDeckUpdate: () => void;
 };
 
 export function MeDataSettings({
@@ -22,6 +25,9 @@ export function MeDataSettings({
   onClearAI,
   onShiftDue,
   onRegenerate,
+  onAICards,
+  aiGeneration,
+  onDeckUpdate,
 }: Props) {
   return (
     <>
@@ -34,6 +40,7 @@ export function MeDataSettings({
       <Text style={styles.group}>AI</Text>
       <View style={styles.panel}>
         <SettingsRow label={zh.me.aiSettings} onPress={onAISettings} />
+        <SettingsRow label={zh.me.aiCards} value={aiGeneration} onPress={onAICards} />
         <SettingsRow label={zh.me.clearAICache} last onPress={onClearAI} />
       </View>
 
@@ -45,20 +52,25 @@ export function MeDataSettings({
         />
         <SettingsRow
           label={zh.me.deckLibrary}
-          last
           value={zh.me.libraryValue(cards, decks)}
         />
+        <SettingsRow label={zh.me.deckUpdate} last onPress={onDeckUpdate} />
       </View>
 
       {__DEV__ ? (
         <>
           <Text style={styles.group}>{zh.me.developer}</Text>
           <View style={styles.panel}>
+            <SettingsRow
+              label={zh.me.fontScale}
+              value={PixelRatio.getFontScale().toFixed(2)}
+            />
             <SettingsRow label={zh.me.shiftDue} onPress={onShiftDue} />
             <SettingsRow label={zh.me.regenerate} last onPress={onRegenerate} />
           </View>
         </>
       ) : null}
+      <Text style={styles.description}>{zh.me.appCloneNote}</Text>
     </>
   );
 }

@@ -1,16 +1,16 @@
 import { useCallback, useState } from 'react';
-import { Linking, ScrollView, Text } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
-import { ConfirmSheet } from '@/components/ConfirmSheet';
-import { OptionSheet } from '@/components/OptionSheet';
 import { Screen } from '@/components/Screen';
 import { meStyles as styles } from '@/components/MeSettingsStyles';
 import { MeLearningSettings, type LimitSelector } from '@/components/MeLearningSettings';
 import { MeDataSettings } from '@/components/MeDataSettings';
+import { MeScreenSheets } from '@/components/MeScreenSheets';
 import {
   advanceAllDueByOneDay,
   clearAICache,
   getLibrarySummary,
+  getAIGenerationUsage,
   getSetting,
   listDecks,
   resetProgress,
@@ -36,9 +36,11 @@ export default function MeScreen() {
   const [selector, setSelector] = useState<LimitSelector | null>(null);
   const [resetOpen, setResetOpen] = useState(false);
   const [permissionOpen, setPermissionOpen] = useState(false);
+  const [reminderGuideOpen, setReminderGuideOpen] = useState(false);
   const [reminderEnabled, setReminderEnabled] = useState(false);
   const [reminderTime, setReminderTime] = useState('20:30');
   const [failed, setFailed] = useState(false);
+  const [aiGeneration, setAIGeneration] = useState('0/10');
 
   const load = useCallback(async () => {
     if (!ready) {
@@ -54,6 +56,7 @@ export default function MeScreen() {
         enabledValue,
         reminderValue,
         reminderTimeValue,
+        generation,
       ] =
         await Promise.all([
           listDecks(),
@@ -63,6 +66,7 @@ export default function MeScreen() {
           getSetting('enabled_decks'),
           getSetting('reminder_enabled'),
           getSetting('reminder_time'),
+          getAIGenerationUsage(),
         ]);
       setDecks(deckRows);
       setSummary(library);
@@ -71,6 +75,7 @@ export default function MeScreen() {
       setEnabled(parseEnabledDecks(enabledValue));
       setReminderEnabled(reminderValue === 'true');
       setReminderTime(reminderTimeValue ?? '20:30');
+      setAIGeneration(`${generation.used}/${generation.limit}`);
     } catch (error: unknown) {
       console.warn('设置读取失败', error);
       setFailed(true);
@@ -160,6 +165,11 @@ export default function MeScreen() {
       }
       await setSetting('reminder_enabled', 'true');
       setReminderEnabled(true);
+      const tipShown = await getSetting('reminder_tip_shown');
+      if (tipShown !== 'true') {
+        await setSetting('reminder_tip_shown', 'true');
+        setReminderGuideOpen(true);
+      }
     } catch (error: unknown) {
       console.warn('开启提醒失败', error);
       setReminderEnabled(false);
@@ -200,6 +210,9 @@ export default function MeScreen() {
           cards={summary.cards}
           decks={summary.decks}
           onAISettings={() => router.push('/ai-settings')}
+          aiGeneration={aiGeneration}
+          onAICards={() => router.push('/ai-cards')}
+          onDeckUpdate={() => router.push('/deck-update')}
           onClearAI={() => {
             void clearAICache()
               .then(() => showToast(zh.me.cacheCleared))
@@ -213,36 +226,21 @@ export default function MeScreen() {
           onShiftDue={() => void shiftDue()}
         />
       </ScrollView>
-      <OptionSheet
-        onClose={() => setSelector(null)}
-        onSelect={(value) => {
+      <MeScreenSheets
+        onPermissionClose={() => setPermissionOpen(false)}
+        onReminderGuideClose={() => setReminderGuideOpen(false)}
+        onResetClose={() => setResetOpen(false)}
+        onResetConfirm={() => void doReset()}
+        onSelectLimit={(value) => {
           if (selector) {
             void saveLimit(selector.key, value);
           }
         }}
-        options={selector?.options ?? []}
-        selected={selector?.value ?? 0}
-        title={selector?.title ?? ''}
-        visible={selector !== null}
-      />
-      <ConfirmSheet
-        confirmLabel={zh.me.resetConfirm}
-        message={zh.me.resetMessage}
-        onClose={() => setResetOpen(false)}
-        onConfirm={() => void doReset()}
-        title={zh.me.resetTitle}
-        visible={resetOpen}
-      />
-      <ConfirmSheet
-        confirmLabel={zh.reminder.openSettings}
-        message={zh.reminder.permissionBody}
-        onClose={() => setPermissionOpen(false)}
-        onConfirm={() => {
-          setPermissionOpen(false);
-          void Linking.openSettings();
-        }}
-        title={zh.reminder.permissionTitle}
-        visible={permissionOpen}
+        onSelectorClose={() => setSelector(null)}
+        permissionOpen={permissionOpen}
+        reminderGuideOpen={reminderGuideOpen}
+        resetOpen={resetOpen}
+        selector={selector}
       />
     </Screen>
   );

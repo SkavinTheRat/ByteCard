@@ -10,6 +10,7 @@ type KnowledgeCardProps = {
   accent: string;
   position: number;
   total: number;
+  badge?: string;
 };
 
 export const KnowledgeCard = memo(function KnowledgeCard({
@@ -18,6 +19,7 @@ export const KnowledgeCard = memo(function KnowledgeCard({
   accent,
   position,
   total,
+  badge,
 }: KnowledgeCardProps) {
   return (
     <View style={styles.card}>
@@ -28,6 +30,11 @@ export const KnowledgeCard = memo(function KnowledgeCard({
           <View style={styles.dot} />
         </View>
         <Text style={[styles.deckCode, { color: accent }]}>{deckCode}</Text>
+        {badge ? (
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>{badge}</Text>
+          </View>
+        ) : null}
         <Text style={styles.progress}>
           {zh.study.progress(position, total)}
         </Text>
@@ -73,6 +80,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.textMute,
   },
   deckCode: { ...type.micro, flex: 1 },
+  badge: {
+    borderWidth: stroke.hair,
+    borderColor: colors.warning,
+    borderRadius: radius.pill,
+    paddingHorizontal: space.sm,
+    paddingVertical: 2,
+  },
+  badgeText: { ...type.micro, color: colors.warning },
   progress: { ...type.micro, color: colors.textMute },
   body: { padding: space.lg, paddingVertical: space.xl, gap: space.md },
   question: { ...type.card, color: colors.text },

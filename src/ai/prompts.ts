@@ -1,6 +1,11 @@
 import type { AIRequest } from './provider';
 import { getCardDef } from '@/cards';
 
+export {
+  CARD_SYSTEM_PROMPT,
+  buildCardGenerationPrompt,
+} from './cardPrompt';
+
 export const SYSTEM_PROMPT = `你是一个计算机考研（408）与 AI 基础的助教。学生在做概念卡片练习时答错了题。
 你的任务是针对性地补充讲解，不是重新讲一遍整个知识点。
 

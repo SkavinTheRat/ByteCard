@@ -1,0 +1,653 @@
+{
+  "version": 1,
+  "topics": [
+    {
+      "id": "ds-linear-list",
+      "deckId": "ds",
+      "name": "顺序表与链表",
+      "points": [
+        "顺序表插入与删除的平均移动次数",
+        "头结点、头指针与首元结点的区别"
+      ]
+    },
+    {
+      "id": "ds-stack-queue",
+      "deckId": "ds",
+      "name": "栈与队列",
+      "points": [
+        "合法出栈序列的判定",
+        "循环队列队空与队满条件"
+      ]
+    },
+    {
+      "id": "ds-string-array",
+      "deckId": "ds",
+      "name": "串与数组",
+      "points": [
+        "KMP 的 next 数组含义",
+        "特殊矩阵压缩存储的下标换算"
+      ]
+    },
+    {
+      "id": "ds-tree-basic",
+      "deckId": "ds",
+      "name": "二叉树性质",
+      "points": [
+        "叶子结点与度为 2 结点的关系",
+        "完全二叉树高度与结点编号性质"
+      ]
+    },
+    {
+      "id": "ds-tree-traverse",
+      "deckId": "ds",
+      "name": "树与二叉树遍历",
+      "points": [
+        "由中序与先序序列还原二叉树",
+        "二叉树的线索化与遍历线索"
+      ]
+    },
+    {
+      "id": "ds-huffman",
+      "deckId": "ds",
+      "name": "哈夫曼树与编码",
+      "points": [
+        "哈夫曼树的构造过程",
+        "带权路径长度 WPL 的计算"
+      ]
+    },
+    {
+      "id": "ds-graph-storage",
+      "deckId": "ds",
+      "name": "图的存储",
+      "points": [
+        "邻接矩阵与邻接表的空间复杂度",
+        "有向图出度与入度的存储差异"
+      ]
+    },
+    {
+      "id": "ds-graph-traverse",
+      "deckId": "ds",
+      "name": "图的遍历",
+      "points": [
+        "BFS 与 DFS 的访问序列",
+        "图的连通分量与生成树计数"
+      ]
+    },
+    {
+      "id": "ds-mst",
+      "deckId": "ds",
+      "name": "最小生成树",
+      "points": [
+        "Prim 算法每轮选点的依据",
+        "Kruskal 算法与并查集的配合"
+      ]
+    },
+    {
+      "id": "ds-shortest-path",
+      "deckId": "ds",
+      "name": "最短路径",
+      "points": [
+        "Dijkstra 不适用于负权边的原因",
+        "Floyd 算法的状态转移与复杂度"
+      ]
+    },
+    {
+      "id": "ds-sort-basic",
+      "deckId": "ds",
+      "name": "插入类与交换类排序",
+      "points": [
+        "直接插入排序最好与最坏情况",
+        "冒泡排序一趟后的确定位置"
+      ]
+    },
+    {
+      "id": "ds-sort-divide",
+      "deckId": "ds",
+      "name": "快速排序与归并排序",
+      "points": [
+        "快速排序划分后枢轴的位置",
+        "归并排序的空间复杂度"
+      ]
+    },
+    {
+      "id": "ds-sort-select",
+      "deckId": "ds",
+      "name": "选择类排序与堆排序",
+      "points": [
+        "堆排序建堆的时间复杂度",
+        "稳定性判断"
+      ]
+    },
+    {
+      "id": "ds-search",
+      "deckId": "ds",
+      "name": "查找与散列",
+      "points": [
+        "折半查找的判定树与比较次数",
+        "开放定址法的探测序列"
+      ]
+    },
+    {
+      "id": "co-data-representation",
+      "deckId": "co",
+      "name": "数据表示与运算",
+      "points": [
+        "补码表示范围与符号扩展",
+        "溢出判断与算术移位"
+      ]
+    },
+    {
+      "id": "co-alu",
+      "deckId": "co",
+      "name": "运算器与 ALU",
+      "points": [
+        "行波进位加法器的进位传播",
+        "标志寄存器中 CF 与 OF 的区别"
+      ]
+    },
+    {
+      "id": "co-cache-mapping",
+      "deckId": "co",
+      "name": "Cache 映射",
+      "points": [
+        "直接映射的主存块号拆分",
+        "组相联映射的组号计算"
+      ]
+    },
+    {
+      "id": "co-cache-performance",
+      "deckId": "co",
+      "name": "Cache 命中率",
+      "points": [
+        "命中率、缺失率与平均访问时间",
+        "写直达与写回策略的流量差异"
+      ]
+    },
+    {
+      "id": "co-main-memory",
+      "deckId": "co",
+      "name": "主存与存储器扩展",
+      "points": [
+        "位扩展与字扩展的芯片数量",
+        "存储容量与地址线数量换算"
+      ]
+    },
+    {
+      "id": "co-instruction",
+      "deckId": "co",
+      "name": "指令系统",
+      "points": [
+        "指令字长与操作码扩展",
+        "寻址方式的有效地址计算"
+      ]
+    },
+    {
+      "id": "co-pipeline",
+      "deckId": "co",
+      "name": "指令流水线",
+      "points": [
+        "流水线吞吐率与加速比计算",
+        "流水线周期与总执行时间"
+      ]
+    },
+    {
+      "id": "co-hazards",
+      "deckId": "co",
+      "name": "流水线冒险",
+      "points": [
+        "数据冒险的转发解决",
+        "控制冒险的延迟槽与预测"
+      ]
+    },
+    {
+      "id": "co-cpu",
+      "deckId": "co",
+      "name": "CPU 与控制器",
+      "points": [
+        "指令周期、机器周期与时钟周期",
+        "微程序控制与硬布线控制"
+      ]
+    },
+    {
+      "id": "co-bus",
+      "deckId": "co",
+      "name": "总线",
+      "points": [
+        "总线带宽与传输周期计算",
+        "同步总线与异步总线的握手"
+      ]
+    },
+    {
+      "id": "co-interrupt",
+      "deckId": "co",
+      "name": "中断与异常",
+      "points": [
+        "中断响应过程与断点保存",
+        "中断优先级与中断屏蔽"
+      ]
+    },
+    {
+      "id": "co-dma",
+      "deckId": "co",
+      "name": "DMA 与 I/O",
+      "points": [
+        "DMA 与中断方式的 CPU 开销差异",
+        "DMA 传送过程的所有权转移"
+      ]
+    },
+    {
+      "id": "co-storage",
+      "deckId": "co",
+      "name": "磁盘与 RAID",
+      "points": [
+        "磁盘容量、寻道与传输时间",
+        "RAID 0、1、5 的冗余与容量"
+      ]
+    },
+    {
+      "id": "co-multicore",
+      "deckId": "co",
+      "name": "多核与并行体系结构",
+      "points": [
+        "Cache 一致性的写无效协议",
+        "SIMD 与多核并行的区别"
+      ]
+    },
+    {
+      "id": "os-process-thread",
+      "deckId": "os",
+      "name": "进程与线程",
+      "points": [
+        "进程与线程的地址空间与资源差异",
+        "进程状态转换的合法边"
+      ]
+    },
+    {
+      "id": "os-scheduling",
+      "deckId": "os",
+      "name": "处理机调度",
+      "points": [
+        "FCFS、SJF、RR 的周转时间计算",
+        "抢占式与非抢占式调度差异"
+      ]
+    },
+    {
+      "id": "os-sync",
+      "deckId": "os",
+      "name": "同步与互斥",
+      "points": [
+        "临界区三条件的含义",
+        " Peterson 算法的进入与退出"
+      ]
+    },
+    {
+      "id": "os-semaphore",
+      "deckId": "os",
+      "name": "信号量",
+      "points": [
+        "P、V 操作对信号量值的影响",
+        "生产者消费者信号量的初值设置"
+      ]
+    },
+    {
+      "id": "os-deadlock",
+      "deckId": "os",
+      "name": "死锁",
+      "points": [
+        "死锁四个必要条件",
+        "资源分配图中的环与死锁关系"
+      ]
+    },
+    {
+      "id": "os-banker",
+      "deckId": "os",
+      "name": "银行家算法",
+      "points": [
+        "Need、Available 与 Work 的关系",
+        "安全序列的逐步判定"
+      ]
+    },
+    {
+      "id": "os-memory",
+      "deckId": "os",
+      "name": "连续内存管理",
+      "points": [
+        "首次适应与最佳适应的空闲区选择",
+        "内部碎片与外部碎片的来源"
+      ]
+    },
+    {
+      "id": "os-paging",
+      "deckId": "os",
+      "name": "分页与地址转换",
+      "points": [
+        "页号与页内偏移的位数拆分",
+        "二级页表的地址转换过程"
+      ]
+    },
+    {
+      "id": "os-page-replacement",
+      "deckId": "os",
+      "name": "虚拟内存与页面置换",
+      "points": [
+        "FIFO、LRU、OPT 的缺页次数",
+        "Belady 异常的出现条件"
+      ]
+    },
+    {
+      "id": "os-file-system",
+      "deckId": "os",
+      "name": "文件系统",
+      "points": [
+        "索引结点的作用与文件打开过程",
+        "目录项与索引结点的关系"
+      ]
+    },
+    {
+      "id": "os-disk-scheduling",
+      "deckId": "os",
+      "name": "磁盘调度",
+      "points": [
+        "FCFS、SSTF、SCAN 的磁头移动量",
+        "磁盘访问时间三段构成"
+      ]
+    },
+    {
+      "id": "os-io",
+      "deckId": "os",
+      "name": "I/O 管理",
+      "points": [
+        "缓冲技术减少等待的原因",
+        "SPOOLing 的输入井与输出井"
+      ]
+    },
+    {
+      "id": "os-protection",
+      "deckId": "os",
+      "name": "保护与安全",
+      "points": [
+        "用户态与内核态切换",
+        "访问控制矩阵与能力表"
+      ]
+    },
+    {
+      "id": "os-virtualization",
+      "deckId": "os",
+      "name": "虚拟化与容器",
+      "points": [
+        "虚拟机与容器的隔离边界",
+        "系统调用与硬件虚拟化支持"
+      ]
+    },
+    {
+      "id": "cn-model",
+      "deckId": "cn",
+      "name": "分层模型",
+      "points": [
+        "OSI 与 TCP/IP 层的对应",
+        "每层协议数据单元名称"
+      ]
+    },
+    {
+      "id": "cn-physical",
+      "deckId": "cn",
+      "name": "物理层与传输介质",
+      "points": [
+        "奈奎斯特与香农公式的适用条件",
+        "基带传输与频带传输"
+      ]
+    },
+    {
+      "id": "cn-framing",
+      "deckId": "cn",
+      "name": "数据链路层组帧",
+      "points": [
+        "字符填充与比特填充",
+        "透明传输的含义"
+      ]
+    },
+    {
+      "id": "cn-crc",
+      "deckId": "cn",
+      "name": "差错控制",
+      "points": [
+        "CRC 生成多项式的模 2 除法",
+        "海明码校验位数量与纠错范围"
+      ]
+    },
+    {
+      "id": "cn-ethernet",
+      "deckId": "cn",
+      "name": "以太网与交换",
+      "points": [
+        "CSMA/CD 的最短帧长与争用期",
+        "交换机自学习转发表"
+      ]
+    },
+    {
+      "id": "cn-network-layer",
+      "deckId": "cn",
+      "name": "网络层与 IPv4",
+      "points": [
+        "IPv4 首部字段与分片偏移",
+        "TTL 与首部校验和"
+      ]
+    },
+    {
+      "id": "cn-subnet",
+      "deckId": "cn",
+      "name": "子网划分与 CIDR",
+      "points": [
+        "子网掩码、网络地址与广播地址",
+        "可用主机数与子网数计算"
+      ]
+    },
+    {
+      "id": "cn-routing",
+      "deckId": "cn",
+      "name": "路由协议",
+      "points": [
+        "距离向量算法的收敛问题",
+        "OSPF 链路状态与区域"
+      ]
+    },
+    {
+      "id": "cn-transport",
+      "deckId": "cn",
+      "name": "UDP 与 TCP",
+      "points": [
+        "TCP 三次握手的序号与确认号",
+        "UDP 首部与无连接特性"
+      ]
+    },
+    {
+      "id": "cn-congestion",
+      "deckId": "cn",
+      "name": "TCP 可靠传输与拥塞控制",
+      "points": [
+        "慢开始、拥塞避免与快恢复",
+        "滑动窗口与超时重传"
+      ]
+    },
+    {
+      "id": "cn-application",
+      "deckId": "cn",
+      "name": "应用层协议",
+      "points": [
+        "DNS 递归查询与迭代查询",
+        "HTTP 请求响应与持久连接"
+      ]
+    },
+    {
+      "id": "cn-security",
+      "deckId": "cn",
+      "name": "网络安全",
+      "points": [
+        "对称加密与非对称加密的密钥用途",
+        "数字证书与数字签名"
+      ]
+    },
+    {
+      "id": "cn-wireless",
+      "deckId": "cn",
+      "name": "无线网络",
+      "points": [
+        "CSMA/CA 与 CSMA/CD 的差异",
+        "802.11 帧与接入点"
+      ]
+    },
+    {
+      "id": "cn-http",
+      "deckId": "cn",
+      "name": "Web 与 CDN",
+      "points": [
+        "Cookie 与 Session 的存储位置",
+        "CDN 就近访问与 DNS 调度"
+      ]
+    },
+    {
+      "id": "ai-ml-basics",
+      "deckId": "ai",
+      "name": "机器学习基本范式",
+      "points": [
+        "监督、无监督与强化学习的信号差异",
+        "训练集、验证集与测试集的职责"
+      ]
+    },
+    {
+      "id": "ai-metrics",
+      "deckId": "ai",
+      "name": "分类评价指标",
+      "points": [
+        "精确率、召回率与 F1 的计算",
+        "混淆矩阵中假阳性与假阴性"
+      ]
+    },
+    {
+      "id": "ai-regression",
+      "deckId": "ai",
+      "name": "回归与损失",
+      "points": [
+        "均方误差的梯度形式",
+        "线性回归的正则化"
+      ]
+    },
+    {
+      "id": "ai-regularization",
+      "deckId": "ai",
+      "name": "过拟合与正则化",
+      "points": [
+        "L1、L2 正则对参数的影响",
+        "训练误差下降但验证误差上升的含义"
+      ]
+    },
+    {
+      "id": "ai-neural-net",
+      "deckId": "ai",
+      "name": "神经网络基础",
+      "points": [
+        "反向传播的链式法则",
+        "激活函数与非线性表达"
+      ]
+    },
+    {
+      "id": "ai-attention",
+      "deckId": "ai",
+      "name": "注意力与 Transformer",
+      "points": [
+        "缩放点积注意力的 Q、K、V 角色",
+        "多头注意力与位置编码"
+      ]
+    },
+    {
+      "id": "ai-llm",
+      "deckId": "ai",
+      "name": "大语言模型",
+      "points": [
+        "预训练与指令微调的目标差异",
+        "上下文窗口与事实储存的边界"
+      ]
+    },
+    {
+      "id": "ai-evaluation",
+      "deckId": "ai",
+      "name": "模型评估与偏差",
+      "points": [
+        "数据泄漏的典型来源",
+        "类别不平衡下只看准确率的风险"
+      ]
+    },
+    {
+      "id": "agent-loop",
+      "deckId": "agent",
+      "name": "Agent 基本循环",
+      "points": [
+        "观察、思考、行动的闭环",
+        "终止条件与最大步数保护"
+      ]
+    },
+    {
+      "id": "agent-tools",
+      "deckId": "agent",
+      "name": "工具调用",
+      "points": [
+        "工具 schema 与参数校验",
+        "工具结果回填与错误恢复"
+      ]
+    },
+    {
+      "id": "agent-memory",
+      "deckId": "agent",
+      "name": "Agent 记忆",
+      "points": [
+        "短期上下文与长期记忆的区别",
+        "记忆写入、检索与遗忘策略"
+      ]
+    },
+    {
+      "id": "agent-planning",
+      "deckId": "agent",
+      "name": "规划与任务分解",
+      "points": [
+        "ReAct 循环中的推理与行动",
+        "计划重排与子任务依赖"
+      ]
+    },
+    {
+      "id": "agent-rag",
+      "deckId": "agent",
+      "name": "RAG",
+      "points": [
+        "文档切分、向量检索与生成",
+        "召回率与上下文噪声的权衡"
+      ]
+    },
+    {
+      "id": "agent-multi",
+      "deckId": "agent",
+      "name": "多 Agent 协作",
+      "points": [
+        "角色分工与消息传递",
+        "集中协调与去中心化协作"
+      ]
+    },
+    {
+      "id": "agent-safety",
+      "deckId": "agent",
+      "name": "Agent 安全",
+      "points": [
+        "最小权限与工具白名单",
+        "提示注入与不可信工具输出"
+      ]
+    },
+    {
+      "id": "agent-evaluation",
+      "deckId": "agent",
+      "name": "Agent 评估",
+      "points": [
+        "任务成功率、步骤数与成本指标",
+        "可复现实验与轨迹评估"
+      ]
+    }
+  ]
+}

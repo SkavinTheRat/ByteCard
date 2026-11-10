@@ -16,6 +16,7 @@ type SessionState = {
   correctCount: number;
   unsavedCount: number;
   aiRequestCount: number;
+  active: boolean;
   start: (queue: Card[]) => void;
   selectOption: (index: number) => void;
   setDraft: (draft: unknown) => void;
@@ -40,6 +41,7 @@ const initialSession = {
   correctCount: 0,
   unsavedCount: 0,
   aiRequestCount: 0,
+  active: false,
 };
 
 export const useSessionStore = create<SessionState>((set, get) => ({
@@ -49,6 +51,7 @@ export const useSessionStore = create<SessionState>((set, get) => ({
       ...initialSession,
       queue,
       startedAt: Date.now(),
+      active: queue.length > 0,
     });
   },
   selectOption: (index) => set({ draft: [index] }),
@@ -101,7 +104,7 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     const state = get();
     const nextIndex = state.index + 1;
     if (nextIndex >= state.queue.length) {
-      set({ index: state.queue.length });
+      set({ index: state.queue.length, active: false });
       return;
     }
     set({
@@ -113,7 +116,7 @@ export const useSessionStore = create<SessionState>((set, get) => ({
       result: null,
     });
   },
-  end: () => set({ index: get().queue.length }),
+  end: () => set({ index: get().queue.length, active: false }),
   consumeAIRequest: () => {
     const count = get().aiRequestCount;
     if (count >= MAX_AI_REQUESTS) {

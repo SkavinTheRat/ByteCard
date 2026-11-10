@@ -1,4 +1,5 @@
-import { Switch, Text, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, Switch, Text, View } from 'react-native';
 import { meStyles as styles } from './MeSettingsStyles';
 import { SettingsRow } from './SettingsRow';
 import { zh } from '@/i18n/zh';
@@ -36,6 +37,7 @@ export function MeLearningSettings({
   onDeck,
   onReminder,
 }: Props) {
+  const [guideOpen, setGuideOpen] = useState(false);
   return (
     <>
       <Text style={styles.group}>{zh.me.learning}</Text>
@@ -77,8 +79,18 @@ export function MeLearningSettings({
           }
           label={zh.me.reminder}
           last
-          value={reminderTime}
+          value={
+            reminderEnabled ? zh.reminder.enabledMaybeLate : `${reminderTime} · ${zh.reminder.disabled}`
+          }
         />
+        <View style={styles.guide}>
+          <Pressable accessibilityRole="button" onPress={() => setGuideOpen((value) => !value)}>
+            <Text style={styles.guideToggle}>
+              {guideOpen ? zh.reminder.collapse : zh.reminder.expand}
+            </Text>
+          </Pressable>
+          {guideOpen ? <Text style={styles.guideBody}>{zh.reminder.guideBody}</Text> : null}
+        </View>
       </View>
     </>
   );

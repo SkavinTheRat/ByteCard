@@ -18,9 +18,13 @@ export type CardRow = {
   code: string | null;
   options: string | null;
   answer: string;
+  payload: string;
   explain: string;
   tags: string;
   difficulty: number;
+  source: 'seed' | 'ai';
+  verified_at: string | null;
+  sort_order: number;
 };
 
 function parseStringArray(value: string | null, fallback: string[] = []): string[] {
@@ -63,6 +67,10 @@ export function mapCard(row: CardRow): Card {
     explain: row.explain,
     tags: parseStringArray(row.tags),
     difficulty: difficulty(row.difficulty),
+    payload: parsePayload(row.payload),
+    source: row.source,
+    verifiedAt: row.verified_at ?? undefined,
+    sortOrder: row.sort_order,
   };
   const options = parseStringArray(row.options);
   const answer = parseAnswer(row.answer);
@@ -94,6 +102,20 @@ export function mapCard(row: CardRow): Card {
       };
     }
   }
+  if (row.type === 'judge' && typeof answer === 'object' && answer !== null) {
+    const value = (answer as { value?: unknown }).value;
+    if (typeof value === 'boolean') {
+      return { ...base, type: 'judge', options: null, answer: { value } };
+    }
+  }
 
   throw new Error(`卡片 ${row.id} 的 JSON 字段无效`);
+}
+
+function parsePayload(value: string): Record<string, unknown> {
+  const parsed: unknown = JSON.parse(value || '{}');
+  if (typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)) {
+    return parsed as Record<string, unknown>;
+  }
+  return {};
 }

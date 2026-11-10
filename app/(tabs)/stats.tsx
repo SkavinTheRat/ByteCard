@@ -16,6 +16,7 @@ import {
   getDailySeries,
   getDeckAccuracy,
   getStatsOverview,
+  getUnsupportedCardCount,
   getWrongCards,
   type DeckAccuracy,
   type StatsOverview,
@@ -23,12 +24,14 @@ import {
 import { zh } from '@/i18n/zh';
 import { colors, radius, space, stroke, type } from '@/theme';
 import type { DailyStat } from '@/types';
+import { findWeakestTopic } from '@/ai/topics';
 
 type StatsData = {
   overview: StatsOverview;
   daily: DailyStat[];
   decks: DeckAccuracy[];
   wrongCount: number;
+  unsupportedCount: number;
 };
 
 export default function StatsScreen() {
@@ -40,13 +43,20 @@ export default function StatsScreen() {
     setLoading(true);
     setFailed(false);
     try {
-      const [overview, daily, decks, wrong] = await Promise.all([
+      const [overview, daily, decks, wrong, unsupportedCount] = await Promise.all([
         getStatsOverview(),
         getDailySeries(35),
         getDeckAccuracy(),
         getWrongCards(999),
+        getUnsupportedCardCount(),
       ]);
-      setData({ overview, daily, decks, wrongCount: wrong.length });
+      setData({
+        overview,
+        daily,
+        decks,
+        wrongCount: wrong.length,
+        unsupportedCount,
+      });
     } catch (error: unknown) {
       console.warn('统计数据读取失败', error);
       setFailed(true);
@@ -60,6 +70,18 @@ export default function StatsScreen() {
       void load();
     }, [load]),
   );
+
+  async function generateForDeck(deckId: string) {
+    const topic = await findWeakestTopic(deckId);
+    router.push({
+      pathname: '/ai-card',
+      params: {
+        deckId,
+        topicId: topic?.id ?? '',
+        point: topic?.points[0] ?? '',
+      },
+    });
+  }
 
   const overview = data?.overview;
   const accuracyPercent =
@@ -116,7 +138,11 @@ export default function StatsScreen() {
           {data?.decks.length ? (
             <View style={styles.deckList}>
               {data.decks.map((deck) => (
-                <DeckAccuracyRow item={deck} key={deck.deckId} />
+                <DeckAccuracyRow
+                  item={deck}
+                  key={deck.deckId}
+                  onGenerate={() => void generateForDeck(deck.deckId)}
+                />
               ))}
             </View>
           ) : (
@@ -134,6 +160,11 @@ export default function StatsScreen() {
           </Text>
           <Ionicons color={colors.textMute} name="chevron-forward" size={18} />
         </Pressable>
+        {data?.unsupportedCount ? (
+          <Text style={styles.unsupported}>
+            {zh.stats.unsupported(data.unsupportedCount)}
+          </Text>
+        ) : null}
       </ScrollView>
     </Screen>
   );
@@ -193,4 +224,5 @@ const styles = StyleSheet.create({
     borderRadius: radius.sm,
   },
   error: { ...type.caption, color: colors.danger },
+  unsupported: { ...type.caption, color: colors.warning },
 });

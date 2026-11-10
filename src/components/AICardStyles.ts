@@ -1,0 +1,30 @@
+import { StyleSheet } from 'react-native';
+import { colors, radius, space, stroke, type } from '@/theme';
+
+export const aiCardStyles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: colors.bg },
+  flex: { flex: 1 },
+  center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: space.lg },
+  generating: { ...type.title, color: colors.text },
+  dots: { flexDirection: 'row', gap: space.sm },
+  dot: { width: 6, height: 6, borderRadius: radius.pill, backgroundColor: colors.primary },
+  hint: { ...type.micro, color: colors.textMute, textAlign: 'center' },
+  close: { position: 'absolute', top: space.xl, right: space.lg, padding: space.sm },
+  header: { minHeight: 56, paddingHorizontal: space.lg, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  headerTitle: { ...type.title, color: colors.text },
+  content: { padding: space.lg, gap: space.md, paddingBottom: space.xxxl },
+  meta: { flexDirection: 'row', gap: space.sm, flexWrap: 'wrap' },
+  metaText: { ...type.micro, color: colors.textMute },
+  explainPanel: { padding: space.lg, borderWidth: stroke.hair, borderColor: colors.border, borderRadius: radius.md, backgroundColor: colors.surface, gap: space.md },
+  result: { ...type.micro },
+  explain: { ...type.small, color: colors.text },
+  confirm: { borderTopWidth: stroke.hair, borderTopColor: colors.border, paddingTop: space.lg, gap: space.md },
+  confirmTitle: { ...type.small, color: colors.text },
+  confirmBody: { ...type.caption, color: colors.textDim },
+  secondary: { minHeight: 48, alignItems: 'center', justifyContent: 'center', borderWidth: stroke.hair, borderColor: colors.border, borderRadius: radius.md, backgroundColor: colors.surfaceAlt },
+  secondaryText: { ...type.small, color: colors.textDim },
+  bottomSpace: { backgroundColor: colors.bg },
+  errorWrap: { flex: 1, justifyContent: 'center', padding: space.xl, gap: space.lg },
+  errorTitle: { ...type.title, color: colors.text },
+  errorBody: { ...type.body, color: colors.textDim },
+});
