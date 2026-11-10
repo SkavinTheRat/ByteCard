@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "ByteCard",
+    "slug": "bytecard",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "scheme": "bytecard",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.bytecard.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#0A0D13",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": true
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0A0D13",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 180
+        }
+      ],
+      "expo-asset"
+    ]
+  }
+}

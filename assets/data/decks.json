@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "removed": [],
+  "minAppVersion": "1.0.0",
+  "decks": [
+    {
+      "id": "ds",
+      "name": "数据结构",
+      "code": "408-DS",
+      "description": "线性表、树、图、排序与查找",
+      "accent": "#22D3EE",
+      "sortOrder": 1
+    },
+    {
+      "id": "co",
+      "name": "计算机组成原理",
+      "code": "408-CO",
+      "description": "数据表示、Cache、指令、流水线与 I/O",
+      "accent": "#A78BFA",
+      "sortOrder": 2
+    },
+    {
+      "id": "os",
+      "name": "操作系统",
+      "code": "408-OS",
+      "description": "进程、同步、内存、文件与磁盘",
+      "accent": "#34D399",
+      "sortOrder": 3
+    },
+    {
+      "id": "cn",
+      "name": "计算机网络",
+      "code": "408-CN",
+      "description": "分层、传输、网络、路由与应用层",
+      "accent": "#FBBF24",
+      "sortOrder": 4
+    },
+    {
+      "id": "ai",
+      "name": "人工智能",
+      "code": "AI-BASE",
+      "description": "机器学习基础、神经网络与模型评价",
+      "accent": "#F472B6",
+      "sortOrder": 5
+    },
+    {
+      "id": "agent",
+      "name": "智能体",
+      "code": "AI-AGENT",
+      "description": "Agent、工具调用、记忆与 RAG",
+      "accent": "#60A5FA",
+      "sortOrder": 6
+    }
+  ]
+}
