@@ -1,5 +1,6 @@
 import { getSetting } from '@/db/repository';
 import { validateDraftCard, type DraftCard } from '@/utils/cardValidate';
+import { normalizeSingleAnswerPosition } from '@/utils/singleOptions';
 import { CARD_SYSTEM_PROMPT, buildCardGenerationPrompt } from './prompts';
 import { getTopic, listTopics } from './topics';
 
@@ -163,6 +164,10 @@ export async function generateCard(input: {
         message: validated.errors.join('；'),
       };
     }
+    const card =
+      validated.card.type === 'single'
+        ? normalizeSingleAnswerPosition(validated.card)
+        : validated.card;
     const usage = payload.usage
       ? {
           input: Number(payload.usage.prompt_tokens ?? 0),
@@ -171,7 +176,7 @@ export async function generateCard(input: {
           estimated: false,
         }
       : estimateUsage(userPrompt, content);
-    return { ok: true, card: validated.card, usage };
+    return { ok: true, card, usage };
   } catch (error) {
     if (input.signal?.aborted) {
       return { ok: false, reason: 'network', message: '已取消生成。' };

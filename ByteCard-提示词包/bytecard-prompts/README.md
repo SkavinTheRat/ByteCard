@@ -166,7 +166,7 @@ git init
 | 9   | `09-ai-card-generator.md` | App 里能按薄弱点让 AI 补卡，先答再收             | 中                  |
 | 10  | `10-extensibility.md`     | 加第 4 种题型（判断题）只需新建 1 个目录            | 小~中（取决于是否要重构）      |
 | 11  | `11-deck-distribution.md` | AI 卡能导出回电脑；加卡不用重新打包                | 中                  |
-| 12  | `12-android-coloros.md`   | APK 装到 OPPO 手机上，字体缩放/手势条/强制深色都不出问题 | 中                  |
+| 12  | `12-android-coloros.md`   | APK 装到 OPPO 手机上，字体缩放/手势条/强制深色都不出问题 |  中                 |
 
 **阶段 2 里有一个「停下来」的节点**：先只生成 `ds.json`（数据结构 20 张），
 你人工看一遍题目质量，确认风格 OK 再让它继续生成剩下 5 个包。

@@ -1,14 +1,19 @@
 import agentCards from '../../assets/data/cards/agent.json';
+import agentAdvancedCards from '../../assets/data/cards/agent-advanced.json';
+import agentBasicCards from '../../assets/data/cards/agent-basic.json';
 import aiCards from '../../assets/data/cards/ai.json';
 import cnCards from '../../assets/data/cards/cn.json';
 import coCards from '../../assets/data/cards/co.json';
 import dsCards from '../../assets/data/cards/ds.json';
+import llmAdvancedCards from '../../assets/data/cards/llm-advanced.json';
+import llmBasicCards from '../../assets/data/cards/llm-basic.json';
 import osCards from '../../assets/data/cards/os.json';
 import decksData from '../../assets/data/decks.json';
 import type { Card, Deck, DeckBundle } from '@/types';
 import { validateDecks } from './validateDecks';
 
 type DeckSeed = Omit<Deck, 'enabled'>;
+type CardGroup = { cards: unknown[] };
 
 type DeckMetadata = {
   version: number;
@@ -19,8 +24,21 @@ type DeckMetadata = {
 
 export function loadBundledDeck(): DeckBundle {
   const metadata = decksData as DeckMetadata;
-  const groups = [dsCards, coCards, osCards, cnCards, aiCards, agentCards];
-  const cards = groups.flatMap((group) => group.cards as unknown as Card[]);
+  const groups: Record<string, CardGroup> = {
+    ds: dsCards,
+    co: coCards,
+    os: osCards,
+    cn: cnCards,
+    ai: aiCards,
+    agent: agentCards,
+    'llm-basic': llmBasicCards,
+    'llm-advanced': llmAdvancedCards,
+    'agent-basic': agentBasicCards,
+    'agent-advanced': agentAdvancedCards,
+  };
+  const cards = metadata.decks.flatMap(
+    (deck) => (groups[deck.id]?.cards ?? []) as Card[],
+  );
   const bundle: DeckBundle = {
     version: metadata.version,
     removed: metadata.removed,

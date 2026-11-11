@@ -1,0 +1,6104 @@
+{
+  "cards": [
+    {
+      "id": "llm-basic-001",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「Query 的作用」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，Query 与所有 Key 计算相关性，再决定每个 Value 的权重，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，embedding 直接把 token id 变成最终词表概率，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Value 先与 Query 做 softmax，再决定 Key 的位置，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，点积乘以 sqrt(d_k) 会降低 softmax 的峰值，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "Query 与 Key 的点积产生匹配分数，softmax 把这些分数变成权重，随后对 Value 加权求和。 常见误区：把 Query 和 Value 混为一谈，会误以为 Query 本身保存了被汇总的信息。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "Query 的作用"
+      ],
+      "sortOrder": 1
+    },
+    {
+      "id": "llm-basic-002",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「Query 的作用」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，Value 按注意力权重加权求和形成输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Query 直接作为注意力层的最终输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，多个头在不同投影子空间中学习不同的相关性，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，因果掩码阻止当前位置看到未来 token，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。把 Query 和 Value 混为一谈，会误以为 Query 本身保存了被汇总的信息 正确理解是：Query 与所有 Key 计算相关性，再决定每个 Value 的权重。Query 与 Key 的点积产生匹配分数，softmax 把这些分数变成权重，随后对 Value 加权求和。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "Query 的作用"
+      ],
+      "sortOrder": 2
+    },
+    {
+      "id": "llm-basic-003",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：Query 与 Key 的点积产生匹配分数，softmax 把这些分数变成权重，随后对 Value 加权求和。 据此判断「Query 的作用」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "自注意力对任意序列都只需要 O(n) 时间且无需额外显存",
+        "自注意力天然知道 token 的绝对顺序，不需要位置编码",
+        "多个头等价于把词表扩大若干倍",
+        "Query 与所有 Key 计算相关性，再决定每个 Value 的权重",
+        "点积除以 sqrt(d_k) 可抑制维度增大带来的数值放大"
+      ],
+      "answer": {
+        "indices": [
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向Transformer 与注意力基础的机制与边界。Query 与 Key 的点积产生匹配分数，softmax 把这些分数变成权重，随后对 Value 加权求和。 常见误区：把 Query 和 Value 混为一谈，会误以为 Query 本身保存了被汇总的信息。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "Query 的作用",
+        "机制判断"
+      ],
+      "sortOrder": 3
+    },
+    {
+      "id": "llm-basic-004",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「把 Query 和 Value 混为一谈，会误以为 Query 本身保存了被汇总的信息」。为排除该误区，关于「Query 的作用」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "多个头在不同投影子空间中学习不同的相关性",
+        "自注意力天然知道 token 的绝对顺序，不需要位置编码",
+        "Query 与所有 Key 计算相关性，再决定每个 Value 的权重",
+        "自注意力对任意序列都只需要 O(n) 时间且无需额外显存",
+        "因果掩码阻止当前位置看到未来 token"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2,
+          4
+        ]
+      },
+      "explain": "正确项共同指向Transformer 与注意力基础的机制与边界。Query 与 Key 的点积产生匹配分数，softmax 把这些分数变成权重，随后对 Value 加权求和。 常见误区：把 Query 和 Value 混为一谈，会误以为 Query 本身保存了被汇总的信息。【扩展】形状检查：Q、K 为 [B,H,n,d_k] 时，QK^T 得到 [B,H,n,n]，再乘 V [B,H,n,d_v] 得到 [B,H,n,d_v]。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "Query 的作用",
+        "机制判断"
+      ],
+      "sortOrder": 4
+    },
+    {
+      "id": "llm-basic-005",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "Query 直接作为注意力层的最终输出",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：Query 与所有 Key 计算相关性，再决定每个 Value 的权重。Query 与 Key 的点积产生匹配分数，softmax 把这些分数变成权重，随后对 Value 加权求和。 常见误区：把 Query 和 Value 混为一谈，会误以为 Query 本身保存了被汇总的信息。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "Query 的作用",
+        "正误辨析"
+      ],
+      "sortOrder": 5
+    },
+    {
+      "id": "llm-basic-006",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「Key 的作用」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，自注意力天然知道 token 的绝对顺序，不需要位置编码，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Query 直接作为注意力层的最终输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Key 提供用于和 Query 匹配的索引表示，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，因果掩码只用于过滤批次中的 padding token，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "每个位置的 Key 与 Query 做点积，分数越高表示该位置越值得关注。Value 才承载最终被加权汇总的内容。 常见误区：把 Key 当作输出内容，会忽略分数与被汇总信息的分工。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "Key 的作用"
+      ],
+      "sortOrder": 6
+    },
+    {
+      "id": "llm-basic-007",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「Key 的作用」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，位置编码向模型注入 token 顺序信息，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，把离散 token id 映射为连续向量表示，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，多个头在不同投影子空间中学习不同的相关性，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Key 只负责保存位置编码，不参与注意力计算，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。把 Key 当作输出内容，会忽略分数与被汇总信息的分工 正确理解是：Key 提供用于和 Query 匹配的索引表示。每个位置的 Key 与 Query 做点积，分数越高表示该位置越值得关注。Value 才承载最终被加权汇总的内容。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "Key 的作用"
+      ],
+      "sortOrder": 7
+    },
+    {
+      "id": "llm-basic-008",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：每个位置的 Key 与 Query 做点积，分数越高表示该位置越值得关注。Value 才承载最终被加权汇总的内容。 据此判断「Key 的作用」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "Key 提供用于和 Query 匹配的索引表示",
+        "位置编码向模型注入 token 顺序信息",
+        "embedding 直接把 token id 变成最终词表概率",
+        "多个头在不同投影子空间中学习不同的相关性",
+        "自注意力对任意序列都只需要 O(n) 时间且无需额外显存"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          1,
+          3
+        ]
+      },
+      "explain": "正确项共同指向Transformer 与注意力基础的机制与边界。每个位置的 Key 与 Query 做点积，分数越高表示该位置越值得关注。Value 才承载最终被加权汇总的内容。 常见误区：把 Key 当作输出内容，会忽略分数与被汇总信息的分工。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "Key 的作用",
+        "机制判断"
+      ],
+      "sortOrder": 8
+    },
+    {
+      "id": "llm-basic-009",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「把 Key 当作输出内容，会忽略分数与被汇总信息的分工」。为排除该误区，关于「Key 的作用」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "自注意力对任意序列都只需要 O(n) 时间且无需额外显存",
+        "Key 提供用于和 Query 匹配的索引表示",
+        "因果掩码阻止当前位置看到未来 token",
+        "embedding 直接把 token id 变成最终词表概率",
+        "自注意力天然知道 token 的绝对顺序，不需要位置编码"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          2
+        ]
+      },
+      "explain": "正确项共同指向Transformer 与注意力基础的机制与边界。每个位置的 Key 与 Query 做点积，分数越高表示该位置越值得关注。Value 才承载最终被加权汇总的内容。 常见误区：把 Key 当作输出内容，会忽略分数与被汇总信息的分工。【扩展】形状检查：Q、K 为 [B,H,n,d_k] 时，QK^T 得到 [B,H,n,n]，再乘 V [B,H,n,d_v] 得到 [B,H,n,d_v]。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "Key 的作用",
+        "机制判断"
+      ],
+      "sortOrder": 9
+    },
+    {
+      "id": "llm-basic-010",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "Key 只负责保存位置编码，不参与注意力计算",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：Key 提供用于和 Query 匹配的索引表示。每个位置的 Key 与 Query 做点积，分数越高表示该位置越值得关注。Value 才承载最终被加权汇总的内容。 常见误区：把 Key 当作输出内容，会忽略分数与被汇总信息的分工。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "Key 的作用",
+        "正误辨析"
+      ],
+      "sortOrder": 10
+    },
+    {
+      "id": "llm-basic-011",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「Value 的作用」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，Value 按注意力权重加权求和形成输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Key 只负责保存位置编码，不参与注意力计算，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Query 直接作为注意力层的最终输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，多个头等价于把词表扩大若干倍，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "注意力权重作用在 Value 上，使输出成为多个位置内容的加权组合。Key 负责匹配，Value 负责提供内容。 常见误区：看到 V 就认为它只与位置编码有关，会漏掉输出聚合这一核心步骤。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "Value 的作用"
+      ],
+      "sortOrder": 11
+    },
+    {
+      "id": "llm-basic-012",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「Value 的作用」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，标准自注意力对长度 n 的序列需要 O(n^2) 的注意力分数计算，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Value 先与 Query 做 softmax，再决定 Key 的位置，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Query 与所有 Key 计算相关性，再决定每个 Value 的权重，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，点积除以 sqrt(d_k) 可抑制维度增大带来的数值放大，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。看到 V 就认为它只与位置编码有关，会漏掉输出聚合这一核心步骤 正确理解是：Value 按注意力权重加权求和形成输出。注意力权重作用在 Value 上，使输出成为多个位置内容的加权组合。Key 负责匹配，Value 负责提供内容。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "Value 的作用"
+      ],
+      "sortOrder": 12
+    },
+    {
+      "id": "llm-basic-013",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：注意力权重作用在 Value 上，使输出成为多个位置内容的加权组合。Key 负责匹配，Value 负责提供内容。 据此判断「Value 的作用」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "Query 直接作为注意力层的最终输出",
+        "自注意力对任意序列都只需要 O(n) 时间且无需额外显存",
+        "embedding 直接把 token id 变成最终词表概率",
+        "多个头在不同投影子空间中学习不同的相关性",
+        "Value 按注意力权重加权求和形成输出"
+      ],
+      "answer": {
+        "indices": [
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向Transformer 与注意力基础的机制与边界。注意力权重作用在 Value 上，使输出成为多个位置内容的加权组合。Key 负责匹配，Value 负责提供内容。 常见误区：看到 V 就认为它只与位置编码有关，会漏掉输出聚合这一核心步骤。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "Value 的作用",
+        "机制判断"
+      ],
+      "sortOrder": 13
+    },
+    {
+      "id": "llm-basic-014",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「看到 V 就认为它只与位置编码有关，会漏掉输出聚合这一核心步骤」。为排除该误区，关于「Value 的作用」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "标准自注意力对长度 n 的序列需要 O(n^2) 的注意力分数计算",
+        "Query 直接作为注意力层的最终输出",
+        "位置编码向模型注入 token 顺序信息",
+        "Value 按注意力权重加权求和形成输出",
+        "embedding 直接把 token id 变成最终词表概率"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2,
+          3
+        ]
+      },
+      "explain": "正确项共同指向Transformer 与注意力基础的机制与边界。注意力权重作用在 Value 上，使输出成为多个位置内容的加权组合。Key 负责匹配，Value 负责提供内容。 常见误区：看到 V 就认为它只与位置编码有关，会漏掉输出聚合这一核心步骤。【扩展】形状检查：Q、K 为 [B,H,n,d_k] 时，QK^T 得到 [B,H,n,n]，再乘 V [B,H,n,d_v] 得到 [B,H,n,d_v]。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "Value 的作用",
+        "机制判断"
+      ],
+      "sortOrder": 14
+    },
+    {
+      "id": "llm-basic-015",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "Value 按注意力权重加权求和形成输出",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "注意力权重作用在 Value 上，使输出成为多个位置内容的加权组合。Key 负责匹配，Value 负责提供内容。 常见误区：看到 V 就认为它只与位置编码有关，会漏掉输出聚合这一核心步骤。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "Value 的作用",
+        "正误辨析"
+      ],
+      "sortOrder": 15
+    },
+    {
+      "id": "llm-basic-016",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「缩放点积注意力的缩放项」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，自注意力天然知道 token 的绝对顺序，不需要位置编码，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，自注意力对任意序列都只需要 O(n) 时间且无需额外显存，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，点积除以 sqrt(d_k) 可抑制维度增大带来的数值放大，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，embedding 直接把 token id 变成最终词表概率，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "Query 和 Key 的维度越大，点积方差通常越大；缩放后再做 softmax，可以减少分数进入饱和区。 常见误区：把缩放因子写成 1/d_k 或 sqrt(d_k)，会改变数值稳定性分析。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "缩放点积注意力的缩放项"
+      ],
+      "sortOrder": 16
+    },
+    {
+      "id": "llm-basic-017",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「缩放点积注意力的缩放项」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，Query 与所有 Key 计算相关性，再决定每个 Value 的权重，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Key 提供用于和 Query 匹配的索引表示，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，标准自注意力对长度 n 的序列需要 O(n^2) 的注意力分数计算，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，点积乘以 sqrt(d_k) 会降低 softmax 的峰值，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。把缩放因子写成 1/d_k 或 sqrt(d_k)，会改变数值稳定性分析 正确理解是：点积除以 sqrt(d_k) 可抑制维度增大带来的数值放大。Query 和 Key 的维度越大，点积方差通常越大；缩放后再做 softmax，可以减少分数进入饱和区。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "缩放点积注意力的缩放项"
+      ],
+      "sortOrder": 17
+    },
+    {
+      "id": "llm-basic-018",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：Query 和 Key 的维度越大，点积方差通常越大；缩放后再做 softmax，可以减少分数进入饱和区。 据此判断「缩放点积注意力的缩放项」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "把离散 token id 映射为连续向量表示",
+        "Query 直接作为注意力层的最终输出",
+        "Key 只负责保存位置编码，不参与注意力计算",
+        "点积除以 sqrt(d_k) 可抑制维度增大带来的数值放大",
+        "标准自注意力对长度 n 的序列需要 O(n^2) 的注意力分数计算"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向Transformer 与注意力基础的机制与边界。Query 和 Key 的维度越大，点积方差通常越大；缩放后再做 softmax，可以减少分数进入饱和区。 常见误区：把缩放因子写成 1/d_k 或 sqrt(d_k)，会改变数值稳定性分析。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "缩放点积注意力的缩放项",
+        "机制判断"
+      ],
+      "sortOrder": 18
+    },
+    {
+      "id": "llm-basic-019",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「把缩放因子写成 1/d_k 或 sqrt(d_k)，会改变数值稳定性分析」。为排除该误区，关于「缩放点积注意力的缩放项」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "Key 只负责保存位置编码，不参与注意力计算",
+        "位置编码向模型注入 token 顺序信息",
+        "embedding 直接把 token id 变成最终词表概率",
+        "Query 直接作为注意力层的最终输出",
+        "点积除以 sqrt(d_k) 可抑制维度增大带来的数值放大"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          4
+        ]
+      },
+      "explain": "正确项共同指向Transformer 与注意力基础的机制与边界。Query 和 Key 的维度越大，点积方差通常越大；缩放后再做 softmax，可以减少分数进入饱和区。 常见误区：把缩放因子写成 1/d_k 或 sqrt(d_k)，会改变数值稳定性分析。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "缩放点积注意力的缩放项",
+        "机制判断"
+      ],
+      "sortOrder": 19
+    },
+    {
+      "id": "llm-basic-020",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 3,
+      "question": "点积除以 sqrt(d_k) 可抑制维度增大带来的数值放大",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "Query 和 Key 的维度越大，点积方差通常越大；缩放后再做 softmax，可以减少分数进入饱和区。 常见误区：把缩放因子写成 1/d_k 或 sqrt(d_k)，会改变数值稳定性分析。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "缩放点积注意力的缩放项",
+        "正误辨析"
+      ],
+      "sortOrder": 20
+    },
+    {
+      "id": "llm-basic-021",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「因果掩码」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，因果掩码阻止当前位置看到未来 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Query 直接作为注意力层的最终输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，多个头等价于把词表扩大若干倍，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Key 只负责保存位置编码，不参与注意力计算，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "自回归训练需要保证第 t 个位置只能依赖 t 及之前的信息。实现时通常把未来位置的注意力分数置为负无穷。 常见误区：把 causal mask 与 padding mask 混用，会让模型训练时偷看答案。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "因果掩码"
+      ],
+      "sortOrder": 21
+    },
+    {
+      "id": "llm-basic-022",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 3,
+      "question": "关于「因果掩码」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，点积除以 sqrt(d_k) 可抑制维度增大带来的数值放大，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，因果掩码只用于过滤批次中的 padding token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Key 提供用于和 Query 匹配的索引表示，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，把离散 token id 映射为连续向量表示，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。把 causal mask 与 padding mask 混用，会让模型训练时偷看答案 正确理解是：因果掩码阻止当前位置看到未来 token。自回归训练需要保证第 t 个位置只能依赖 t 及之前的信息。实现时通常把未来位置的注意力分数置为负无穷。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "因果掩码"
+      ],
+      "sortOrder": 22
+    },
+    {
+      "id": "llm-basic-023",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：自回归训练需要保证第 t 个位置只能依赖 t 及之前的信息。实现时通常把未来位置的注意力分数置为负无穷。 据此判断「因果掩码」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "Key 只负责保存位置编码，不参与注意力计算",
+        "Value 先与 Query 做 softmax，再决定 Key 的位置",
+        "标准自注意力对长度 n 的序列需要 O(n^2) 的注意力分数计算",
+        "Query 直接作为注意力层的最终输出",
+        "因果掩码阻止当前位置看到未来 token"
+      ],
+      "answer": {
+        "indices": [
+          2,
+          4
+        ]
+      },
+      "explain": "正确项共同指向Transformer 与注意力基础的机制与边界。自回归训练需要保证第 t 个位置只能依赖 t 及之前的信息。实现时通常把未来位置的注意力分数置为负无穷。 常见误区：把 causal mask 与 padding mask 混用，会让模型训练时偷看答案。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "因果掩码",
+        "机制判断"
+      ],
+      "sortOrder": 23
+    },
+    {
+      "id": "llm-basic-024",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「把 causal mask 与 padding mask 混用，会让模型训练时偷看答案」。为排除该误区，关于「因果掩码」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "因果掩码阻止当前位置看到未来 token",
+        "Value 先与 Query 做 softmax，再决定 Key 的位置",
+        "把离散 token id 映射为连续向量表示",
+        "Key 只负责保存位置编码，不参与注意力计算",
+        "Query 与所有 Key 计算相关性，再决定每个 Value 的权重"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2,
+          4
+        ]
+      },
+      "explain": "正确项共同指向Transformer 与注意力基础的机制与边界。自回归训练需要保证第 t 个位置只能依赖 t 及之前的信息。实现时通常把未来位置的注意力分数置为负无穷。 常见误区：把 causal mask 与 padding mask 混用，会让模型训练时偷看答案。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "因果掩码",
+        "机制判断"
+      ],
+      "sortOrder": 24
+    },
+    {
+      "id": "llm-basic-025",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 2,
+      "question": "因果掩码只用于过滤批次中的 padding token",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：因果掩码阻止当前位置看到未来 token。自回归训练需要保证第 t 个位置只能依赖 t 及之前的信息。实现时通常把未来位置的注意力分数置为负无穷。 常见误区：把 causal mask 与 padding mask 混用，会让模型训练时偷看答案。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "因果掩码",
+        "正误辨析"
+      ],
+      "sortOrder": 25
+    },
+    {
+      "id": "llm-basic-026",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「多头注意力」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，Query 直接作为注意力层的最终输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，因果掩码只用于过滤批次中的 padding token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，多个头在不同投影子空间中学习不同的相关性，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Key 只负责保存位置编码，不参与注意力计算，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "多头注意力并行计算多组 Q、K、V，再把各头输出拼接并投影。它增加表示能力，不直接改变词表。 常见误区：认为头数越多必然越好，会忽略额外计算和过拟合风险。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "多头注意力"
+      ],
+      "sortOrder": 26
+    },
+    {
+      "id": "llm-basic-027",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「多头注意力」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，因果掩码阻止当前位置看到未来 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，位置编码向模型注入 token 顺序信息，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Value 按注意力权重加权求和形成输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，多个头等价于把词表扩大若干倍，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。认为头数越多必然越好，会忽略额外计算和过拟合风险 正确理解是：多个头在不同投影子空间中学习不同的相关性。多头注意力并行计算多组 Q、K、V，再把各头输出拼接并投影。它增加表示能力，不直接改变词表。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "多头注意力"
+      ],
+      "sortOrder": 27
+    },
+    {
+      "id": "llm-basic-028",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：多头注意力并行计算多组 Q、K、V，再把各头输出拼接并投影。它增加表示能力，不直接改变词表。 据此判断「多头注意力」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "多个头在不同投影子空间中学习不同的相关性",
+        "点积乘以 sqrt(d_k) 会降低 softmax 的峰值",
+        "Key 提供用于和 Query 匹配的索引表示",
+        "Value 先与 Query 做 softmax，再决定 Key 的位置",
+        "Query 与所有 Key 计算相关性，再决定每个 Value 的权重"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2,
+          4
+        ]
+      },
+      "explain": "正确项共同指向Transformer 与注意力基础的机制与边界。多头注意力并行计算多组 Q、K、V，再把各头输出拼接并投影。它增加表示能力，不直接改变词表。 常见误区：认为头数越多必然越好，会忽略额外计算和过拟合风险。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "多头注意力",
+        "机制判断"
+      ],
+      "sortOrder": 28
+    },
+    {
+      "id": "llm-basic-029",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「认为头数越多必然越好，会忽略额外计算和过拟合风险」。为排除该误区，关于「多头注意力」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "点积乘以 sqrt(d_k) 会降低 softmax 的峰值",
+        "Value 先与 Query 做 softmax，再决定 Key 的位置",
+        "把离散 token id 映射为连续向量表示",
+        "多个头在不同投影子空间中学习不同的相关性",
+        "Key 只负责保存位置编码，不参与注意力计算"
+      ],
+      "answer": {
+        "indices": [
+          2,
+          3
+        ]
+      },
+      "explain": "正确项共同指向Transformer 与注意力基础的机制与边界。多头注意力并行计算多组 Q、K、V，再把各头输出拼接并投影。它增加表示能力，不直接改变词表。 常见误区：认为头数越多必然越好，会忽略额外计算和过拟合风险。【扩展】形状检查：Q、K 为 [B,H,n,d_k] 时，QK^T 得到 [B,H,n,n]，再乘 V [B,H,n,d_v] 得到 [B,H,n,d_v]。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "多头注意力",
+        "机制判断"
+      ],
+      "sortOrder": 29
+    },
+    {
+      "id": "llm-basic-030",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "多个头等价于把词表扩大若干倍",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：多个头在不同投影子空间中学习不同的相关性。多头注意力并行计算多组 Q、K、V，再把各头输出拼接并投影。它增加表示能力，不直接改变词表。 常见误区：认为头数越多必然越好，会忽略额外计算和过拟合风险。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "多头注意力",
+        "正误辨析"
+      ],
+      "sortOrder": 30
+    },
+    {
+      "id": "llm-basic-031",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「位置编码」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，位置编码向模型注入 token 顺序信息，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Key 只负责保存位置编码，不参与注意力计算，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，多个头等价于把词表扩大若干倍，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Query 直接作为注意力层的最终输出，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "自注意力对输入排列并不敏感，若不提供位置信息，交换 token 顺序可能得到相近的注意力结构。位置编码用于打破这种对称性。 常见误区：只记住 RoPE 的名称却不理解自注意力的顺序不变性，容易误判其必要性。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "位置编码"
+      ],
+      "sortOrder": 31
+    },
+    {
+      "id": "llm-basic-032",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「位置编码」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，标准自注意力对长度 n 的序列需要 O(n^2) 的注意力分数计算，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，自注意力天然知道 token 的绝对顺序，不需要位置编码，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，点积除以 sqrt(d_k) 可抑制维度增大带来的数值放大，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Key 提供用于和 Query 匹配的索引表示，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。只记住 RoPE 的名称却不理解自注意力的顺序不变性，容易误判其必要性 正确理解是：位置编码向模型注入 token 顺序信息。自注意力对输入排列并不敏感，若不提供位置信息，交换 token 顺序可能得到相近的注意力结构。位置编码用于打破这种对称性。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "位置编码"
+      ],
+      "sortOrder": 32
+    },
+    {
+      "id": "llm-basic-033",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：自注意力对输入排列并不敏感，若不提供位置信息，交换 token 顺序可能得到相近的注意力结构。位置编码用于打破这种对称性。 据此判断「位置编码」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "位置编码向模型注入 token 顺序信息",
+        "Value 先与 Query 做 softmax，再决定 Key 的位置",
+        "Query 与所有 Key 计算相关性，再决定每个 Value 的权重",
+        "因果掩码只用于过滤批次中的 padding token",
+        "点积乘以 sqrt(d_k) 会降低 softmax 的峰值"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2
+        ]
+      },
+      "explain": "正确项共同指向Transformer 与注意力基础的机制与边界。自注意力对输入排列并不敏感，若不提供位置信息，交换 token 顺序可能得到相近的注意力结构。位置编码用于打破这种对称性。 常见误区：只记住 RoPE 的名称却不理解自注意力的顺序不变性，容易误判其必要性。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "位置编码",
+        "机制判断"
+      ],
+      "sortOrder": 33
+    },
+    {
+      "id": "llm-basic-034",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「只记住 RoPE 的名称却不理解自注意力的顺序不变性，容易误判其必要性」。为排除该误区，关于「位置编码」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "Key 提供用于和 Query 匹配的索引表示",
+        "点积乘以 sqrt(d_k) 会降低 softmax 的峰值",
+        "位置编码向模型注入 token 顺序信息",
+        "Value 按注意力权重加权求和形成输出",
+        "因果掩码只用于过滤批次中的 padding token"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2,
+          3
+        ]
+      },
+      "explain": "正确项共同指向Transformer 与注意力基础的机制与边界。自注意力对输入排列并不敏感，若不提供位置信息，交换 token 顺序可能得到相近的注意力结构。位置编码用于打破这种对称性。 常见误区：只记住 RoPE 的名称却不理解自注意力的顺序不变性，容易误判其必要性。【扩展】形状检查：Q、K 为 [B,H,n,d_k] 时，QK^T 得到 [B,H,n,n]，再乘 V [B,H,n,d_v] 得到 [B,H,n,d_v]。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "位置编码",
+        "机制判断"
+      ],
+      "sortOrder": 34
+    },
+    {
+      "id": "llm-basic-035",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "位置编码向模型注入 token 顺序信息",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "自注意力对输入排列并不敏感，若不提供位置信息，交换 token 顺序可能得到相近的注意力结构。位置编码用于打破这种对称性。 常见误区：只记住 RoPE 的名称却不理解自注意力的顺序不变性，容易误判其必要性。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "位置编码",
+        "正误辨析"
+      ],
+      "sortOrder": 35
+    },
+    {
+      "id": "llm-basic-036",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「自注意力的复杂度」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，Value 先与 Query 做 softmax，再决定 Key 的位置，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，点积乘以 sqrt(d_k) 会降低 softmax 的峰值，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，标准自注意力对长度 n 的序列需要 O(n^2) 的注意力分数计算，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，embedding 直接把 token id 变成最终词表概率，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "每个 token 通常要与所有 token 计算分数，因此注意力矩阵包含 n×n 个元素。长上下文的核心成本正来自这里。 常见误区：把 O(n^2) 只看成训练成本，会漏掉推理时的显存和带宽压力。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "自注意力的成本"
+      ],
+      "sortOrder": 36
+    },
+    {
+      "id": "llm-basic-037",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「自注意力的复杂度」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，点积除以 sqrt(d_k) 可抑制维度增大带来的数值放大，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，把离散 token id 映射为连续向量表示，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Key 提供用于和 Query 匹配的索引表示，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，自注意力对任意序列都只需要 O(n) 时间且无需额外显存，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。把 O(n^2) 只看成训练成本，会漏掉推理时的显存和带宽压力 正确理解是：标准自注意力对长度 n 的序列需要 O(n^2) 的注意力分数计算。每个 token 通常要与所有 token 计算分数，因此注意力矩阵包含 n×n 个元素。长上下文的核心成本正来自这里。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "自注意力的成本"
+      ],
+      "sortOrder": 37
+    },
+    {
+      "id": "llm-basic-038",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：每个 token 通常要与所有 token 计算分数，因此注意力矩阵包含 n×n 个元素。长上下文的核心成本正来自这里。 据此判断「自注意力的复杂度」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "Value 按注意力权重加权求和形成输出",
+        "标准自注意力对长度 n 的序列需要 O(n^2) 的注意力分数计算",
+        "多个头等价于把词表扩大若干倍",
+        "点积除以 sqrt(d_k) 可抑制维度增大带来的数值放大",
+        "因果掩码只用于过滤批次中的 padding token"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          1,
+          3
+        ]
+      },
+      "explain": "正确项共同指向Transformer 与注意力基础的机制与边界。每个 token 通常要与所有 token 计算分数，因此注意力矩阵包含 n×n 个元素。长上下文的核心成本正来自这里。 常见误区：把 O(n^2) 只看成训练成本，会漏掉推理时的显存和带宽压力。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "自注意力的成本",
+        "机制判断"
+      ],
+      "sortOrder": 38
+    },
+    {
+      "id": "llm-basic-039",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「把 O(n^2) 只看成训练成本，会漏掉推理时的显存和带宽压力」。为排除该误区，关于「自注意力的复杂度」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "点积乘以 sqrt(d_k) 会降低 softmax 的峰值",
+        "因果掩码只用于过滤批次中的 padding token",
+        "标准自注意力对长度 n 的序列需要 O(n^2) 的注意力分数计算",
+        "多个头等价于把词表扩大若干倍",
+        "Key 提供用于和 Query 匹配的索引表示"
+      ],
+      "answer": {
+        "indices": [
+          2,
+          4
+        ]
+      },
+      "explain": "正确项共同指向Transformer 与注意力基础的机制与边界。每个 token 通常要与所有 token 计算分数，因此注意力矩阵包含 n×n 个元素。长上下文的核心成本正来自这里。 常见误区：把 O(n^2) 只看成训练成本，会漏掉推理时的显存和带宽压力。【扩展】形状检查：Q、K 为 [B,H,n,d_k] 时，QK^T 得到 [B,H,n,n]，再乘 V [B,H,n,d_v] 得到 [B,H,n,d_v]。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "自注意力的成本",
+        "机制判断"
+      ],
+      "sortOrder": 39
+    },
+    {
+      "id": "llm-basic-040",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "标准自注意力对长度 n 的序列需要 O(n^2) 的注意力分数计算",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "每个 token 通常要与所有 token 计算分数，因此注意力矩阵包含 n×n 个元素。长上下文的核心成本正来自这里。 常见误区：把 O(n^2) 只看成训练成本，会漏掉推理时的显存和带宽压力。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "自注意力的成本",
+        "正误辨析"
+      ],
+      "sortOrder": 40
+    },
+    {
+      "id": "llm-basic-041",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「token embedding 的作用」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，把离散 token id 映射为连续向量表示，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Key 只负责保存位置编码，不参与注意力计算，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Query 直接作为注意力层的最终输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，因果掩码只用于过滤批次中的 padding token，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "embedding 是输入表示层，最终词表概率来自模型输出 logits 经过 softmax 或采样过程。两者处于不同阶段。 常见误区：看到 embedding 和 logits 都是向量，就误以为二者可以互相替代。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "token embedding 的作用"
+      ],
+      "sortOrder": 41
+    },
+    {
+      "id": "llm-basic-042",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「token embedding 的作用」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，点积除以 sqrt(d_k) 可抑制维度增大带来的数值放大，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，embedding 直接把 token id 变成最终词表概率，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，Query 与所有 Key 计算相关性，再决定每个 Value 的权重，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，标准自注意力对长度 n 的序列需要 O(n^2) 的注意力分数计算，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。看到 embedding 和 logits 都是向量，就误以为二者可以互相替代 正确理解是：把离散 token id 映射为连续向量表示。embedding 是输入表示层，最终词表概率来自模型输出 logits 经过 softmax 或采样过程。两者处于不同阶段。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "token embedding 的作用"
+      ],
+      "sortOrder": 42
+    },
+    {
+      "id": "llm-basic-043",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：embedding 是输入表示层，最终词表概率来自模型输出 logits 经过 softmax 或采样过程。两者处于不同阶段。 据此判断「token embedding 的作用」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "因果掩码只用于过滤批次中的 padding token",
+        "多个头等价于把词表扩大若干倍",
+        "Value 按注意力权重加权求和形成输出",
+        "自注意力天然知道 token 的绝对顺序，不需要位置编码",
+        "把离散 token id 映射为连续向量表示"
+      ],
+      "answer": {
+        "indices": [
+          2,
+          4
+        ]
+      },
+      "explain": "正确项共同指向Transformer 与注意力基础的机制与边界。embedding 是输入表示层，最终词表概率来自模型输出 logits 经过 softmax 或采样过程。两者处于不同阶段。 常见误区：看到 embedding 和 logits 都是向量，就误以为二者可以互相替代。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "token embedding 的作用",
+        "机制判断"
+      ],
+      "sortOrder": 43
+    },
+    {
+      "id": "llm-basic-044",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「看到 embedding 和 logits 都是向量，就误以为二者可以互相替代」。为排除该误区，关于「token embedding 的作用」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "因果掩码阻止当前位置看到未来 token",
+        "多个头等价于把词表扩大若干倍",
+        "把离散 token id 映射为连续向量表示",
+        "点积除以 sqrt(d_k) 可抑制维度增大带来的数值放大",
+        "自注意力天然知道 token 的绝对顺序，不需要位置编码"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2,
+          3
+        ]
+      },
+      "explain": "正确项共同指向Transformer 与注意力基础的机制与边界。embedding 是输入表示层，最终词表概率来自模型输出 logits 经过 softmax 或采样过程。两者处于不同阶段。 常见误区：看到 embedding 和 logits 都是向量，就误以为二者可以互相替代。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "token embedding 的作用",
+        "机制判断"
+      ],
+      "sortOrder": 44
+    },
+    {
+      "id": "llm-basic-045",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 3,
+      "question": "embedding 直接把 token id 变成最终词表概率",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：把离散 token id 映射为连续向量表示。embedding 是输入表示层，最终词表概率来自模型输出 logits 经过 softmax 或采样过程。两者处于不同阶段。 常见误区：看到 embedding 和 logits 都是向量，就误以为二者可以互相替代。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "Transformer 与注意力基础",
+        "token embedding 的作用",
+        "正误辨析"
+      ],
+      "sortOrder": 45
+    },
+    {
+      "id": "llm-basic-046",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「token 的含义」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，BPE 先训练神经网络再为每个句子生成 new token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，词表越大越省参数，因为每个 token 的向量维度会自动变小，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，token 是 tokenizer 切分文本后供模型处理的基本单位，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，perplexity 越高表示模型越确定且生成质量必然越好，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "token 粒度由 tokenizer 决定，可能是字、子词或短片段。不同 tokenizer 对同一文本会得到不同切分。 常见误区：把 token 当作固定字符数，会错误估算上下文长度和成本。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "token 的含义"
+      ],
+      "sortOrder": 46
+    },
+    {
+      "id": "llm-basic-047",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 3,
+      "question": "关于「token 的含义」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，重复数据会放大记忆和过拟合风险并影响泛化，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，BPE 反复合并语料中高频相邻符号对，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，交叉熵衡量预测分布与目标 token 分布的差距，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，token 必然等于一个完整英文单词或一个汉字，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。把 token 当作固定字符数，会错误估算上下文长度和成本 正确理解是：token 是 tokenizer 切分文本后供模型处理的基本单位。token 粒度由 tokenizer 决定，可能是字、子词或短片段。不同 tokenizer 对同一文本会得到不同切分。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "token 的含义"
+      ],
+      "sortOrder": 47
+    },
+    {
+      "id": "llm-basic-048",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：token 粒度由 tokenizer 决定，可能是字、子词或短片段。不同 tokenizer 对同一文本会得到不同切分。 据此判断「token 的含义」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "token 是 tokenizer 切分文本后供模型处理的基本单位",
+        "重复数据会放大记忆和过拟合风险并影响泛化",
+        "perplexity 越高表示模型越确定且生成质量必然越好",
+        "交叉熵衡量预测分布与目标 token 分布的差距",
+        "BPE 先训练神经网络再为每个句子生成 new token"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          1,
+          3
+        ]
+      },
+      "explain": "正确项共同指向预训练与 Tokenization的机制与边界。token 粒度由 tokenizer 决定，可能是字、子词或短片段。不同 tokenizer 对同一文本会得到不同切分。 常见误区：把 token 当作固定字符数，会错误估算上下文长度和成本。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "token 的含义",
+        "机制判断"
+      ],
+      "sortOrder": 48
+    },
+    {
+      "id": "llm-basic-049",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「把 token 当作固定字符数，会错误估算上下文长度和成本」。为排除该误区，关于「token 的含义」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "根据前文预测下一个 token",
+        "perplexity 越高表示模型越确定且生成质量必然越好",
+        "BPE 先训练神经网络再为每个句子生成 new token",
+        "训练数据重复只会减少磁盘空间，不影响模型行为",
+        "token 是 tokenizer 切分文本后供模型处理的基本单位"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          4
+        ]
+      },
+      "explain": "正确项共同指向预训练与 Tokenization的机制与边界。token 粒度由 tokenizer 决定，可能是字、子词或短片段。不同 tokenizer 对同一文本会得到不同切分。 常见误区：把 token 当作固定字符数，会错误估算上下文长度和成本。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "token 的含义",
+        "机制判断"
+      ],
+      "sortOrder": 49
+    },
+    {
+      "id": "llm-basic-050",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 2,
+      "question": "token 必然等于一个完整英文单词或一个汉字",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：token 是 tokenizer 切分文本后供模型处理的基本单位。token 粒度由 tokenizer 决定，可能是字、子词或短片段。不同 tokenizer 对同一文本会得到不同切分。 常见误区：把 token 当作固定字符数，会错误估算上下文长度和成本。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "token 的含义",
+        "正误辨析"
+      ],
+      "sortOrder": 50
+    },
+    {
+      "id": "llm-basic-051",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「BPE 的基本过程」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，BPE 反复合并语料中高频相邻符号对，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，根据完整句子预测被随机删除的中间 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，交叉熵只在预测概率恰好等于 1 时才下降，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，训练数据重复只会减少磁盘空间，不影响模型行为，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "BPE 从较小符号集合开始，按频率合并相邻符号，逐步形成子词。它依赖语料统计而非神经网络反向传播。 常见误区：把 BPE 与模型权重训练混在一起，会无法解释 tokenizer 的独立性。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "BPE 的基本过程"
+      ],
+      "sortOrder": 51
+    },
+    {
+      "id": "llm-basic-052",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「BPE 的基本过程」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，交叉熵衡量预测分布与目标 token 分布的差距，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，BPE 先训练神经网络再为每个句子生成 new token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，更大的词表通常缩短序列，但会增加 embedding 和输出层参数，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，token 是 tokenizer 切分文本后供模型处理的基本单位，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。把 BPE 与模型权重训练混在一起，会无法解释 tokenizer 的独立性 正确理解是：BPE 反复合并语料中高频相邻符号对。BPE 从较小符号集合开始，按频率合并相邻符号，逐步形成子词。它依赖语料统计而非神经网络反向传播。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "BPE 的基本过程"
+      ],
+      "sortOrder": 52
+    },
+    {
+      "id": "llm-basic-053",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：BPE 从较小符号集合开始，按频率合并相邻符号，逐步形成子词。它依赖语料统计而非神经网络反向传播。 据此判断「BPE 的基本过程」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "BPE 反复合并语料中高频相邻符号对",
+        "token 必然等于一个完整英文单词或一个汉字",
+        "perplexity 越高表示模型越确定且生成质量必然越好",
+        "词表越大越省参数，因为每个 token 的向量维度会自动变小",
+        "交叉熵衡量预测分布与目标 token 分布的差距"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          4
+        ]
+      },
+      "explain": "正确项共同指向预训练与 Tokenization的机制与边界。BPE 从较小符号集合开始，按频率合并相邻符号，逐步形成子词。它依赖语料统计而非神经网络反向传播。 常见误区：把 BPE 与模型权重训练混在一起，会无法解释 tokenizer 的独立性。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "BPE 的基本过程",
+        "机制判断"
+      ],
+      "sortOrder": 53
+    },
+    {
+      "id": "llm-basic-054",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「把 BPE 与模型权重训练混在一起，会无法解释 tokenizer 的独立性」。为排除该误区，关于「BPE 的基本过程」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "词表越大越省参数，因为每个 token 的向量维度会自动变小",
+        "token 必然等于一个完整英文单词或一个汉字",
+        "perplexity 可理解为模型在下一个 token 上的平均不确定程度",
+        "BPE 反复合并语料中高频相邻符号对",
+        "重复数据会放大记忆和过拟合风险并影响泛化"
+      ],
+      "answer": {
+        "indices": [
+          2,
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向预训练与 Tokenization的机制与边界。BPE 从较小符号集合开始，按频率合并相邻符号，逐步形成子词。它依赖语料统计而非神经网络反向传播。 常见误区：把 BPE 与模型权重训练混在一起，会无法解释 tokenizer 的独立性。【扩展】损失示例：loss=-log p(y_t|x_<t)。降低总分不代表每个长尾事实都被稳定学会。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "BPE 的基本过程",
+        "机制判断"
+      ],
+      "sortOrder": 54
+    },
+    {
+      "id": "llm-basic-055",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "BPE 反复合并语料中高频相邻符号对",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "BPE 从较小符号集合开始，按频率合并相邻符号，逐步形成子词。它依赖语料统计而非神经网络反向传播。 常见误区：把 BPE 与模型权重训练混在一起，会无法解释 tokenizer 的独立性。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "BPE 的基本过程",
+        "正误辨析"
+      ],
+      "sortOrder": 55
+    },
+    {
+      "id": "llm-basic-056",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「词表大小的影响」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，BPE 先训练神经网络再为每个句子生成 new token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，perplexity 越高表示模型越确定且生成质量必然越好，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，更大的词表通常缩短序列，但会增加 embedding 和输出层参数，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，token 必然等于一个完整英文单词或一个汉字，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "词表大小与隐藏维度共同决定 embedding 参数量。词表扩大可减少 token 数，却增加模型参数和 softmax 成本。 常见误区：只看到序列变短就断定总成本下降，会忽略输出层和表示层开销。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "词表大小的影响"
+      ],
+      "sortOrder": 56
+    },
+    {
+      "id": "llm-basic-057",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「词表大小的影响」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，token 是 tokenizer 切分文本后供模型处理的基本单位，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，perplexity 可理解为模型在下一个 token 上的平均不确定程度，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，交叉熵衡量预测分布与目标 token 分布的差距，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，词表越大越省参数，因为每个 token 的向量维度会自动变小，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。只看到序列变短就断定总成本下降，会忽略输出层和表示层开销 正确理解是：更大的词表通常缩短序列，但会增加 embedding 和输出层参数。词表大小与隐藏维度共同决定 embedding 参数量。词表扩大可减少 token 数，却增加模型参数和 softmax 成本。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "词表大小的影响"
+      ],
+      "sortOrder": 57
+    },
+    {
+      "id": "llm-basic-058",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：词表大小与隐藏维度共同决定 embedding 参数量。词表扩大可减少 token 数，却增加模型参数和 softmax 成本。 据此判断「词表大小的影响」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "perplexity 可理解为模型在下一个 token 上的平均不确定程度",
+        "token 是 tokenizer 切分文本后供模型处理的基本单位",
+        "BPE 先训练神经网络再为每个句子生成 new token",
+        "更大的词表通常缩短序列，但会增加 embedding 和输出层参数",
+        "根据完整句子预测被随机删除的中间 token"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          1,
+          3
+        ]
+      },
+      "explain": "正确项共同指向预训练与 Tokenization的机制与边界。词表大小与隐藏维度共同决定 embedding 参数量。词表扩大可减少 token 数，却增加模型参数和 softmax 成本。 常见误区：只看到序列变短就断定总成本下降，会忽略输出层和表示层开销。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "词表大小的影响",
+        "机制判断"
+      ],
+      "sortOrder": 58
+    },
+    {
+      "id": "llm-basic-059",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「只看到序列变短就断定总成本下降，会忽略输出层和表示层开销」。为排除该误区，关于「词表大小的影响」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "token 必然等于一个完整英文单词或一个汉字",
+        "重复数据会放大记忆和过拟合风险并影响泛化",
+        "更大的词表通常缩短序列，但会增加 embedding 和输出层参数",
+        "BPE 先训练神经网络再为每个句子生成 new token",
+        "根据完整句子预测被随机删除的中间 token"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          2
+        ]
+      },
+      "explain": "正确项共同指向预训练与 Tokenization的机制与边界。词表大小与隐藏维度共同决定 embedding 参数量。词表扩大可减少 token 数，却增加模型参数和 softmax 成本。 常见误区：只看到序列变短就断定总成本下降，会忽略输出层和表示层开销。【扩展】损失示例：loss=-log p(y_t|x_<t)。降低总分不代表每个长尾事实都被稳定学会。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "词表大小的影响",
+        "机制判断"
+      ],
+      "sortOrder": 59
+    },
+    {
+      "id": "llm-basic-060",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "更大的词表通常缩短序列，但会增加 embedding 和输出层参数",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "词表大小与隐藏维度共同决定 embedding 参数量。词表扩大可减少 token 数，却增加模型参数和 softmax 成本。 常见误区：只看到序列变短就断定总成本下降，会忽略输出层和表示层开销。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "词表大小的影响",
+        "正误辨析"
+      ],
+      "sortOrder": 60
+    },
+    {
+      "id": "llm-basic-061",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「causal language model 目标」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，根据前文预测下一个 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，训练数据重复只会减少磁盘空间，不影响模型行为，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，交叉熵只在预测概率恰好等于 1 时才下降，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，token 必然等于一个完整英文单词或一个汉字，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "因果语言模型训练时通常把下一个 token 作为标签，并让当前位置只能看到前文。这与双向掩码语言模型的目标不同。 常见误区：把 GPT 式因果目标和 BERT 式填空目标混用，会写错标签对齐。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "causal language model 目标"
+      ],
+      "sortOrder": 61
+    },
+    {
+      "id": "llm-basic-062",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「causal language model 目标」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，交叉熵衡量预测分布与目标 token 分布的差距，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，根据完整句子预测被随机删除的中间 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，重复数据会放大记忆和过拟合风险并影响泛化，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，BPE 反复合并语料中高频相邻符号对，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。把 GPT 式因果目标和 BERT 式填空目标混用，会写错标签对齐 正确理解是：根据前文预测下一个 token。因果语言模型训练时通常把下一个 token 作为标签，并让当前位置只能看到前文。这与双向掩码语言模型的目标不同。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "causal language model 目标"
+      ],
+      "sortOrder": 62
+    },
+    {
+      "id": "llm-basic-063",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：因果语言模型训练时通常把下一个 token 作为标签，并让当前位置只能看到前文。这与双向掩码语言模型的目标不同。 据此判断「causal language model 目标」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "perplexity 可理解为模型在下一个 token 上的平均不确定程度",
+        "根据前文预测下一个 token",
+        "词表越大越省参数，因为每个 token 的向量维度会自动变小",
+        "BPE 先训练神经网络再为每个句子生成 new token",
+        "交叉熵只在预测概率恰好等于 1 时才下降"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          1
+        ]
+      },
+      "explain": "正确项共同指向预训练与 Tokenization的机制与边界。因果语言模型训练时通常把下一个 token 作为标签，并让当前位置只能看到前文。这与双向掩码语言模型的目标不同。 常见误区：把 GPT 式因果目标和 BERT 式填空目标混用，会写错标签对齐。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "causal language model 目标",
+        "机制判断"
+      ],
+      "sortOrder": 63
+    },
+    {
+      "id": "llm-basic-064",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「把 GPT 式因果目标和 BERT 式填空目标混用，会写错标签对齐」。为排除该误区，关于「causal language model 目标」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "BPE 反复合并语料中高频相邻符号对",
+        "token 是 tokenizer 切分文本后供模型处理的基本单位",
+        "根据前文预测下一个 token",
+        "交叉熵只在预测概率恰好等于 1 时才下降",
+        "词表越大越省参数，因为每个 token 的向量维度会自动变小"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          1,
+          2
+        ]
+      },
+      "explain": "正确项共同指向预训练与 Tokenization的机制与边界。因果语言模型训练时通常把下一个 token 作为标签，并让当前位置只能看到前文。这与双向掩码语言模型的目标不同。 常见误区：把 GPT 式因果目标和 BERT 式填空目标混用，会写错标签对齐。【扩展】损失示例：loss=-log p(y_t|x_<t)。降低总分不代表每个长尾事实都被稳定学会。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "causal language model 目标",
+        "机制判断"
+      ],
+      "sortOrder": 64
+    },
+    {
+      "id": "llm-basic-065",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "根据完整句子预测被随机删除的中间 token",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：根据前文预测下一个 token。因果语言模型训练时通常把下一个 token 作为标签，并让当前位置只能看到前文。这与双向掩码语言模型的目标不同。 常见误区：把 GPT 式因果目标和 BERT 式填空目标混用，会写错标签对齐。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "causal language model 目标",
+        "正误辨析"
+      ],
+      "sortOrder": 65
+    },
+    {
+      "id": "llm-basic-066",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「交叉熵损失」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，训练数据重复只会减少磁盘空间，不影响模型行为，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，token 必然等于一个完整英文单词或一个汉字，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，交叉熵衡量预测分布与目标 token 分布的差距，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，根据完整句子预测被随机删除的中间 token，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "目标 token 的对数概率越高，交叉熵越低。训练通过反向传播提高正确 token 的概率。 常见误区：把 loss 低直接等同于模型全部能力提升，会忽略验证集和下游任务。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "交叉熵损失"
+      ],
+      "sortOrder": 66
+    },
+    {
+      "id": "llm-basic-067",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「交叉熵损失」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，重复数据会放大记忆和过拟合风险并影响泛化，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，根据前文预测下一个 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，BPE 反复合并语料中高频相邻符号对，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，交叉熵只在预测概率恰好等于 1 时才下降，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。把 loss 低直接等同于模型全部能力提升，会忽略验证集和下游任务 正确理解是：交叉熵衡量预测分布与目标 token 分布的差距。目标 token 的对数概率越高，交叉熵越低。训练通过反向传播提高正确 token 的概率。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "交叉熵损失"
+      ],
+      "sortOrder": 67
+    },
+    {
+      "id": "llm-basic-068",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：目标 token 的对数概率越高，交叉熵越低。训练通过反向传播提高正确 token 的概率。 据此判断「交叉熵损失」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "更大的词表通常缩短序列，但会增加 embedding 和输出层参数",
+        "BPE 反复合并语料中高频相邻符号对",
+        "训练数据重复只会减少磁盘空间，不影响模型行为",
+        "根据完整句子预测被随机删除的中间 token",
+        "交叉熵衡量预测分布与目标 token 分布的差距"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          1,
+          4
+        ]
+      },
+      "explain": "正确项共同指向预训练与 Tokenization的机制与边界。目标 token 的对数概率越高，交叉熵越低。训练通过反向传播提高正确 token 的概率。 常见误区：把 loss 低直接等同于模型全部能力提升，会忽略验证集和下游任务。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "交叉熵损失",
+        "机制判断"
+      ],
+      "sortOrder": 68
+    },
+    {
+      "id": "llm-basic-069",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「把 loss 低直接等同于模型全部能力提升，会忽略验证集和下游任务」。为排除该误区，关于「交叉熵损失」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "token 是 tokenizer 切分文本后供模型处理的基本单位",
+        "根据完整句子预测被随机删除的中间 token",
+        "训练数据重复只会减少磁盘空间，不影响模型行为",
+        "交叉熵衡量预测分布与目标 token 分布的差距",
+        "词表越大越省参数，因为每个 token 的向量维度会自动变小"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          3
+        ]
+      },
+      "explain": "正确项共同指向预训练与 Tokenization的机制与边界。目标 token 的对数概率越高，交叉熵越低。训练通过反向传播提高正确 token 的概率。 常见误区：把 loss 低直接等同于模型全部能力提升，会忽略验证集和下游任务。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "交叉熵损失",
+        "机制判断"
+      ],
+      "sortOrder": 69
+    },
+    {
+      "id": "llm-basic-070",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 3,
+      "question": "交叉熵只在预测概率恰好等于 1 时才下降",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：交叉熵衡量预测分布与目标 token 分布的差距。目标 token 的对数概率越高，交叉熵越低。训练通过反向传播提高正确 token 的概率。 常见误区：把 loss 低直接等同于模型全部能力提升，会忽略验证集和下游任务。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "交叉熵损失",
+        "正误辨析"
+      ],
+      "sortOrder": 70
+    },
+    {
+      "id": "llm-basic-071",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「训练数据重复」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，重复数据会放大记忆和过拟合风险并影响泛化，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，token 必然等于一个完整英文单词或一个汉字，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，根据完整句子预测被随机删除的中间 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，交叉熵只在预测概率恰好等于 1 时才下降，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "大规模重复样本会让模型更频繁看到相同模式，也可能抬高训练集表现而污染评估。去重是预训练数据治理的重要步骤。 常见误区：只看总 token 数而不看唯一文档数，会误判数据多样性。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "训练数据重复"
+      ],
+      "sortOrder": 71
+    },
+    {
+      "id": "llm-basic-072",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 3,
+      "question": "关于「训练数据重复」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，根据前文预测下一个 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，训练数据重复只会减少磁盘空间，不影响模型行为，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，BPE 反复合并语料中高频相邻符号对，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，交叉熵衡量预测分布与目标 token 分布的差距，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。只看总 token 数而不看唯一文档数，会误判数据多样性 正确理解是：重复数据会放大记忆和过拟合风险并影响泛化。大规模重复样本会让模型更频繁看到相同模式，也可能抬高训练集表现而污染评估。去重是预训练数据治理的重要步骤。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "训练数据重复"
+      ],
+      "sortOrder": 72
+    },
+    {
+      "id": "llm-basic-073",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：大规模重复样本会让模型更频繁看到相同模式，也可能抬高训练集表现而污染评估。去重是预训练数据治理的重要步骤。 据此判断「训练数据重复」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "重复数据会放大记忆和过拟合风险并影响泛化",
+        "根据完整句子预测被随机删除的中间 token",
+        "BPE 反复合并语料中高频相邻符号对",
+        "perplexity 越高表示模型越确定且生成质量必然越好",
+        "交叉熵只在预测概率恰好等于 1 时才下降"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2
+        ]
+      },
+      "explain": "正确项共同指向预训练与 Tokenization的机制与边界。大规模重复样本会让模型更频繁看到相同模式，也可能抬高训练集表现而污染评估。去重是预训练数据治理的重要步骤。 常见误区：只看总 token 数而不看唯一文档数，会误判数据多样性。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "训练数据重复",
+        "机制判断"
+      ],
+      "sortOrder": 73
+    },
+    {
+      "id": "llm-basic-074",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「只看总 token 数而不看唯一文档数，会误判数据多样性」。为排除该误区，关于「训练数据重复」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "更大的词表通常缩短序列，但会增加 embedding 和输出层参数",
+        "交叉熵只在预测概率恰好等于 1 时才下降",
+        "perplexity 越高表示模型越确定且生成质量必然越好",
+        "根据前文预测下一个 token",
+        "重复数据会放大记忆和过拟合风险并影响泛化"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向预训练与 Tokenization的机制与边界。大规模重复样本会让模型更频繁看到相同模式，也可能抬高训练集表现而污染评估。去重是预训练数据治理的重要步骤。 常见误区：只看总 token 数而不看唯一文档数，会误判数据多样性。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "训练数据重复",
+        "机制判断"
+      ],
+      "sortOrder": 74
+    },
+    {
+      "id": "llm-basic-075",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 2,
+      "question": "重复数据会放大记忆和过拟合风险并影响泛化",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "大规模重复样本会让模型更频繁看到相同模式，也可能抬高训练集表现而污染评估。去重是预训练数据治理的重要步骤。 常见误区：只看总 token 数而不看唯一文档数，会误判数据多样性。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "训练数据重复",
+        "正误辨析"
+      ],
+      "sortOrder": 75
+    },
+    {
+      "id": "llm-basic-076",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「perplexity 的含义」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，token 必然等于一个完整英文单词或一个汉字，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，词表越大越省参数，因为每个 token 的向量维度会自动变小，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，perplexity 可理解为模型在下一个 token 上的平均不确定程度，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，BPE 先训练神经网络再为每个句子生成 new token，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "perplexity 与平均负对数似然相关，数值越低通常表示对数据更确定。不同 tokenizer 的 token 单位不同，不能直接横比。 常见误区：跨 tokenizer 直接比较 perplexity，会得到没有意义的结论。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "perplexity 的含义"
+      ],
+      "sortOrder": 76
+    },
+    {
+      "id": "llm-basic-077",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「perplexity 的含义」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，交叉熵衡量预测分布与目标 token 分布的差距，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，更大的词表通常缩短序列，但会增加 embedding 和输出层参数，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，token 是 tokenizer 切分文本后供模型处理的基本单位，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，perplexity 越高表示模型越确定且生成质量必然越好，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。跨 tokenizer 直接比较 perplexity，会得到没有意义的结论 正确理解是：perplexity 可理解为模型在下一个 token 上的平均不确定程度。perplexity 与平均负对数似然相关，数值越低通常表示对数据更确定。不同 tokenizer 的 token 单位不同，不能直接横比。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "perplexity 的含义"
+      ],
+      "sortOrder": 77
+    },
+    {
+      "id": "llm-basic-078",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：perplexity 与平均负对数似然相关，数值越低通常表示对数据更确定。不同 tokenizer 的 token 单位不同，不能直接横比。 据此判断「perplexity 的含义」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "根据前文预测下一个 token",
+        "token 必然等于一个完整英文单词或一个汉字",
+        "perplexity 可理解为模型在下一个 token 上的平均不确定程度",
+        "交叉熵衡量预测分布与目标 token 分布的差距",
+        "训练数据重复只会减少磁盘空间，不影响模型行为"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2,
+          3
+        ]
+      },
+      "explain": "正确项共同指向预训练与 Tokenization的机制与边界。perplexity 与平均负对数似然相关，数值越低通常表示对数据更确定。不同 tokenizer 的 token 单位不同，不能直接横比。 常见误区：跨 tokenizer 直接比较 perplexity，会得到没有意义的结论。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "perplexity 的含义",
+        "机制判断"
+      ],
+      "sortOrder": 78
+    },
+    {
+      "id": "llm-basic-079",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「跨 tokenizer 直接比较 perplexity，会得到没有意义的结论」。为排除该误区，关于「perplexity 的含义」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "perplexity 可理解为模型在下一个 token 上的平均不确定程度",
+        "token 必然等于一个完整英文单词或一个汉字",
+        "训练数据重复只会减少磁盘空间，不影响模型行为",
+        "更大的词表通常缩短序列，但会增加 embedding 和输出层参数",
+        "交叉熵只在预测概率恰好等于 1 时才下降"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          3
+        ]
+      },
+      "explain": "正确项共同指向预训练与 Tokenization的机制与边界。perplexity 与平均负对数似然相关，数值越低通常表示对数据更确定。不同 tokenizer 的 token 单位不同，不能直接横比。 常见误区：跨 tokenizer 直接比较 perplexity，会得到没有意义的结论。【扩展】损失示例：loss=-log p(y_t|x_<t)。降低总分不代表每个长尾事实都被稳定学会。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "perplexity 的含义",
+        "机制判断"
+      ],
+      "sortOrder": 79
+    },
+    {
+      "id": "llm-basic-080",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "perplexity 可理解为模型在下一个 token 上的平均不确定程度",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "perplexity 与平均负对数似然相关，数值越低通常表示对数据更确定。不同 tokenizer 的 token 单位不同，不能直接横比。 常见误区：跨 tokenizer 直接比较 perplexity，会得到没有意义的结论。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "预训练与 Tokenization",
+        "perplexity 的含义",
+        "正误辨析"
+      ],
+      "sortOrder": 80
+    },
+    {
+      "id": "llm-basic-081",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「预训练与 SFT 的差异」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，预训练学习通用语言规律，SFT 用指令和回答示范调整行为，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，训练用一套模板、推理用另一套模板通常不会影响输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，必须对所有角色 token 使用不同损失函数，且无法屏蔽，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，SFT 数据越多越好，质量不会影响模型行为，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "SFT 通常在预训练模型上进行，用较小规模的指令样本教会模型遵循格式和任务要求。它不替代基础语言能力。 常见误区：把 SFT 当作预训练的同义词，会低估基础模型和数据的区别。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "预训练与 SFT 的差异"
+      ],
+      "sortOrder": 81
+    },
+    {
+      "id": "llm-basic-082",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「预训练与 SFT 的差异」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，过度窄域微调可能削弱基础模型的通用能力，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，SFT 会从零开始学习全部语言知识，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，训练和推理应使用一致的 chat template，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，少量高质量、多样的指令样本通常比大量噪声样本更可靠，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。把 SFT 当作预训练的同义词，会低估基础模型和数据的区别 正确理解是：预训练学习通用语言规律，SFT 用指令和回答示范调整行为。SFT 通常在预训练模型上进行，用较小规模的指令样本教会模型遵循格式和任务要求。它不替代基础语言能力。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "预训练与 SFT 的差异"
+      ],
+      "sortOrder": 82
+    },
+    {
+      "id": "llm-basic-083",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：SFT 通常在预训练模型上进行，用较小规模的指令样本教会模型遵循格式和任务要求。它不替代基础语言能力。 据此判断「预训练与 SFT 的差异」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "常见做法是屏蔽 system 和 user token，只训练回答部分",
+        "system、user、assistant 三种角色在训练中使用完全相同的损失权重",
+        "SFT 只会增加新知识，不会改变原有能力",
+        "训练用一套模板、推理用另一套模板通常不会影响输出",
+        "预训练学习通用语言规律，SFT 用指令和回答示范调整行为"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          4
+        ]
+      },
+      "explain": "正确项共同指向SFT 与后训练流程的机制与边界。SFT 通常在预训练模型上进行，用较小规模的指令样本教会模型遵循格式和任务要求。它不替代基础语言能力。 常见误区：把 SFT 当作预训练的同义词，会低估基础模型和数据的区别。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "预训练与 SFT 的差异",
+        "机制判断"
+      ],
+      "sortOrder": 83
+    },
+    {
+      "id": "llm-basic-084",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「把 SFT 当作预训练的同义词，会低估基础模型和数据的区别」。为排除该误区，关于「预训练与 SFT 的差异」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "预训练学习通用语言规律，SFT 用指令和回答示范调整行为",
+        "过度窄域微调可能削弱基础模型的通用能力",
+        "system、user、assistant 三种角色在训练中使用完全相同的损失权重",
+        "少量高质量、多样的指令样本通常比大量噪声样本更可靠",
+        "训练用一套模板、推理用另一套模板通常不会影响输出"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          1,
+          3
+        ]
+      },
+      "explain": "正确项共同指向SFT 与后训练流程的机制与边界。SFT 通常在预训练模型上进行，用较小规模的指令样本教会模型遵循格式和任务要求。它不替代基础语言能力。 常见误区：把 SFT 当作预训练的同义词，会低估基础模型和数据的区别。【扩展】标签示意：把 system 和 user 位置设为 -100，只在 assistant 回答 token 上计算交叉熵。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "预训练与 SFT 的差异",
+        "机制判断"
+      ],
+      "sortOrder": 84
+    },
+    {
+      "id": "llm-basic-085",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "SFT 会从零开始学习全部语言知识",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：预训练学习通用语言规律，SFT 用指令和回答示范调整行为。SFT 通常在预训练模型上进行，用较小规模的指令样本教会模型遵循格式和任务要求。它不替代基础语言能力。 常见误区：把 SFT 当作预训练的同义词，会低估基础模型和数据的区别。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "预训练与 SFT 的差异",
+        "正误辨析"
+      ],
+      "sortOrder": 85
+    },
+    {
+      "id": "llm-basic-086",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「对话角色」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，训练用一套模板、推理用另一套模板通常不会影响输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，必须对所有角色 token 使用不同损失函数，且无法屏蔽，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，system 约束全局行为，user 提供请求，assistant 给出回答，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，SFT 数据越多越好，质量不会影响模型行为，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "对话模板把不同角色编码成模型可识别的边界。推理和训练应使用一致的模板，否则角色边界会错位。 常见误区：把用户请求和助手回答拼在一起却不区分角色，会降低指令遵循稳定性。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "对话角色"
+      ],
+      "sortOrder": 86
+    },
+    {
+      "id": "llm-basic-087",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「对话角色」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，常见做法是屏蔽 system 和 user token，只训练回答部分，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，训练和推理应使用一致的 chat template，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，预训练学习通用语言规律，SFT 用指令和回答示范调整行为，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，system、user、assistant 三种角色在训练中使用完全相同的损失权重，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。把用户请求和助手回答拼在一起却不区分角色，会降低指令遵循稳定性 正确理解是：system 约束全局行为，user 提供请求，assistant 给出回答。对话模板把不同角色编码成模型可识别的边界。推理和训练应使用一致的模板，否则角色边界会错位。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "对话角色"
+      ],
+      "sortOrder": 87
+    },
+    {
+      "id": "llm-basic-088",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：对话模板把不同角色编码成模型可识别的边界。推理和训练应使用一致的模板，否则角色边界会错位。 据此判断「对话角色」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "system 约束全局行为，user 提供请求，assistant 给出回答",
+        "必须对所有角色 token 使用不同损失函数，且无法屏蔽",
+        "训练用一套模板、推理用另一套模板通常不会影响输出",
+        "过度窄域微调可能削弱基础模型的通用能力",
+        "预训练学习通用语言规律，SFT 用指令和回答示范调整行为"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向SFT 与后训练流程的机制与边界。对话模板把不同角色编码成模型可识别的边界。推理和训练应使用一致的模板，否则角色边界会错位。 常见误区：把用户请求和助手回答拼在一起却不区分角色，会降低指令遵循稳定性。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "对话角色",
+        "机制判断"
+      ],
+      "sortOrder": 88
+    },
+    {
+      "id": "llm-basic-089",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「把用户请求和助手回答拼在一起却不区分角色，会降低指令遵循稳定性」。为排除该误区，关于「对话角色」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "训练用一套模板、推理用另一套模板通常不会影响输出",
+        "system 约束全局行为，user 提供请求，assistant 给出回答",
+        "少量高质量、多样的指令样本通常比大量噪声样本更可靠",
+        "必须对所有角色 token 使用不同损失函数，且无法屏蔽",
+        "SFT 会从零开始学习全部语言知识"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          2
+        ]
+      },
+      "explain": "正确项共同指向SFT 与后训练流程的机制与边界。对话模板把不同角色编码成模型可识别的边界。推理和训练应使用一致的模板，否则角色边界会错位。 常见误区：把用户请求和助手回答拼在一起却不区分角色，会降低指令遵循稳定性。【扩展】标签示意：把 system 和 user 位置设为 -100，只在 assistant 回答 token 上计算交叉熵。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "对话角色",
+        "机制判断"
+      ],
+      "sortOrder": 89
+    },
+    {
+      "id": "llm-basic-090",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "system、user、assistant 三种角色在训练中使用完全相同的损失权重",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：system 约束全局行为，user 提供请求，assistant 给出回答。对话模板把不同角色编码成模型可识别的边界。推理和训练应使用一致的模板，否则角色边界会错位。 常见误区：把用户请求和助手回答拼在一起却不区分角色，会降低指令遵循稳定性。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "对话角色",
+        "正误辨析"
+      ],
+      "sortOrder": 90
+    },
+    {
+      "id": "llm-basic-091",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「chat template 一致性」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，训练和推理应使用一致的 chat template，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，必须对所有角色 token 使用不同损失函数，且无法屏蔽，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，SFT 只会增加新知识，不会改变原有能力，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，SFT 数据越多越好，质量不会影响模型行为，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "模板决定特殊 token、换行和角色边界。训练与部署不一致会让模型看到陌生格式，导致回答退化或格式错误。 常见误区：只关注文字内容而忽略特殊 token，是模板错配的常见来源。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "chat template 一致性"
+      ],
+      "sortOrder": 91
+    },
+    {
+      "id": "llm-basic-092",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「chat template 一致性」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，预训练学习通用语言规律，SFT 用指令和回答示范调整行为，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，训练用一套模板、推理用另一套模板通常不会影响输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，过度窄域微调可能削弱基础模型的通用能力，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，少量高质量、多样的指令样本通常比大量噪声样本更可靠，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。只关注文字内容而忽略特殊 token，是模板错配的常见来源 正确理解是：训练和推理应使用一致的 chat template。模板决定特殊 token、换行和角色边界。训练与部署不一致会让模型看到陌生格式，导致回答退化或格式错误。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "chat template 一致性"
+      ],
+      "sortOrder": 92
+    },
+    {
+      "id": "llm-basic-093",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：模板决定特殊 token、换行和角色边界。训练与部署不一致会让模型看到陌生格式，导致回答退化或格式错误。 据此判断「chat template 一致性」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "训练和推理应使用一致的 chat template",
+        "system、user、assistant 三种角色在训练中使用完全相同的损失权重",
+        "必须对所有角色 token 使用不同损失函数，且无法屏蔽",
+        "过度窄域微调可能削弱基础模型的通用能力",
+        "SFT 数据越多越好，质量不会影响模型行为"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          3
+        ]
+      },
+      "explain": "正确项共同指向SFT 与后训练流程的机制与边界。模板决定特殊 token、换行和角色边界。训练与部署不一致会让模型看到陌生格式，导致回答退化或格式错误。 常见误区：只关注文字内容而忽略特殊 token，是模板错配的常见来源。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "chat template 一致性",
+        "机制判断"
+      ],
+      "sortOrder": 93
+    },
+    {
+      "id": "llm-basic-094",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「只关注文字内容而忽略特殊 token，是模板错配的常见来源」。为排除该误区，关于「chat template 一致性」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "预训练学习通用语言规律，SFT 用指令和回答示范调整行为",
+        "system 约束全局行为，user 提供请求，assistant 给出回答",
+        "必须对所有角色 token 使用不同损失函数，且无法屏蔽",
+        "训练和推理应使用一致的 chat template",
+        "SFT 数据越多越好，质量不会影响模型行为"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          1,
+          3
+        ]
+      },
+      "explain": "正确项共同指向SFT 与后训练流程的机制与边界。模板决定特殊 token、换行和角色边界。训练与部署不一致会让模型看到陌生格式，导致回答退化或格式错误。 常见误区：只关注文字内容而忽略特殊 token，是模板错配的常见来源。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "chat template 一致性",
+        "机制判断"
+      ],
+      "sortOrder": 94
+    },
+    {
+      "id": "llm-basic-095",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 3,
+      "question": "训练和推理应使用一致的 chat template",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "模板决定特殊 token、换行和角色边界。训练与部署不一致会让模型看到陌生格式，导致回答退化或格式错误。 常见误区：只关注文字内容而忽略特殊 token，是模板错配的常见来源。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "chat template 一致性",
+        "正误辨析"
+      ],
+      "sortOrder": 95
+    },
+    {
+      "id": "llm-basic-096",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「只在 assistant token 上计算损失」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，SFT 数据越多越好，质量不会影响模型行为，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，system、user、assistant 三种角色在训练中使用完全相同的损失权重，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，常见做法是屏蔽 system 和 user token，只训练回答部分，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，训练用一套模板、推理用另一套模板通常不会影响输出，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "许多 SFT 实现把非回答位置的标签设为忽略值，让模型专注学习目标回答。具体做法可依任务变化，但 mask 必须与数据格式一致。 常见误区：mask 位置错一位会让模型学习用户问题或忽略回答。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "只在 assistant token 上计算损失"
+      ],
+      "sortOrder": 96
+    },
+    {
+      "id": "llm-basic-097",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 3,
+      "question": "关于「只在 assistant token 上计算损失」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，训练和推理应使用一致的 chat template，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，少量高质量、多样的指令样本通常比大量噪声样本更可靠，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，预训练学习通用语言规律，SFT 用指令和回答示范调整行为，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，必须对所有角色 token 使用不同损失函数，且无法屏蔽，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。mask 位置错一位会让模型学习用户问题或忽略回答 正确理解是：常见做法是屏蔽 system 和 user token，只训练回答部分。许多 SFT 实现把非回答位置的标签设为忽略值，让模型专注学习目标回答。具体做法可依任务变化，但 mask 必须与数据格式一致。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "只在 assistant token 上计算损失"
+      ],
+      "sortOrder": 97
+    },
+    {
+      "id": "llm-basic-098",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：许多 SFT 实现把非回答位置的标签设为忽略值，让模型专注学习目标回答。具体做法可依任务变化，但 mask 必须与数据格式一致。 据此判断「只在 assistant token 上计算损失」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "system 约束全局行为，user 提供请求，assistant 给出回答",
+        "SFT 数据越多越好，质量不会影响模型行为",
+        "SFT 只会增加新知识，不会改变原有能力",
+        "常见做法是屏蔽 system 和 user token，只训练回答部分",
+        "训练和推理应使用一致的 chat template"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向SFT 与后训练流程的机制与边界。许多 SFT 实现把非回答位置的标签设为忽略值，让模型专注学习目标回答。具体做法可依任务变化，但 mask 必须与数据格式一致。 常见误区：mask 位置错一位会让模型学习用户问题或忽略回答。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "只在 assistant token 上计算损失",
+        "机制判断"
+      ],
+      "sortOrder": 98
+    },
+    {
+      "id": "llm-basic-099",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「mask 位置错一位会让模型学习用户问题或忽略回答」。为排除该误区，关于「只在 assistant token 上计算损失」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "训练用一套模板、推理用另一套模板通常不会影响输出",
+        "预训练学习通用语言规律，SFT 用指令和回答示范调整行为",
+        "常见做法是屏蔽 system 和 user token，只训练回答部分",
+        "SFT 数据越多越好，质量不会影响模型行为",
+        "SFT 只会增加新知识，不会改变原有能力"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          2
+        ]
+      },
+      "explain": "正确项共同指向SFT 与后训练流程的机制与边界。许多 SFT 实现把非回答位置的标签设为忽略值，让模型专注学习目标回答。具体做法可依任务变化，但 mask 必须与数据格式一致。 常见误区：mask 位置错一位会让模型学习用户问题或忽略回答。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "只在 assistant token 上计算损失",
+        "机制判断"
+      ],
+      "sortOrder": 99
+    },
+    {
+      "id": "llm-basic-100",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 2,
+      "question": "必须对所有角色 token 使用不同损失函数，且无法屏蔽",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：常见做法是屏蔽 system 和 user token，只训练回答部分。许多 SFT 实现把非回答位置的标签设为忽略值，让模型专注学习目标回答。具体做法可依任务变化，但 mask 必须与数据格式一致。 常见误区：mask 位置错一位会让模型学习用户问题或忽略回答。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "只在 assistant token 上计算损失",
+        "正误辨析"
+      ],
+      "sortOrder": 100
+    },
+    {
+      "id": "llm-basic-101",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「SFT 数据质量」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，少量高质量、多样的指令样本通常比大量噪声样本更可靠，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，SFT 只会增加新知识，不会改变原有能力，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，必须对所有角色 token 使用不同损失函数，且无法屏蔽，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，训练用一套模板、推理用另一套模板通常不会影响输出，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "SFT 会模仿示范中的风格、错误和偏见。低质量数据会放大错误模式，因此清洗、去重和难例检查比单纯扩容更重要。 常见误区：只统计样本条数，会忽略重复、空回答和模板错误。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "SFT 数据质量"
+      ],
+      "sortOrder": 101
+    },
+    {
+      "id": "llm-basic-102",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「SFT 数据质量」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，预训练学习通用语言规律，SFT 用指令和回答示范调整行为，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，SFT 数据越多越好，质量不会影响模型行为，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，训练和推理应使用一致的 chat template，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，过度窄域微调可能削弱基础模型的通用能力，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。只统计样本条数，会忽略重复、空回答和模板错误 正确理解是：少量高质量、多样的指令样本通常比大量噪声样本更可靠。SFT 会模仿示范中的风格、错误和偏见。低质量数据会放大错误模式，因此清洗、去重和难例检查比单纯扩容更重要。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "SFT 数据质量"
+      ],
+      "sortOrder": 102
+    },
+    {
+      "id": "llm-basic-103",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：SFT 会模仿示范中的风格、错误和偏见。低质量数据会放大错误模式，因此清洗、去重和难例检查比单纯扩容更重要。 据此判断「SFT 数据质量」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "少量高质量、多样的指令样本通常比大量噪声样本更可靠",
+        "必须对所有角色 token 使用不同损失函数，且无法屏蔽",
+        "system 约束全局行为，user 提供请求，assistant 给出回答",
+        "SFT 只会增加新知识，不会改变原有能力",
+        "SFT 会从零开始学习全部语言知识"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2
+        ]
+      },
+      "explain": "正确项共同指向SFT 与后训练流程的机制与边界。SFT 会模仿示范中的风格、错误和偏见。低质量数据会放大错误模式，因此清洗、去重和难例检查比单纯扩容更重要。 常见误区：只统计样本条数，会忽略重复、空回答和模板错误。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "SFT 数据质量",
+        "机制判断"
+      ],
+      "sortOrder": 103
+    },
+    {
+      "id": "llm-basic-104",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「只统计样本条数，会忽略重复、空回答和模板错误」。为排除该误区，关于「SFT 数据质量」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "训练和推理应使用一致的 chat template",
+        "SFT 只会增加新知识，不会改变原有能力",
+        "少量高质量、多样的指令样本通常比大量噪声样本更可靠",
+        "SFT 会从零开始学习全部语言知识",
+        "常见做法是屏蔽 system 和 user token，只训练回答部分"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2,
+          4
+        ]
+      },
+      "explain": "正确项共同指向SFT 与后训练流程的机制与边界。SFT 会模仿示范中的风格、错误和偏见。低质量数据会放大错误模式，因此清洗、去重和难例检查比单纯扩容更重要。 常见误区：只统计样本条数，会忽略重复、空回答和模板错误。【扩展】标签示意：把 system 和 user 位置设为 -100，只在 assistant 回答 token 上计算交叉熵。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "SFT 数据质量",
+        "机制判断"
+      ],
+      "sortOrder": 104
+    },
+    {
+      "id": "llm-basic-105",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "少量高质量、多样的指令样本通常比大量噪声样本更可靠",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "SFT 会模仿示范中的风格、错误和偏见。低质量数据会放大错误模式，因此清洗、去重和难例检查比单纯扩容更重要。 常见误区：只统计样本条数，会忽略重复、空回答和模板错误。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "SFT 数据质量",
+        "正误辨析"
+      ],
+      "sortOrder": 105
+    },
+    {
+      "id": "llm-basic-106",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「灾难性遗忘」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，SFT 会从零开始学习全部语言知识，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，训练用一套模板、推理用另一套模板通常不会影响输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，过度窄域微调可能削弱基础模型的通用能力，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，SFT 数据越多越好，质量不会影响模型行为，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "参数更新可能让模型偏向训练分布，造成其他任务表现下降。混入通用数据、控制学习率和定期评测可缓解风险。 常见误区：只看目标任务提升就结束评估，会漏掉通用能力回退。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "灾难性遗忘"
+      ],
+      "sortOrder": 106
+    },
+    {
+      "id": "llm-basic-107",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「灾难性遗忘」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，预训练学习通用语言规律，SFT 用指令和回答示范调整行为，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，训练和推理应使用一致的 chat template，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，少量高质量、多样的指令样本通常比大量噪声样本更可靠，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，SFT 只会增加新知识，不会改变原有能力，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。只看目标任务提升就结束评估，会漏掉通用能力回退 正确理解是：过度窄域微调可能削弱基础模型的通用能力。参数更新可能让模型偏向训练分布，造成其他任务表现下降。混入通用数据、控制学习率和定期评测可缓解风险。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "灾难性遗忘"
+      ],
+      "sortOrder": 107
+    },
+    {
+      "id": "llm-basic-108",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：参数更新可能让模型偏向训练分布，造成其他任务表现下降。混入通用数据、控制学习率和定期评测可缓解风险。 据此判断「灾难性遗忘」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "常见做法是屏蔽 system 和 user token，只训练回答部分",
+        "SFT 会从零开始学习全部语言知识",
+        "system、user、assistant 三种角色在训练中使用完全相同的损失权重",
+        "少量高质量、多样的指令样本通常比大量噪声样本更可靠",
+        "过度窄域微调可能削弱基础模型的通用能力"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向SFT 与后训练流程的机制与边界。参数更新可能让模型偏向训练分布，造成其他任务表现下降。混入通用数据、控制学习率和定期评测可缓解风险。 常见误区：只看目标任务提升就结束评估，会漏掉通用能力回退。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "灾难性遗忘",
+        "机制判断"
+      ],
+      "sortOrder": 108
+    },
+    {
+      "id": "llm-basic-109",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「只看目标任务提升就结束评估，会漏掉通用能力回退」。为排除该误区，关于「灾难性遗忘」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "SFT 数据越多越好，质量不会影响模型行为",
+        "SFT 会从零开始学习全部语言知识",
+        "过度窄域微调可能削弱基础模型的通用能力",
+        "system、user、assistant 三种角色在训练中使用完全相同的损失权重",
+        "训练和推理应使用一致的 chat template"
+      ],
+      "answer": {
+        "indices": [
+          2,
+          4
+        ]
+      },
+      "explain": "正确项共同指向SFT 与后训练流程的机制与边界。参数更新可能让模型偏向训练分布，造成其他任务表现下降。混入通用数据、控制学习率和定期评测可缓解风险。 常见误区：只看目标任务提升就结束评估，会漏掉通用能力回退。【扩展】标签示意：把 system 和 user 位置设为 -100，只在 assistant 回答 token 上计算交叉熵。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "灾难性遗忘",
+        "机制判断"
+      ],
+      "sortOrder": 109
+    },
+    {
+      "id": "llm-basic-110",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "过度窄域微调可能削弱基础模型的通用能力",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "参数更新可能让模型偏向训练分布，造成其他任务表现下降。混入通用数据、控制学习率和定期评测可缓解风险。 常见误区：只看目标任务提升就结束评估，会漏掉通用能力回退。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "SFT 与后训练流程",
+        "灾难性遗忘",
+        "正误辨析"
+      ],
+      "sortOrder": 110
+    },
+    {
+      "id": "llm-basic-111",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「偏好对」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，偏好对记录同一提示下更受偏好的回答和被拒绝的回答，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，DPO 必须先运行 PPO 才能计算损失，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，RLHF 只需要收集偏好数据，不需要任何策略模型，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，奖励模型直接生成最终回答文本，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "偏好数据通常成对出现，chosen 表示更符合人类偏好的回答，rejected 表示较差回答。训练信号来自相对比较。 常见误区：把偏好对当成普通问答对，会丢失相对排序信息。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "偏好对"
+      ],
+      "sortOrder": 111
+    },
+    {
+      "id": "llm-basic-112",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「偏好对」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，DPO 直接用偏好对优化策略，不需要显式先训练奖励模型，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，偏好对只需要一个正确标签，不需要比较两个回答，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，典型 RLHF 包括 SFT、奖励建模和策略优化，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，奖励模型学习给回答质量打分，使偏好回答获得更高分数，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。把偏好对当成普通问答对，会丢失相对排序信息 正确理解是：偏好对记录同一提示下更受偏好的回答和被拒绝的回答。偏好数据通常成对出现，chosen 表示更符合人类偏好的回答，rejected 表示较差回答。训练信号来自相对比较。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "偏好对"
+      ],
+      "sortOrder": 112
+    },
+    {
+      "id": "llm-basic-113",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：偏好数据通常成对出现，chosen 表示更符合人类偏好的回答，rejected 表示较差回答。训练信号来自相对比较。 据此判断「偏好对」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "奖励模型直接生成最终回答文本",
+        "偏好对记录同一提示下更受偏好的回答和被拒绝的回答",
+        "DPO 必须先运行 PPO 才能计算损失",
+        "RLHF 只需要收集偏好数据，不需要任何策略模型",
+        "DPO 直接用偏好对优化策略，不需要显式先训练奖励模型"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          4
+        ]
+      },
+      "explain": "正确项共同指向RLHF、奖励模型与 DPO的机制与边界。偏好数据通常成对出现，chosen 表示更符合人类偏好的回答，rejected 表示较差回答。训练信号来自相对比较。 常见误区：把偏好对当成普通问答对，会丢失相对排序信息。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "偏好对",
+        "机制判断"
+      ],
+      "sortOrder": 113
+    },
+    {
+      "id": "llm-basic-114",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「把偏好对当成普通问答对，会丢失相对排序信息」。为排除该误区，关于「偏好对」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "典型 RLHF 包括 SFT、奖励建模和策略优化",
+        "奖励模型学习给回答质量打分，使偏好回答获得更高分数",
+        "奖励模型直接生成最终回答文本",
+        "DPO 必须先运行 PPO 才能计算损失",
+        "偏好对记录同一提示下更受偏好的回答和被拒绝的回答"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          1,
+          4
+        ]
+      },
+      "explain": "正确项共同指向RLHF、奖励模型与 DPO的机制与边界。偏好数据通常成对出现，chosen 表示更符合人类偏好的回答，rejected 表示较差回答。训练信号来自相对比较。 常见误区：把偏好对当成普通问答对，会丢失相对排序信息。【扩展】DPO 比较核心：log π(y_w|x)-log π(y_l|x) 与参考模型的同项差值。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "偏好对",
+        "机制判断"
+      ],
+      "sortOrder": 114
+    },
+    {
+      "id": "llm-basic-115",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "偏好对只需要一个正确标签，不需要比较两个回答",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：偏好对记录同一提示下更受偏好的回答和被拒绝的回答。偏好数据通常成对出现，chosen 表示更符合人类偏好的回答，rejected 表示较差回答。训练信号来自相对比较。 常见误区：把偏好对当成普通问答对，会丢失相对排序信息。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "偏好对",
+        "正误辨析"
+      ],
+      "sortOrder": 115
+    },
+    {
+      "id": "llm-basic-116",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「奖励模型」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，DPO 必须先运行 PPO 才能计算损失，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，偏好对只需要一个正确标签，不需要比较两个回答，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，奖励模型学习给回答质量打分，使偏好回答获得更高分数，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，RLHF 只需要收集偏好数据，不需要任何策略模型，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "奖励模型通常以语言模型为骨干，在回答末尾输出标量分数。它服务于偏好优化，不负责替代生成模型。 常见误区：把 reward model 与 policy model 混用，会无法解释 RLHF 的多个阶段。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "奖励模型"
+      ],
+      "sortOrder": 116
+    },
+    {
+      "id": "llm-basic-117",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「奖励模型」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，典型 RLHF 包括 SFT、奖励建模和策略优化，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，偏好对记录同一提示下更受偏好的回答和被拒绝的回答，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，DPO 直接用偏好对优化策略，不需要显式先训练奖励模型，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，奖励模型直接生成最终回答文本，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。把 reward model 与 policy model 混用，会无法解释 RLHF 的多个阶段 正确理解是：奖励模型学习给回答质量打分，使偏好回答获得更高分数。奖励模型通常以语言模型为骨干，在回答末尾输出标量分数。它服务于偏好优化，不负责替代生成模型。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "奖励模型"
+      ],
+      "sortOrder": 117
+    },
+    {
+      "id": "llm-basic-118",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：奖励模型通常以语言模型为骨干，在回答末尾输出标量分数。它服务于偏好优化，不负责替代生成模型。 据此判断「奖励模型」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "RLHF 只需要收集偏好数据，不需要任何策略模型",
+        "典型 RLHF 包括 SFT、奖励建模和策略优化",
+        "奖励模型学习给回答质量打分，使偏好回答获得更高分数",
+        "偏好对只需要一个正确标签，不需要比较两个回答",
+        "DPO 直接用偏好对优化策略，不需要显式先训练奖励模型"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          2,
+          4
+        ]
+      },
+      "explain": "正确项共同指向RLHF、奖励模型与 DPO的机制与边界。奖励模型通常以语言模型为骨干，在回答末尾输出标量分数。它服务于偏好优化，不负责替代生成模型。 常见误区：把 reward model 与 policy model 混用，会无法解释 RLHF 的多个阶段。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "奖励模型",
+        "机制判断"
+      ],
+      "sortOrder": 118
+    },
+    {
+      "id": "llm-basic-119",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「把 reward model 与 policy model 混用，会无法解释 RLHF 的多个阶段」。为排除该误区，关于「奖励模型」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "偏好对记录同一提示下更受偏好的回答和被拒绝的回答",
+        "DPO 必须先运行 PPO 才能计算损失",
+        "偏好对只需要一个正确标签，不需要比较两个回答",
+        "RLHF 只需要收集偏好数据，不需要任何策略模型",
+        "奖励模型学习给回答质量打分，使偏好回答获得更高分数"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          4
+        ]
+      },
+      "explain": "正确项共同指向RLHF、奖励模型与 DPO的机制与边界。奖励模型通常以语言模型为骨干，在回答末尾输出标量分数。它服务于偏好优化，不负责替代生成模型。 常见误区：把 reward model 与 policy model 混用，会无法解释 RLHF 的多个阶段。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "奖励模型",
+        "机制判断"
+      ],
+      "sortOrder": 119
+    },
+    {
+      "id": "llm-basic-120",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 3,
+      "question": "奖励模型直接生成最终回答文本",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：奖励模型学习给回答质量打分，使偏好回答获得更高分数。奖励模型通常以语言模型为骨干，在回答末尾输出标量分数。它服务于偏好优化，不负责替代生成模型。 常见误区：把 reward model 与 policy model 混用，会无法解释 RLHF 的多个阶段。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "奖励模型",
+        "正误辨析"
+      ],
+      "sortOrder": 120
+    },
+    {
+      "id": "llm-basic-121",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「RLHF 三阶段」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，典型 RLHF 包括 SFT、奖励建模和策略优化，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，奖励模型直接生成最终回答文本，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，DPO 必须先运行 PPO 才能计算损失，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，偏好对只需要一个正确标签，不需要比较两个回答，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "先得到基础指令模型，再训练奖励模型，最后用强化学习优化策略并约束其不要偏离参考模型。 常见误区：认为 RLHF 是一轮监督微调，会漏掉奖励和策略优化的关系。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "RLHF 三阶段"
+      ],
+      "sortOrder": 121
+    },
+    {
+      "id": "llm-basic-122",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 3,
+      "question": "关于「RLHF 三阶段」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，偏好对记录同一提示下更受偏好的回答和被拒绝的回答，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，RLHF 只需要收集偏好数据，不需要任何策略模型，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，DPO 直接用偏好对优化策略，不需要显式先训练奖励模型，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，奖励模型学习给回答质量打分，使偏好回答获得更高分数，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。认为 RLHF 是一轮监督微调，会漏掉奖励和策略优化的关系 正确理解是：典型 RLHF 包括 SFT、奖励建模和策略优化。先得到基础指令模型，再训练奖励模型，最后用强化学习优化策略并约束其不要偏离参考模型。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "RLHF 三阶段"
+      ],
+      "sortOrder": 122
+    },
+    {
+      "id": "llm-basic-123",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：先得到基础指令模型，再训练奖励模型，最后用强化学习优化策略并约束其不要偏离参考模型。 据此判断「RLHF 三阶段」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "典型 RLHF 包括 SFT、奖励建模和策略优化",
+        "DPO 必须先运行 PPO 才能计算损失",
+        "偏好对只需要一个正确标签，不需要比较两个回答",
+        "奖励模型学习给回答质量打分，使偏好回答获得更高分数",
+        "奖励模型直接生成最终回答文本"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          3
+        ]
+      },
+      "explain": "正确项共同指向RLHF、奖励模型与 DPO的机制与边界。先得到基础指令模型，再训练奖励模型，最后用强化学习优化策略并约束其不要偏离参考模型。 常见误区：认为 RLHF 是一轮监督微调，会漏掉奖励和策略优化的关系。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "RLHF 三阶段",
+        "机制判断"
+      ],
+      "sortOrder": 123
+    },
+    {
+      "id": "llm-basic-124",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「认为 RLHF 是一轮监督微调，会漏掉奖励和策略优化的关系」。为排除该误区，关于「RLHF 三阶段」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "DPO 必须先运行 PPO 才能计算损失",
+        "奖励模型直接生成最终回答文本",
+        "偏好对记录同一提示下更受偏好的回答和被拒绝的回答",
+        "典型 RLHF 包括 SFT、奖励建模和策略优化",
+        "DPO 直接用偏好对优化策略，不需要显式先训练奖励模型"
+      ],
+      "answer": {
+        "indices": [
+          2,
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向RLHF、奖励模型与 DPO的机制与边界。先得到基础指令模型，再训练奖励模型，最后用强化学习优化策略并约束其不要偏离参考模型。 常见误区：认为 RLHF 是一轮监督微调，会漏掉奖励和策略优化的关系。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "RLHF 三阶段",
+        "机制判断"
+      ],
+      "sortOrder": 124
+    },
+    {
+      "id": "llm-basic-125",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 2,
+      "question": "典型 RLHF 包括 SFT、奖励建模和策略优化",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "先得到基础指令模型，再训练奖励模型，最后用强化学习优化策略并约束其不要偏离参考模型。 常见误区：认为 RLHF 是一轮监督微调，会漏掉奖励和策略优化的关系。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "RLHF 三阶段",
+        "正误辨析"
+      ],
+      "sortOrder": 125
+    },
+    {
+      "id": "llm-basic-126",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「DPO 的核心直觉」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，偏好对只需要一个正确标签，不需要比较两个回答，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，RLHF 只需要收集偏好数据，不需要任何策略模型，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，DPO 直接用偏好对优化策略，不需要显式先训练奖励模型，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，奖励模型直接生成最终回答文本，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "DPO 通过偏好对构造 chosen 与 rejected 的相对概率目标，把奖励模型隐式纳入优化。它简化流程，但仍依赖数据质量。 常见误区：把 DPO 理解为无需偏好数据，是常见误解。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "DPO 的核心直觉"
+      ],
+      "sortOrder": 126
+    },
+    {
+      "id": "llm-basic-127",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「DPO 的核心直觉」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，偏好对记录同一提示下更受偏好的回答和被拒绝的回答，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，典型 RLHF 包括 SFT、奖励建模和策略优化，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，奖励模型学习给回答质量打分，使偏好回答获得更高分数，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，DPO 必须先运行 PPO 才能计算损失，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。把 DPO 理解为无需偏好数据，是常见误解 正确理解是：DPO 直接用偏好对优化策略，不需要显式先训练奖励模型。DPO 通过偏好对构造 chosen 与 rejected 的相对概率目标，把奖励模型隐式纳入优化。它简化流程，但仍依赖数据质量。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "DPO 的核心直觉"
+      ],
+      "sortOrder": 127
+    },
+    {
+      "id": "llm-basic-128",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：DPO 通过偏好对构造 chosen 与 rejected 的相对概率目标，把奖励模型隐式纳入优化。它简化流程，但仍依赖数据质量。 据此判断「DPO 的核心直觉」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "偏好对只需要一个正确标签，不需要比较两个回答",
+        "奖励模型学习给回答质量打分，使偏好回答获得更高分数",
+        "RLHF 只需要收集偏好数据，不需要任何策略模型",
+        "DPO 直接用偏好对优化策略，不需要显式先训练奖励模型",
+        "偏好对记录同一提示下更受偏好的回答和被拒绝的回答"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向RLHF、奖励模型与 DPO的机制与边界。DPO 通过偏好对构造 chosen 与 rejected 的相对概率目标，把奖励模型隐式纳入优化。它简化流程，但仍依赖数据质量。 常见误区：把 DPO 理解为无需偏好数据，是常见误解。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "DPO 的核心直觉",
+        "机制判断"
+      ],
+      "sortOrder": 128
+    },
+    {
+      "id": "llm-basic-129",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「把 DPO 理解为无需偏好数据，是常见误解」。为排除该误区，关于「DPO 的核心直觉」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "奖励模型直接生成最终回答文本",
+        "偏好对只需要一个正确标签，不需要比较两个回答",
+        "DPO 直接用偏好对优化策略，不需要显式先训练奖励模型",
+        "RLHF 只需要收集偏好数据，不需要任何策略模型",
+        "典型 RLHF 包括 SFT、奖励建模和策略优化"
+      ],
+      "answer": {
+        "indices": [
+          2,
+          4
+        ]
+      },
+      "explain": "正确项共同指向RLHF、奖励模型与 DPO的机制与边界。DPO 通过偏好对构造 chosen 与 rejected 的相对概率目标，把奖励模型隐式纳入优化。它简化流程，但仍依赖数据质量。 常见误区：把 DPO 理解为无需偏好数据，是常见误解。【扩展】DPO 比较核心：log π(y_w|x)-log π(y_l|x) 与参考模型的同项差值。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "DPO 的核心直觉",
+        "机制判断"
+      ],
+      "sortOrder": 129
+    },
+    {
+      "id": "llm-basic-130",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "DPO 直接用偏好对优化策略，不需要显式先训练奖励模型",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "DPO 通过偏好对构造 chosen 与 rejected 的相对概率目标，把奖励模型隐式纳入优化。它简化流程，但仍依赖数据质量。 常见误区：把 DPO 理解为无需偏好数据，是常见误解。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "RLHF、奖励模型与 DPO",
+        "DPO 的核心直觉",
+        "正误辨析"
+      ],
+      "sortOrder": 130
+    },
+    {
+      "id": "llm-basic-131",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「logits 的含义」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，logits 是 softmax 或采样前每个词表 token 的未归一化分数，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，通过提高所有已出现 token 的概率来增加多样性，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，只要提示相同，任何服务端并发请求都必然产生完全相同的文本，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，temperature 越高，模型越倾向选择最高概率 token，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "模型输出 logits 后，通过 softmax 得到概率，或经贪心、top-k、top-p 等策略选择 token。logits 本身不要求和为 1。 常见误区：把 logits 与概率混为一谈，会误判 temperature 的作用位置。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "logits 的含义"
+      ],
+      "sortOrder": 131
+    },
+    {
+      "id": "llm-basic-132",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「logits 的含义」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，在累积概率达到 p 的最小 token 集合中采样，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，logits 已经是归一化后的概率，所有值都在 0 到 1 之间，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，固定提示、模型、采样参数和随机种子有助于复现输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，temperature 调整概率分布的平滑或尖锐程度，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。把 logits 与概率混为一谈，会误判 temperature 的作用位置 正确理解是：logits 是 softmax 或采样前每个词表 token 的未归一化分数。模型输出 logits 后，通过 softmax 得到概率，或经贪心、top-k、top-p 等策略选择 token。logits 本身不要求和为 1。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "logits 的含义"
+      ],
+      "sortOrder": 132
+    },
+    {
+      "id": "llm-basic-133",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：模型输出 logits 后，通过 softmax 得到概率，或经贪心、top-k、top-p 等策略选择 token。logits 本身不要求和为 1。 据此判断「logits 的含义」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "只在概率最高的 k 个 token 中采样",
+        "通过提高所有已出现 token 的概率来增加多样性",
+        "只要提示相同，任何服务端并发请求都必然产生完全相同的文本",
+        "logits 是 softmax 或采样前每个词表 token 的未归一化分数",
+        "temperature 越高，模型越倾向选择最高概率 token"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          3
+        ]
+      },
+      "explain": "正确项共同指向推理流程与采样参数的机制与边界。模型输出 logits 后，通过 softmax 得到概率，或经贪心、top-k、top-p 等策略选择 token。logits 本身不要求和为 1。 常见误区：把 logits 与概率混为一谈，会误判 temperature 的作用位置。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "logits 的含义",
+        "机制判断"
+      ],
+      "sortOrder": 133
+    },
+    {
+      "id": "llm-basic-134",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「把 logits 与概率混为一谈，会误判 temperature 的作用位置」。为排除该误区，关于「logits 的含义」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "logits 是 softmax 或采样前每个词表 token 的未归一化分数",
+        "temperature 越高，模型越倾向选择最高概率 token",
+        "通过降低已出现 token 的分数减少重复",
+        "在累积概率达到 p 的最小 token 集合中采样",
+        "只要提示相同，任何服务端并发请求都必然产生完全相同的文本"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2,
+          3
+        ]
+      },
+      "explain": "正确项共同指向推理流程与采样参数的机制与边界。模型输出 logits 后，通过 softmax 得到概率，或经贪心、top-k、top-p 等策略选择 token。logits 本身不要求和为 1。 常见误区：把 logits 与概率混为一谈，会误判 temperature 的作用位置。【扩展】采样顺序：logits/τ -> softmax -> top-k或top-p截断 -> 重归一化 -> 抽样。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "logits 的含义",
+        "机制判断"
+      ],
+      "sortOrder": 134
+    },
+    {
+      "id": "llm-basic-135",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "logits 已经是归一化后的概率，所有值都在 0 到 1 之间",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：logits 是 softmax 或采样前每个词表 token 的未归一化分数。模型输出 logits 后，通过 softmax 得到概率，或经贪心、top-k、top-p 等策略选择 token。logits 本身不要求和为 1。 常见误区：把 logits 与概率混为一谈，会误判 temperature 的作用位置。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "logits 的含义",
+        "正误辨析"
+      ],
+      "sortOrder": 135
+    },
+    {
+      "id": "llm-basic-136",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「temperature 的作用」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，只要提示相同，任何服务端并发请求都必然产生完全相同的文本，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，通过提高所有已出现 token 的概率来增加多样性，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，temperature 调整概率分布的平滑或尖锐程度，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，始终保留固定数量的 k 个候选 token，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "较高 temperature 使分布更平坦、采样更随机；较低 temperature 使分布更尖锐、输出更确定。它不改变模型参数。 常见误区：把 temperature=0 当成有效的数学设置，会忽略实现通常使用贪心特判。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "temperature 的作用"
+      ],
+      "sortOrder": 136
+    },
+    {
+      "id": "llm-basic-137",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「temperature 的作用」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，在累积概率达到 p 的最小 token 集合中采样，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，logits 是 softmax 或采样前每个词表 token 的未归一化分数，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，固定提示、模型、采样参数和随机种子有助于复现输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，temperature 越高，模型越倾向选择最高概率 token，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。把 temperature=0 当成有效的数学设置，会忽略实现通常使用贪心特判 正确理解是：temperature 调整概率分布的平滑或尖锐程度。较高 temperature 使分布更平坦、采样更随机；较低 temperature 使分布更尖锐、输出更确定。它不改变模型参数。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "temperature 的作用"
+      ],
+      "sortOrder": 137
+    },
+    {
+      "id": "llm-basic-138",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：较高 temperature 使分布更平坦、采样更随机；较低 temperature 使分布更尖锐、输出更确定。它不改变模型参数。 据此判断「temperature 的作用」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "固定提示、模型、采样参数和随机种子有助于复现输出",
+        "每一步随机抽取全部词表中的 token",
+        "temperature 调整概率分布的平滑或尖锐程度",
+        "通过降低已出现 token 的分数减少重复",
+        "logits 已经是归一化后的概率，所有值都在 0 到 1 之间"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2,
+          3
+        ]
+      },
+      "explain": "正确项共同指向推理流程与采样参数的机制与边界。较高 temperature 使分布更平坦、采样更随机；较低 temperature 使分布更尖锐、输出更确定。它不改变模型参数。 常见误区：把 temperature=0 当成有效的数学设置，会忽略实现通常使用贪心特判。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "temperature 的作用",
+        "机制判断"
+      ],
+      "sortOrder": 138
+    },
+    {
+      "id": "llm-basic-139",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「把 temperature=0 当成有效的数学设置，会忽略实现通常使用贪心特判」。为排除该误区，关于「temperature 的作用」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "logits 已经是归一化后的概率，所有值都在 0 到 1 之间",
+        "temperature 调整概率分布的平滑或尖锐程度",
+        "在累积概率达到 p 的最小 token 集合中采样",
+        "每一步随机抽取全部词表中的 token",
+        "只要提示相同，任何服务端并发请求都必然产生完全相同的文本"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          2
+        ]
+      },
+      "explain": "正确项共同指向推理流程与采样参数的机制与边界。较高 temperature 使分布更平坦、采样更随机；较低 temperature 使分布更尖锐、输出更确定。它不改变模型参数。 常见误区：把 temperature=0 当成有效的数学设置，会忽略实现通常使用贪心特判。【扩展】采样顺序：logits/τ -> softmax -> top-k或top-p截断 -> 重归一化 -> 抽样。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "temperature 的作用",
+        "机制判断"
+      ],
+      "sortOrder": 139
+    },
+    {
+      "id": "llm-basic-140",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "temperature 越高，模型越倾向选择最高概率 token",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：temperature 调整概率分布的平滑或尖锐程度。较高 temperature 使分布更平坦、采样更随机；较低 temperature 使分布更尖锐、输出更确定。它不改变模型参数。 常见误区：把 temperature=0 当成有效的数学设置，会忽略实现通常使用贪心特判。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "temperature 的作用",
+        "正误辨析"
+      ],
+      "sortOrder": 140
+    },
+    {
+      "id": "llm-basic-141",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「greedy decoding」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，每一步选择当前概率最高的 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，始终保留固定数量的 k 个候选 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，通过提高所有已出现 token 的概率来增加多样性，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，根据累积概率动态决定候选集合大小，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "贪心解码确定性强、实现简单，但可能错过需要先选低概率 token 才能达到的更好整句。 常见误区：认为局部最高概率必然带来全局最优句子，是贪心解码的常见误区。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "greedy decoding"
+      ],
+      "sortOrder": 141
+    },
+    {
+      "id": "llm-basic-142",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「greedy decoding」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，只在概率最高的 k 个 token 中采样，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，每一步随机抽取全部词表中的 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，通过降低已出现 token 的分数减少重复，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，固定提示、模型、采样参数和随机种子有助于复现输出，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。认为局部最高概率必然带来全局最优句子，是贪心解码的常见误区 正确理解是：每一步选择当前概率最高的 token。贪心解码确定性强、实现简单，但可能错过需要先选低概率 token 才能达到的更好整句。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "greedy decoding"
+      ],
+      "sortOrder": 142
+    },
+    {
+      "id": "llm-basic-143",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：贪心解码确定性强、实现简单，但可能错过需要先选低概率 token 才能达到的更好整句。 据此判断「greedy decoding」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "每一步选择当前概率最高的 token",
+        "logits 已经是归一化后的概率，所有值都在 0 到 1 之间",
+        "通过降低已出现 token 的分数减少重复",
+        "根据累积概率动态决定候选集合大小",
+        "temperature 越高，模型越倾向选择最高概率 token"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2
+        ]
+      },
+      "explain": "正确项共同指向推理流程与采样参数的机制与边界。贪心解码确定性强、实现简单，但可能错过需要先选低概率 token 才能达到的更好整句。 常见误区：认为局部最高概率必然带来全局最优句子，是贪心解码的常见误区。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "greedy decoding",
+        "机制判断"
+      ],
+      "sortOrder": 143
+    },
+    {
+      "id": "llm-basic-144",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「认为局部最高概率必然带来全局最优句子，是贪心解码的常见误区」。为排除该误区，关于「greedy decoding」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "固定提示、模型、采样参数和随机种子有助于复现输出",
+        "temperature 越高，模型越倾向选择最高概率 token",
+        "每一步选择当前概率最高的 token",
+        "logits 是 softmax 或采样前每个词表 token 的未归一化分数",
+        "根据累积概率动态决定候选集合大小"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2,
+          3
+        ]
+      },
+      "explain": "正确项共同指向推理流程与采样参数的机制与边界。贪心解码确定性强、实现简单，但可能错过需要先选低概率 token 才能达到的更好整句。 常见误区：认为局部最高概率必然带来全局最优句子，是贪心解码的常见误区。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "greedy decoding",
+        "机制判断"
+      ],
+      "sortOrder": 144
+    },
+    {
+      "id": "llm-basic-145",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 3,
+      "question": "每一步选择当前概率最高的 token",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "贪心解码确定性强、实现简单，但可能错过需要先选低概率 token 才能达到的更好整句。 常见误区：认为局部最高概率必然带来全局最优句子，是贪心解码的常见误区。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "greedy decoding",
+        "正误辨析"
+      ],
+      "sortOrder": 145
+    },
+    {
+      "id": "llm-basic-146",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「top-k 采样」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，每一步随机抽取全部词表中的 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，始终保留固定数量的 k 个候选 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，只在概率最高的 k 个 token 中采样，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，通过提高所有已出现 token 的概率来增加多样性，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "top-k 的候选数量固定为 k，分布形状随上下文变化时仍保持固定数量。k 过小会限制多样性。 常见误区：把 top-k 与 top-p 混淆，会写错采样参数。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "top-k 采样"
+      ],
+      "sortOrder": 146
+    },
+    {
+      "id": "llm-basic-147",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 3,
+      "question": "关于「top-k 采样」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，每一步选择当前概率最高的 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，通过降低已出现 token 的分数减少重复，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，固定提示、模型、采样参数和随机种子有助于复现输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，根据累积概率动态决定候选集合大小，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。把 top-k 与 top-p 混淆，会写错采样参数 正确理解是：只在概率最高的 k 个 token 中采样。top-k 的候选数量固定为 k，分布形状随上下文变化时仍保持固定数量。k 过小会限制多样性。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "top-k 采样"
+      ],
+      "sortOrder": 147
+    },
+    {
+      "id": "llm-basic-148",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：top-k 的候选数量固定为 k，分布形状随上下文变化时仍保持固定数量。k 过小会限制多样性。 据此判断「top-k 采样」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "logits 是 softmax 或采样前每个词表 token 的未归一化分数",
+        "始终保留固定数量的 k 个候选 token",
+        "每一步随机抽取全部词表中的 token",
+        "temperature 调整概率分布的平滑或尖锐程度",
+        "只在概率最高的 k 个 token 中采样"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向推理流程与采样参数的机制与边界。top-k 的候选数量固定为 k，分布形状随上下文变化时仍保持固定数量。k 过小会限制多样性。 常见误区：把 top-k 与 top-p 混淆，会写错采样参数。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "top-k 采样",
+        "机制判断"
+      ],
+      "sortOrder": 148
+    },
+    {
+      "id": "llm-basic-149",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「把 top-k 与 top-p 混淆，会写错采样参数」。为排除该误区，关于「top-k 采样」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "始终保留固定数量的 k 个候选 token",
+        "temperature 越高，模型越倾向选择最高概率 token",
+        "每一步随机抽取全部词表中的 token",
+        "固定提示、模型、采样参数和随机种子有助于复现输出",
+        "只在概率最高的 k 个 token 中采样"
+      ],
+      "answer": {
+        "indices": [
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向推理流程与采样参数的机制与边界。top-k 的候选数量固定为 k，分布形状随上下文变化时仍保持固定数量。k 过小会限制多样性。 常见误区：把 top-k 与 top-p 混淆，会写错采样参数。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "top-k 采样",
+        "机制判断"
+      ],
+      "sortOrder": 149
+    },
+    {
+      "id": "llm-basic-150",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 2,
+      "question": "只在概率最高的 k 个 token 中采样",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "top-k 的候选数量固定为 k，分布形状随上下文变化时仍保持固定数量。k 过小会限制多样性。 常见误区：把 top-k 与 top-p 混淆，会写错采样参数。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "top-k 采样",
+        "正误辨析"
+      ],
+      "sortOrder": 150
+    },
+    {
+      "id": "llm-basic-151",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「top-p 采样」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，在累积概率达到 p 的最小 token 集合中采样，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，只要提示相同，任何服务端并发请求都必然产生完全相同的文本，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，通过提高所有已出现 token 的概率来增加多样性，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，每一步随机抽取全部词表中的 token，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "top-p 又称 nucleus sampling，候选数量会随概率分布动态变化。集中分布时候选少，平坦分布时候选多。 常见误区：把 p 当成固定 token 数，是配置 top-p 时最常见的错误。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "top-p 采样"
+      ],
+      "sortOrder": 151
+    },
+    {
+      "id": "llm-basic-152",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「top-p 采样」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，只在概率最高的 k 个 token 中采样，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，始终保留固定数量的 k 个候选 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，固定提示、模型、采样参数和随机种子有助于复现输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，通过降低已出现 token 的分数减少重复，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。把 p 当成固定 token 数，是配置 top-p 时最常见的错误 正确理解是：在累积概率达到 p 的最小 token 集合中采样。top-p 又称 nucleus sampling，候选数量会随概率分布动态变化。集中分布时候选少，平坦分布时候选多。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "top-p 采样"
+      ],
+      "sortOrder": 152
+    },
+    {
+      "id": "llm-basic-153",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：top-p 又称 nucleus sampling，候选数量会随概率分布动态变化。集中分布时候选少，平坦分布时候选多。 据此判断「top-p 采样」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "根据累积概率动态决定候选集合大小",
+        "在累积概率达到 p 的最小 token 集合中采样",
+        "logits 是 softmax 或采样前每个词表 token 的未归一化分数",
+        "通过提高所有已出现 token 的概率来增加多样性",
+        "每一步随机抽取全部词表中的 token"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          2
+        ]
+      },
+      "explain": "正确项共同指向推理流程与采样参数的机制与边界。top-p 又称 nucleus sampling，候选数量会随概率分布动态变化。集中分布时候选少，平坦分布时候选多。 常见误区：把 p 当成固定 token 数，是配置 top-p 时最常见的错误。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "top-p 采样",
+        "机制判断"
+      ],
+      "sortOrder": 153
+    },
+    {
+      "id": "llm-basic-154",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「把 p 当成固定 token 数，是配置 top-p 时最常见的错误」。为排除该误区，关于「top-p 采样」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "每一步选择当前概率最高的 token",
+        "通过提高所有已出现 token 的概率来增加多样性",
+        "在累积概率达到 p 的最小 token 集合中采样",
+        "根据累积概率动态决定候选集合大小",
+        "temperature 调整概率分布的平滑或尖锐程度"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2,
+          4
+        ]
+      },
+      "explain": "正确项共同指向推理流程与采样参数的机制与边界。top-p 又称 nucleus sampling，候选数量会随概率分布动态变化。集中分布时候选少，平坦分布时候选多。 常见误区：把 p 当成固定 token 数，是配置 top-p 时最常见的错误。【扩展】采样顺序：logits/τ -> softmax -> top-k或top-p截断 -> 重归一化 -> 抽样。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "top-p 采样",
+        "机制判断"
+      ],
+      "sortOrder": 154
+    },
+    {
+      "id": "llm-basic-155",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "始终保留固定数量的 k 个候选 token",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：在累积概率达到 p 的最小 token 集合中采样。top-p 又称 nucleus sampling，候选数量会随概率分布动态变化。集中分布时候选少，平坦分布时候选多。 常见误区：把 p 当成固定 token 数，是配置 top-p 时最常见的错误。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "top-p 采样",
+        "正误辨析"
+      ],
+      "sortOrder": 155
+    },
+    {
+      "id": "llm-basic-156",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「repetition penalty」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，根据累积概率动态决定候选集合大小，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，每一步随机抽取全部词表中的 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，通过降低已出现 token 的分数减少重复，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，始终保留固定数量的 k 个候选 token，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "重复惩罚会调整历史 token 的 logits，降低再次生成它们的倾向。惩罚过强可能破坏必要复述和格式稳定性。 常见误区：一味提高惩罚强度，可能导致数字、标点和专有名词被错误替换。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "repetition penalty"
+      ],
+      "sortOrder": 156
+    },
+    {
+      "id": "llm-basic-157",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「repetition penalty」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，固定提示、模型、采样参数和随机种子有助于复现输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，temperature 调整概率分布的平滑或尖锐程度，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，在累积概率达到 p 的最小 token 集合中采样，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，通过提高所有已出现 token 的概率来增加多样性，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。一味提高惩罚强度，可能导致数字、标点和专有名词被错误替换 正确理解是：通过降低已出现 token 的分数减少重复。重复惩罚会调整历史 token 的 logits，降低再次生成它们的倾向。惩罚过强可能破坏必要复述和格式稳定性。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "repetition penalty"
+      ],
+      "sortOrder": 157
+    },
+    {
+      "id": "llm-basic-158",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：重复惩罚会调整历史 token 的 logits，降低再次生成它们的倾向。惩罚过强可能破坏必要复述和格式稳定性。 据此判断「repetition penalty」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "只在概率最高的 k 个 token 中采样",
+        "每一步选择当前概率最高的 token",
+        "通过降低已出现 token 的分数减少重复",
+        "始终保留固定数量的 k 个候选 token",
+        "只要提示相同，任何服务端并发请求都必然产生完全相同的文本"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          1,
+          2
+        ]
+      },
+      "explain": "正确项共同指向推理流程与采样参数的机制与边界。重复惩罚会调整历史 token 的 logits，降低再次生成它们的倾向。惩罚过强可能破坏必要复述和格式稳定性。 常见误区：一味提高惩罚强度，可能导致数字、标点和专有名词被错误替换。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "repetition penalty",
+        "机制判断"
+      ],
+      "sortOrder": 158
+    },
+    {
+      "id": "llm-basic-159",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「一味提高惩罚强度，可能导致数字、标点和专有名词被错误替换」。为排除该误区，关于「repetition penalty」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "temperature 调整概率分布的平滑或尖锐程度",
+        "始终保留固定数量的 k 个候选 token",
+        "根据累积概率动态决定候选集合大小",
+        "只要提示相同，任何服务端并发请求都必然产生完全相同的文本",
+        "通过降低已出现 token 的分数减少重复"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          4
+        ]
+      },
+      "explain": "正确项共同指向推理流程与采样参数的机制与边界。重复惩罚会调整历史 token 的 logits，降低再次生成它们的倾向。惩罚过强可能破坏必要复述和格式稳定性。 常见误区：一味提高惩罚强度，可能导致数字、标点和专有名词被错误替换。【扩展】采样顺序：logits/τ -> softmax -> top-k或top-p截断 -> 重归一化 -> 抽样。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "repetition penalty",
+        "机制判断"
+      ],
+      "sortOrder": 159
+    },
+    {
+      "id": "llm-basic-160",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "通过提高所有已出现 token 的概率来增加多样性",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：通过降低已出现 token 的分数减少重复。重复惩罚会调整历史 token 的 logits，降低再次生成它们的倾向。惩罚过强可能破坏必要复述和格式稳定性。 常见误区：一味提高惩罚强度，可能导致数字、标点和专有名词被错误替换。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "repetition penalty",
+        "正误辨析"
+      ],
+      "sortOrder": 160
+    },
+    {
+      "id": "llm-basic-161",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「可复现生成」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，固定提示、模型、采样参数和随机种子有助于复现输出，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，每一步随机抽取全部词表中的 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，通过提高所有已出现 token 的概率来增加多样性，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，始终保留固定数量的 k 个候选 token，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "采样过程含随机性，服务端实现和批处理也可能带来数值差异。记录完整参数才能提高可复现性。 常见误区：只保存问题文本而不保存参数，会让失败案例难以重放。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "可复现生成"
+      ],
+      "sortOrder": 161
+    },
+    {
+      "id": "llm-basic-162",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「可复现生成」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，只在概率最高的 k 个 token 中采样，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，只要提示相同，任何服务端并发请求都必然产生完全相同的文本，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，temperature 调整概率分布的平滑或尖锐程度，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，在累积概率达到 p 的最小 token 集合中采样，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。只保存问题文本而不保存参数，会让失败案例难以重放 正确理解是：固定提示、模型、采样参数和随机种子有助于复现输出。采样过程含随机性，服务端实现和批处理也可能带来数值差异。记录完整参数才能提高可复现性。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "可复现生成"
+      ],
+      "sortOrder": 162
+    },
+    {
+      "id": "llm-basic-163",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：采样过程含随机性，服务端实现和批处理也可能带来数值差异。记录完整参数才能提高可复现性。 据此判断「可复现生成」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "logits 已经是归一化后的概率，所有值都在 0 到 1 之间",
+        "始终保留固定数量的 k 个候选 token",
+        "通过提高所有已出现 token 的概率来增加多样性",
+        "每一步选择当前概率最高的 token",
+        "固定提示、模型、采样参数和随机种子有助于复现输出"
+      ],
+      "answer": {
+        "indices": [
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向推理流程与采样参数的机制与边界。采样过程含随机性，服务端实现和批处理也可能带来数值差异。记录完整参数才能提高可复现性。 常见误区：只保存问题文本而不保存参数，会让失败案例难以重放。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "可复现生成",
+        "机制判断"
+      ],
+      "sortOrder": 163
+    },
+    {
+      "id": "llm-basic-164",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「只保存问题文本而不保存参数，会让失败案例难以重放」。为排除该误区，关于「可复现生成」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "在累积概率达到 p 的最小 token 集合中采样",
+        "通过提高所有已出现 token 的概率来增加多样性",
+        "只在概率最高的 k 个 token 中采样",
+        "logits 已经是归一化后的概率，所有值都在 0 到 1 之间",
+        "固定提示、模型、采样参数和随机种子有助于复现输出"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2,
+          4
+        ]
+      },
+      "explain": "正确项共同指向推理流程与采样参数的机制与边界。采样过程含随机性，服务端实现和批处理也可能带来数值差异。记录完整参数才能提高可复现性。 常见误区：只保存问题文本而不保存参数，会让失败案例难以重放。【扩展】采样顺序：logits/τ -> softmax -> top-k或top-p截断 -> 重归一化 -> 抽样。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "可复现生成",
+        "机制判断"
+      ],
+      "sortOrder": 164
+    },
+    {
+      "id": "llm-basic-165",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "固定提示、模型、采样参数和随机种子有助于复现输出",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "采样过程含随机性，服务端实现和批处理也可能带来数值差异。记录完整参数才能提高可复现性。 常见误区：只保存问题文本而不保存参数，会让失败案例难以重放。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "推理流程与采样参数",
+        "可复现生成",
+        "正误辨析"
+      ],
+      "sortOrder": 165
+    },
+    {
+      "id": "llm-basic-166",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「KV Cache 保存的内容」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，批越大延迟一定越低，因此可以无限增大 batch，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，TTFT 和 TPOT 是同一个指标的不同缩写，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，保存历史 token 在各层的 Key 和 Value 张量，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，逐 token 生成回答并不断删除缓存，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "自回归生成时，历史 token 的 Key 和 Value 可以复用，避免每步重复计算。缓存只与注意力计算有关。 常见误区：把 KV Cache 当作模型参数缓存，会误解其显存来源。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "KV Cache 保存的内容"
+      ],
+      "sortOrder": 166
+    },
+    {
+      "id": "llm-basic-167",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「KV Cache 保存的内容」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，并行处理完整提示并建立 KV Cache，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，把多个请求合并计算可提高硬件利用率，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，每次生成一个新 token 并增量写入 KV Cache，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，保存完整词表和所有可能的下一个 token 概率，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。把 KV Cache 当作模型参数缓存，会误解其显存来源 正确理解是：保存历史 token 在各层的 Key 和 Value 张量。自回归生成时，历史 token 的 Key 和 Value 可以复用，避免每步重复计算。缓存只与注意力计算有关。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "KV Cache 保存的内容"
+      ],
+      "sortOrder": 167
+    },
+    {
+      "id": "llm-basic-168",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：自回归生成时，历史 token 的 Key 和 Value 可以复用，避免每步重复计算。缓存只与注意力计算有关。 据此判断「KV Cache 保存的内容」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "TTFT 关注首 token 延迟，TPOT 关注后续每 token 延迟",
+        "并行处理完整提示并建立 KV Cache",
+        "一次并行生成全部未来 token",
+        "批越大延迟一定越低，因此可以无限增大 batch",
+        "保存历史 token 在各层的 Key 和 Value 张量"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          1,
+          4
+        ]
+      },
+      "explain": "正确项共同指向KV Cache 与推理服务入门的机制与边界。自回归生成时，历史 token 的 Key 和 Value 可以复用，避免每步重复计算。缓存只与注意力计算有关。 常见误区：把 KV Cache 当作模型参数缓存，会误解其显存来源。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "KV Cache 保存的内容",
+        "机制判断"
+      ],
+      "sortOrder": 168
+    },
+    {
+      "id": "llm-basic-169",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「把 KV Cache 当作模型参数缓存，会误解其显存来源」。为排除该误区，关于「KV Cache 保存的内容」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "保存历史 token 在各层的 Key 和 Value 张量",
+        "把多个请求合并计算可提高硬件利用率",
+        "批越大延迟一定越低，因此可以无限增大 batch",
+        "一次并行生成全部未来 token",
+        "逐 token 生成回答并不断删除缓存"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          1
+        ]
+      },
+      "explain": "正确项共同指向KV Cache 与推理服务入门的机制与边界。自回归生成时，历史 token 的 Key 和 Value 可以复用，避免每步重复计算。缓存只与注意力计算有关。 常见误区：把 KV Cache 当作模型参数缓存，会误解其显存来源。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "KV Cache 保存的内容",
+        "机制判断"
+      ],
+      "sortOrder": 169
+    },
+    {
+      "id": "llm-basic-170",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 3,
+      "question": "保存历史 token 在各层的 Key 和 Value 张量",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "自回归生成时，历史 token 的 Key 和 Value 可以复用，避免每步重复计算。缓存只与注意力计算有关。 常见误区：把 KV Cache 当作模型参数缓存，会误解其显存来源。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "KV Cache 保存的内容",
+        "正误辨析"
+      ],
+      "sortOrder": 170
+    },
+    {
+      "id": "llm-basic-171",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「prefill 阶段」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，并行处理完整提示并建立 KV Cache，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，一次并行生成全部未来 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，批越大延迟一定越低，因此可以无限增大 batch，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，TTFT 和 TPOT 是同一个指标的不同缩写，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "prefill 通常计算量较大，但可并行处理输入 token，同时为后续 decode 建立缓存。它直接影响首 token 延迟。 常见误区：把 prefill 与 decode 当成同一种负载，会错误优化延迟。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "prefill 阶段"
+      ],
+      "sortOrder": 171
+    },
+    {
+      "id": "llm-basic-172",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 3,
+      "question": "关于「prefill 阶段」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，每次生成一个新 token 并增量写入 KV Cache，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，逐 token 生成回答并不断删除缓存，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，保存历史 token 在各层的 Key 和 Value 张量，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，把多个请求合并计算可提高硬件利用率，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。把 prefill 与 decode 当成同一种负载，会错误优化延迟 正确理解是：并行处理完整提示并建立 KV Cache。prefill 通常计算量较大，但可并行处理输入 token，同时为后续 decode 建立缓存。它直接影响首 token 延迟。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "prefill 阶段"
+      ],
+      "sortOrder": 172
+    },
+    {
+      "id": "llm-basic-173",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：prefill 通常计算量较大，但可并行处理输入 token，同时为后续 decode 建立缓存。它直接影响首 token 延迟。 据此判断「prefill 阶段」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "TTFT 关注首 token 延迟，TPOT 关注后续每 token 延迟",
+        "TTFT 和 TPOT 是同一个指标的不同缩写",
+        "一次并行生成全部未来 token",
+        "并行处理完整提示并建立 KV Cache",
+        "批越大延迟一定越低，因此可以无限增大 batch"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          3
+        ]
+      },
+      "explain": "正确项共同指向KV Cache 与推理服务入门的机制与边界。prefill 通常计算量较大，但可并行处理输入 token，同时为后续 decode 建立缓存。它直接影响首 token 延迟。 常见误区：把 prefill 与 decode 当成同一种负载，会错误优化延迟。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "prefill 阶段",
+        "机制判断"
+      ],
+      "sortOrder": 173
+    },
+    {
+      "id": "llm-basic-174",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「把 prefill 与 decode 当成同一种负载，会错误优化延迟」。为排除该误区，关于「prefill 阶段」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "TTFT 和 TPOT 是同一个指标的不同缩写",
+        "每次生成一个新 token 并增量写入 KV Cache",
+        "批越大延迟一定越低，因此可以无限增大 batch",
+        "保存历史 token 在各层的 Key 和 Value 张量",
+        "并行处理完整提示并建立 KV Cache"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向KV Cache 与推理服务入门的机制与边界。prefill 通常计算量较大，但可并行处理输入 token，同时为后续 decode 建立缓存。它直接影响首 token 延迟。 常见误区：把 prefill 与 decode 当成同一种负载，会错误优化延迟。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "prefill 阶段",
+        "机制判断"
+      ],
+      "sortOrder": 174
+    },
+    {
+      "id": "llm-basic-175",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 2,
+      "question": "逐 token 生成回答并不断删除缓存",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：并行处理完整提示并建立 KV Cache。prefill 通常计算量较大，但可并行处理输入 token，同时为后续 decode 建立缓存。它直接影响首 token 延迟。 常见误区：把 prefill 与 decode 当成同一种负载，会错误优化延迟。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "prefill 阶段",
+        "正误辨析"
+      ],
+      "sortOrder": 175
+    },
+    {
+      "id": "llm-basic-176",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「decode 阶段」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，TTFT 和 TPOT 是同一个指标的不同缩写，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，保存完整词表和所有可能的下一个 token 概率，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，每次生成一个新 token 并增量写入 KV Cache，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，批越大延迟一定越低，因此可以无限增大 batch，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "decode 每步依赖前一步输出，通常受显存带宽和缓存读取影响。吞吐可通过批处理提升。 常见误区：只关注矩阵乘法而忽略缓存读写，会低估 decode 的瓶颈。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "decode 阶段"
+      ],
+      "sortOrder": 176
+    },
+    {
+      "id": "llm-basic-177",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「decode 阶段」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，把多个请求合并计算可提高硬件利用率，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，并行处理完整提示并建立 KV Cache，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，保存历史 token 在各层的 Key 和 Value 张量，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，一次并行生成全部未来 token，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。只关注矩阵乘法而忽略缓存读写，会低估 decode 的瓶颈 正确理解是：每次生成一个新 token 并增量写入 KV Cache。decode 每步依赖前一步输出，通常受显存带宽和缓存读取影响。吞吐可通过批处理提升。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "decode 阶段"
+      ],
+      "sortOrder": 177
+    },
+    {
+      "id": "llm-basic-178",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：decode 每步依赖前一步输出，通常受显存带宽和缓存读取影响。吞吐可通过批处理提升。 据此判断「decode 阶段」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "每次生成一个新 token 并增量写入 KV Cache",
+        "TTFT 和 TPOT 是同一个指标的不同缩写",
+        "把多个请求合并计算可提高硬件利用率",
+        "保存完整词表和所有可能的下一个 token 概率",
+        "并行处理完整提示并建立 KV Cache"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2,
+          4
+        ]
+      },
+      "explain": "正确项共同指向KV Cache 与推理服务入门的机制与边界。decode 每步依赖前一步输出，通常受显存带宽和缓存读取影响。吞吐可通过批处理提升。 常见误区：只关注矩阵乘法而忽略缓存读写，会低估 decode 的瓶颈。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "decode 阶段",
+        "机制判断"
+      ],
+      "sortOrder": 178
+    },
+    {
+      "id": "llm-basic-179",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「只关注矩阵乘法而忽略缓存读写，会低估 decode 的瓶颈」。为排除该误区，关于「decode 阶段」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "TTFT 和 TPOT 是同一个指标的不同缩写",
+        "每次生成一个新 token 并增量写入 KV Cache",
+        "保存历史 token 在各层的 Key 和 Value 张量",
+        "保存完整词表和所有可能的下一个 token 概率",
+        "批越大延迟一定越低，因此可以无限增大 batch"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          2
+        ]
+      },
+      "explain": "正确项共同指向KV Cache 与推理服务入门的机制与边界。decode 每步依赖前一步输出，通常受显存带宽和缓存读取影响。吞吐可通过批处理提升。 常见误区：只关注矩阵乘法而忽略缓存读写，会低估 decode 的瓶颈。【扩展】缓存估算：bytes ≈ 2×layers×kv_heads×head_dim×seq_len×batch×dtype_bytes。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "decode 阶段",
+        "机制判断"
+      ],
+      "sortOrder": 179
+    },
+    {
+      "id": "llm-basic-180",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "一次并行生成全部未来 token",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：每次生成一个新 token 并增量写入 KV Cache。decode 每步依赖前一步输出，通常受显存带宽和缓存读取影响。吞吐可通过批处理提升。 常见误区：只关注矩阵乘法而忽略缓存读写，会低估 decode 的瓶颈。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "decode 阶段",
+        "正误辨析"
+      ],
+      "sortOrder": 180
+    },
+    {
+      "id": "llm-basic-181",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「动态批处理」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，把多个请求合并计算可提高硬件利用率，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，TTFT 和 TPOT 是同一个指标的不同缩写，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，一次并行生成全部未来 token，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，逐 token 生成回答并不断删除缓存，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "批处理提高吞吐，但也会增加排队和单请求延迟。在线服务需要在并发量、显存和用户体验间平衡。 常见误区：只追求吞吐而不监控尾延迟，会让实际用户等待变长。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "动态批处理"
+      ],
+      "sortOrder": 181
+    },
+    {
+      "id": "llm-basic-182",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「动态批处理」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，并行处理完整提示并建立 KV Cache，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，批越大延迟一定越低，因此可以无限增大 batch，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，保存历史 token 在各层的 Key 和 Value 张量，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，每次生成一个新 token 并增量写入 KV Cache，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。只追求吞吐而不监控尾延迟，会让实际用户等待变长 正确理解是：把多个请求合并计算可提高硬件利用率。批处理提高吞吐，但也会增加排队和单请求延迟。在线服务需要在并发量、显存和用户体验间平衡。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "动态批处理"
+      ],
+      "sortOrder": 182
+    },
+    {
+      "id": "llm-basic-183",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：批处理提高吞吐，但也会增加排队和单请求延迟。在线服务需要在并发量、显存和用户体验间平衡。 据此判断「动态批处理」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "TTFT 和 TPOT 是同一个指标的不同缩写",
+        "并行处理完整提示并建立 KV Cache",
+        "逐 token 生成回答并不断删除缓存",
+        "保存完整词表和所有可能的下一个 token 概率",
+        "把多个请求合并计算可提高硬件利用率"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          4
+        ]
+      },
+      "explain": "正确项共同指向KV Cache 与推理服务入门的机制与边界。批处理提高吞吐，但也会增加排队和单请求延迟。在线服务需要在并发量、显存和用户体验间平衡。 常见误区：只追求吞吐而不监控尾延迟，会让实际用户等待变长。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "动态批处理",
+        "机制判断"
+      ],
+      "sortOrder": 183
+    },
+    {
+      "id": "llm-basic-184",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「只追求吞吐而不监控尾延迟，会让实际用户等待变长」。为排除该误区，关于「动态批处理」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "保存完整词表和所有可能的下一个 token 概率",
+        "把多个请求合并计算可提高硬件利用率",
+        "逐 token 生成回答并不断删除缓存",
+        "TTFT 关注首 token 延迟，TPOT 关注后续每 token 延迟",
+        "每次生成一个新 token 并增量写入 KV Cache"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向KV Cache 与推理服务入门的机制与边界。批处理提高吞吐，但也会增加排队和单请求延迟。在线服务需要在并发量、显存和用户体验间平衡。 常见误区：只追求吞吐而不监控尾延迟，会让实际用户等待变长。【扩展】缓存估算：bytes ≈ 2×layers×kv_heads×head_dim×seq_len×batch×dtype_bytes。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "动态批处理",
+        "机制判断"
+      ],
+      "sortOrder": 184
+    },
+    {
+      "id": "llm-basic-185",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "把多个请求合并计算可提高硬件利用率",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "批处理提高吞吐，但也会增加排队和单请求延迟。在线服务需要在并发量、显存和用户体验间平衡。 常见误区：只追求吞吐而不监控尾延迟，会让实际用户等待变长。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "动态批处理",
+        "正误辨析"
+      ],
+      "sortOrder": 185
+    },
+    {
+      "id": "llm-basic-186",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「TTFT 与 TPOT」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，逐 token 生成回答并不断删除缓存，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，保存完整词表和所有可能的下一个 token 概率，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，TTFT 关注首 token 延迟，TPOT 关注后续每 token 延迟，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，批越大延迟一定越低，因此可以无限增大 batch，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "TTFT 包含排队和 prefill，影响用户多久看到第一个字；TPOT 更接近流式输出速度。两者优化目标不同。 常见误区：用平均总延迟代替分阶段指标，会丢失交互体验信息。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "TTFT 与 TPOT"
+      ],
+      "sortOrder": 186
+    },
+    {
+      "id": "llm-basic-187",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「TTFT 与 TPOT」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，每次生成一个新 token 并增量写入 KV Cache，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，并行处理完整提示并建立 KV Cache，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，把多个请求合并计算可提高硬件利用率，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，TTFT 和 TPOT 是同一个指标的不同缩写，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。用平均总延迟代替分阶段指标，会丢失交互体验信息 正确理解是：TTFT 关注首 token 延迟，TPOT 关注后续每 token 延迟。TTFT 包含排队和 prefill，影响用户多久看到第一个字；TPOT 更接近流式输出速度。两者优化目标不同。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "TTFT 与 TPOT"
+      ],
+      "sortOrder": 187
+    },
+    {
+      "id": "llm-basic-188",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：TTFT 包含排队和 prefill，影响用户多久看到第一个字；TPOT 更接近流式输出速度。两者优化目标不同。 据此判断「TTFT 与 TPOT」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "一次并行生成全部未来 token",
+        "TTFT 关注首 token 延迟，TPOT 关注后续每 token 延迟",
+        "把多个请求合并计算可提高硬件利用率",
+        "保存历史 token 在各层的 Key 和 Value 张量",
+        "逐 token 生成回答并不断删除缓存"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          2,
+          3
+        ]
+      },
+      "explain": "正确项共同指向KV Cache 与推理服务入门的机制与边界。TTFT 包含排队和 prefill，影响用户多久看到第一个字；TPOT 更接近流式输出速度。两者优化目标不同。 常见误区：用平均总延迟代替分阶段指标，会丢失交互体验信息。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "TTFT 与 TPOT",
+        "机制判断"
+      ],
+      "sortOrder": 188
+    },
+    {
+      "id": "llm-basic-189",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「用平均总延迟代替分阶段指标，会丢失交互体验信息」。为排除该误区，关于「TTFT 与 TPOT」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "TTFT 关注首 token 延迟，TPOT 关注后续每 token 延迟",
+        "保存完整词表和所有可能的下一个 token 概率",
+        "一次并行生成全部未来 token",
+        "每次生成一个新 token 并增量写入 KV Cache",
+        "逐 token 生成回答并不断删除缓存"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          3
+        ]
+      },
+      "explain": "正确项共同指向KV Cache 与推理服务入门的机制与边界。TTFT 包含排队和 prefill，影响用户多久看到第一个字；TPOT 更接近流式输出速度。两者优化目标不同。 常见误区：用平均总延迟代替分阶段指标，会丢失交互体验信息。【扩展】缓存估算：bytes ≈ 2×layers×kv_heads×head_dim×seq_len×batch×dtype_bytes。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "TTFT 与 TPOT",
+        "机制判断"
+      ],
+      "sortOrder": 189
+    },
+    {
+      "id": "llm-basic-190",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "TTFT 关注首 token 延迟，TPOT 关注后续每 token 延迟",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "TTFT 包含排队和 prefill，影响用户多久看到第一个字；TPOT 更接近流式输出速度。两者优化目标不同。 常见误区：用平均总延迟代替分阶段指标，会丢失交互体验信息。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "KV Cache 与推理服务入门",
+        "TTFT 与 TPOT",
+        "正误辨析"
+      ],
+      "sortOrder": 190
+    },
+    {
+      "id": "llm-basic-191",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「常见数值精度」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，FP32、FP16、BF16、INT8、INT4 使用不同位数表示数值，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，权重显存只由序列长度决定，与参数量无关，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，INT4 一定比 INT8 更快且质量更高，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，量化后只需要看模型文件能否加载，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "不同精度的指数位、尾数位和存储位宽不同。BF16 通常占 16 位，动态范围较大，但精度低于 FP32。 常见误区：把位宽、动态范围和精度当成同一个概念，会误判模型质量。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "常见数值精度"
+      ],
+      "sortOrder": 191
+    },
+    {
+      "id": "llm-basic-192",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「常见数值精度」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，权重显存近似等于参数量乘以每参数位数再除以 8，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，BF16 与 FP32 的位宽完全相同，因此显存占用相同，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，应同时比较任务效果、显存、延迟和吞吐，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，更低位数通常减少显存，但可能引入更大量化误差，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。把位宽、动态范围和精度当成同一个概念，会误判模型质量 正确理解是：FP32、FP16、BF16、INT8、INT4 使用不同位数表示数值。不同精度的指数位、尾数位和存储位宽不同。BF16 通常占 16 位，动态范围较大，但精度低于 FP32。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "常见数值精度"
+      ],
+      "sortOrder": 192
+    },
+    {
+      "id": "llm-basic-193",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：不同精度的指数位、尾数位和存储位宽不同。BF16 通常占 16 位，动态范围较大，但精度低于 FP32。 据此判断「常见数值精度」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "应同时比较任务效果、显存、延迟和吞吐",
+        "量化后只需要看模型文件能否加载",
+        "FP32、FP16、BF16、INT8、INT4 使用不同位数表示数值",
+        "INT4 一定比 INT8 更快且质量更高",
+        "权重显存只由序列长度决定，与参数量无关"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2
+        ]
+      },
+      "explain": "正确项共同指向量化与显存基础的机制与边界。不同精度的指数位、尾数位和存储位宽不同。BF16 通常占 16 位，动态范围较大，但精度低于 FP32。 常见误区：把位宽、动态范围和精度当成同一个概念，会误判模型质量。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "常见数值精度",
+        "机制判断"
+      ],
+      "sortOrder": 193
+    },
+    {
+      "id": "llm-basic-194",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「把位宽、动态范围和精度当成同一个概念，会误判模型质量」。为排除该误区，关于「常见数值精度」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "FP32、FP16、BF16、INT8、INT4 使用不同位数表示数值",
+        "更低位数通常减少显存，但可能引入更大量化误差",
+        "权重显存近似等于参数量乘以每参数位数再除以 8",
+        "量化后只需要看模型文件能否加载",
+        "权重显存只由序列长度决定，与参数量无关"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          1,
+          2
+        ]
+      },
+      "explain": "正确项共同指向量化与显存基础的机制与边界。不同精度的指数位、尾数位和存储位宽不同。BF16 通常占 16 位，动态范围较大，但精度低于 FP32。 常见误区：把位宽、动态范围和精度当成同一个概念，会误判模型质量。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "常见数值精度",
+        "机制判断"
+      ],
+      "sortOrder": 194
+    },
+    {
+      "id": "llm-basic-195",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 3,
+      "question": "BF16 与 FP32 的位宽完全相同，因此显存占用相同",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：FP32、FP16、BF16、INT8、INT4 使用不同位数表示数值。不同精度的指数位、尾数位和存储位宽不同。BF16 通常占 16 位，动态范围较大，但精度低于 FP32。 常见误区：把位宽、动态范围和精度当成同一个概念，会误判模型质量。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "常见数值精度",
+        "正误辨析"
+      ],
+      "sortOrder": 195
+    },
+    {
+      "id": "llm-basic-196",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「权重显存估算」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，量化后只需要看模型文件能否加载，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，INT4 一定比 INT8 更快且质量更高，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，权重显存近似等于参数量乘以每参数位数再除以 8，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，BF16 与 FP32 的位宽完全相同，因此显存占用相同，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "例如 70 亿参数使用 16 位权重，仅权重就约 14 GB。实际还要考虑激活、KV Cache 和框架开销。 常见误区：只算权重不看运行时缓存，会低估完整显存需求。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "权重显存估算"
+      ],
+      "sortOrder": 196
+    },
+    {
+      "id": "llm-basic-197",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 3,
+      "question": "关于「权重显存估算」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，FP32、FP16、BF16、INT8、INT4 使用不同位数表示数值，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，应同时比较任务效果、显存、延迟和吞吐，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，更低位数通常减少显存，但可能引入更大量化误差，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，权重显存只由序列长度决定，与参数量无关，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。只算权重不看运行时缓存，会低估完整显存需求 正确理解是：权重显存近似等于参数量乘以每参数位数再除以 8。例如 70 亿参数使用 16 位权重，仅权重就约 14 GB。实际还要考虑激活、KV Cache 和框架开销。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "权重显存估算"
+      ],
+      "sortOrder": 197
+    },
+    {
+      "id": "llm-basic-198",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：例如 70 亿参数使用 16 位权重，仅权重就约 14 GB。实际还要考虑激活、KV Cache 和框架开销。 据此判断「权重显存估算」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "INT4 一定比 INT8 更快且质量更高",
+        "更低位数通常减少显存，但可能引入更大量化误差",
+        "权重显存近似等于参数量乘以每参数位数再除以 8",
+        "BF16 与 FP32 的位宽完全相同，因此显存占用相同",
+        "应同时比较任务效果、显存、延迟和吞吐"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          2,
+          4
+        ]
+      },
+      "explain": "正确项共同指向量化与显存基础的机制与边界。例如 70 亿参数使用 16 位权重，仅权重就约 14 GB。实际还要考虑激活、KV Cache 和框架开销。 常见误区：只算权重不看运行时缓存，会低估完整显存需求。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "权重显存估算",
+        "机制判断"
+      ],
+      "sortOrder": 198
+    },
+    {
+      "id": "llm-basic-199",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「只算权重不看运行时缓存，会低估完整显存需求」。为排除该误区，关于「权重显存估算」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "FP32、FP16、BF16、INT8、INT4 使用不同位数表示数值",
+        "INT4 一定比 INT8 更快且质量更高",
+        "BF16 与 FP32 的位宽完全相同，因此显存占用相同",
+        "权重显存近似等于参数量乘以每参数位数再除以 8",
+        "量化后只需要看模型文件能否加载"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          3
+        ]
+      },
+      "explain": "正确项共同指向量化与显存基础的机制与边界。例如 70 亿参数使用 16 位权重，仅权重就约 14 GB。实际还要考虑激活、KV Cache 和框架开销。 常见误区：只算权重不看运行时缓存，会低估完整显存需求。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "权重显存估算",
+        "机制判断"
+      ],
+      "sortOrder": 199
+    },
+    {
+      "id": "llm-basic-200",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 2,
+      "question": "权重显存近似等于参数量乘以每参数位数再除以 8",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "例如 70 亿参数使用 16 位权重，仅权重就约 14 GB。实际还要考虑激活、KV Cache 和框架开销。 常见误区：只算权重不看运行时缓存，会低估完整显存需求。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "权重显存估算",
+        "正误辨析"
+      ],
+      "sortOrder": 200
+    },
+    {
+      "id": "llm-basic-201",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「INT8 与 INT4」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，更低位数通常减少显存，但可能引入更大量化误差，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，BF16 与 FP32 的位宽完全相同，因此显存占用相同，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，权重显存只由序列长度决定，与参数量无关，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，量化后只需要看模型文件能否加载，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "量化收益取决于硬件 kernel、反量化开销和模型对误差的敏感度。位宽更低不保证端到端加速。 常见误区：只看模型文件大小就承诺推理更快，是对量化收益的过度推断。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "INT8 与 INT4"
+      ],
+      "sortOrder": 201
+    },
+    {
+      "id": "llm-basic-202",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「INT8 与 INT4」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，权重显存近似等于参数量乘以每参数位数再除以 8，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，INT4 一定比 INT8 更快且质量更高，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，应同时比较任务效果、显存、延迟和吞吐，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，FP32、FP16、BF16、INT8、INT4 使用不同位数表示数值，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。只看模型文件大小就承诺推理更快，是对量化收益的过度推断 正确理解是：更低位数通常减少显存，但可能引入更大量化误差。量化收益取决于硬件 kernel、反量化开销和模型对误差的敏感度。位宽更低不保证端到端加速。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "INT8 与 INT4"
+      ],
+      "sortOrder": 202
+    },
+    {
+      "id": "llm-basic-203",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：量化收益取决于硬件 kernel、反量化开销和模型对误差的敏感度。位宽更低不保证端到端加速。 据此判断「INT8 与 INT4」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "量化后只需要看模型文件能否加载",
+        "更低位数通常减少显存，但可能引入更大量化误差",
+        "权重显存近似等于参数量乘以每参数位数再除以 8",
+        "BF16 与 FP32 的位宽完全相同，因此显存占用相同",
+        "权重显存只由序列长度决定，与参数量无关"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          2
+        ]
+      },
+      "explain": "正确项共同指向量化与显存基础的机制与边界。量化收益取决于硬件 kernel、反量化开销和模型对误差的敏感度。位宽更低不保证端到端加速。 常见误区：只看模型文件大小就承诺推理更快，是对量化收益的过度推断。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "INT8 与 INT4",
+        "机制判断"
+      ],
+      "sortOrder": 203
+    },
+    {
+      "id": "llm-basic-204",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「只看模型文件大小就承诺推理更快，是对量化收益的过度推断」。为排除该误区，关于「INT8 与 INT4」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "更低位数通常减少显存，但可能引入更大量化误差",
+        "应同时比较任务效果、显存、延迟和吞吐",
+        "量化后只需要看模型文件能否加载",
+        "权重显存只由序列长度决定，与参数量无关",
+        "FP32、FP16、BF16、INT8、INT4 使用不同位数表示数值"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          1,
+          4
+        ]
+      },
+      "explain": "正确项共同指向量化与显存基础的机制与边界。量化收益取决于硬件 kernel、反量化开销和模型对误差的敏感度。位宽更低不保证端到端加速。 常见误区：只看模型文件大小就承诺推理更快，是对量化收益的过度推断。【扩展】量化示意：q=round(x/scale)+zero_point；scale 的选择直接决定舍入误差。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "INT8 与 INT4",
+        "机制判断"
+      ],
+      "sortOrder": 204
+    },
+    {
+      "id": "llm-basic-205",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "INT4 一定比 INT8 更快且质量更高",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：更低位数通常减少显存，但可能引入更大量化误差。量化收益取决于硬件 kernel、反量化开销和模型对误差的敏感度。位宽更低不保证端到端加速。 常见误区：只看模型文件大小就承诺推理更快，是对量化收益的过度推断。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "INT8 与 INT4",
+        "正误辨析"
+      ],
+      "sortOrder": 205
+    },
+    {
+      "id": "llm-basic-206",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「量化质量评估」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，INT4 一定比 INT8 更快且质量更高，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，权重显存只由序列长度决定，与参数量无关，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，应同时比较任务效果、显存、延迟和吞吐，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，BF16 与 FP32 的位宽完全相同，因此显存占用相同，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "量化会改变数值表示，可能影响长尾知识和复杂推理。评估应覆盖目标任务和失败案例，而不只是格式正确。 常见误区：用单一 benchmark 分数代表所有场景，会掩盖量化退化。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "量化质量评估"
+      ],
+      "sortOrder": 206
+    },
+    {
+      "id": "llm-basic-207",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「量化质量评估」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，更低位数通常减少显存，但可能引入更大量化误差，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，权重显存近似等于参数量乘以每参数位数再除以 8，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，FP32、FP16、BF16、INT8、INT4 使用不同位数表示数值，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，量化后只需要看模型文件能否加载，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。用单一 benchmark 分数代表所有场景，会掩盖量化退化 正确理解是：应同时比较任务效果、显存、延迟和吞吐。量化会改变数值表示，可能影响长尾知识和复杂推理。评估应覆盖目标任务和失败案例，而不只是格式正确。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "量化质量评估"
+      ],
+      "sortOrder": 207
+    },
+    {
+      "id": "llm-basic-208",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：量化会改变数值表示，可能影响长尾知识和复杂推理。评估应覆盖目标任务和失败案例，而不只是格式正确。 据此判断「量化质量评估」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "BF16 与 FP32 的位宽完全相同，因此显存占用相同",
+        "权重显存近似等于参数量乘以每参数位数再除以 8",
+        "FP32、FP16、BF16、INT8、INT4 使用不同位数表示数值",
+        "INT4 一定比 INT8 更快且质量更高",
+        "应同时比较任务效果、显存、延迟和吞吐"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          2,
+          4
+        ]
+      },
+      "explain": "正确项共同指向量化与显存基础的机制与边界。量化会改变数值表示，可能影响长尾知识和复杂推理。评估应覆盖目标任务和失败案例，而不只是格式正确。 常见误区：用单一 benchmark 分数代表所有场景，会掩盖量化退化。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "量化质量评估",
+        "机制判断"
+      ],
+      "sortOrder": 208
+    },
+    {
+      "id": "llm-basic-209",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「用单一 benchmark 分数代表所有场景，会掩盖量化退化」。为排除该误区，关于「量化质量评估」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "权重显存只由序列长度决定，与参数量无关",
+        "INT4 一定比 INT8 更快且质量更高",
+        "更低位数通常减少显存，但可能引入更大量化误差",
+        "BF16 与 FP32 的位宽完全相同，因此显存占用相同",
+        "应同时比较任务效果、显存、延迟和吞吐"
+      ],
+      "answer": {
+        "indices": [
+          2,
+          4
+        ]
+      },
+      "explain": "正确项共同指向量化与显存基础的机制与边界。量化会改变数值表示，可能影响长尾知识和复杂推理。评估应覆盖目标任务和失败案例，而不只是格式正确。 常见误区：用单一 benchmark 分数代表所有场景，会掩盖量化退化。【扩展】量化示意：q=round(x/scale)+zero_point；scale 的选择直接决定舍入误差。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "量化质量评估",
+        "机制判断"
+      ],
+      "sortOrder": 209
+    },
+    {
+      "id": "llm-basic-210",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "量化后只需要看模型文件能否加载",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：应同时比较任务效果、显存、延迟和吞吐。量化会改变数值表示，可能影响长尾知识和复杂推理。评估应覆盖目标任务和失败案例，而不只是格式正确。 常见误区：用单一 benchmark 分数代表所有场景，会掩盖量化退化。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "量化与显存基础",
+        "量化质量评估",
+        "正误辨析"
+      ],
+      "sortOrder": 210
+    },
+    {
+      "id": "llm-basic-211",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「参数高效微调」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，PEFT 只训练少量新增或选定参数，并冻结大部分基座权重，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，LoRA 只能注入 embedding 层，不能用于注意力投影，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，alpha 只控制学习率，和 LoRA 权重无关，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，只要提高 rank，LoRA 就能保证模型学会任何新知识，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "PEFT 的目标是在较低训练和存储成本下适配任务。LoRA、adapter 和 prefix tuning 都属于相关思路。 常见误区：把 PEFT 与更强模型结构混为一谈，会忽略其成本动机。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "参数高效微调"
+      ],
+      "sortOrder": 211
+    },
+    {
+      "id": "llm-basic-212",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「参数高效微调」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，LoRA 用两个低秩矩阵 A、B 表示权重增量，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，PEFT 必须更新全部模型参数才能生效，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，选择哪些线性层注入 LoRA 会影响容量和成本，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，rank 控制低秩增量的表达能力与可训练参数量，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。把 PEFT 与更强模型结构混为一谈，会忽略其成本动机 正确理解是：PEFT 只训练少量新增或选定参数，并冻结大部分基座权重。PEFT 的目标是在较低训练和存储成本下适配任务。LoRA、adapter 和 prefix tuning 都属于相关思路。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "参数高效微调"
+      ],
+      "sortOrder": 212
+    },
+    {
+      "id": "llm-basic-213",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：PEFT 的目标是在较低训练和存储成本下适配任务。LoRA、adapter 和 prefix tuning 都属于相关思路。 据此判断「参数高效微调」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "只要提高 rank，LoRA 就能保证模型学会任何新知识",
+        "alpha 常与 rank 一起缩放 LoRA 更新的有效强度",
+        "PEFT 只训练少量新增或选定参数，并冻结大部分基座权重",
+        "QLoRA 把 LoRA 权重永久量化到 1 位",
+        "合并 adapter 后无法再切换其他任务适配器"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          2
+        ]
+      },
+      "explain": "正确项共同指向微调、PEFT 与 LoRA的机制与边界。PEFT 的目标是在较低训练和存储成本下适配任务。LoRA、adapter 和 prefix tuning 都属于相关思路。 常见误区：把 PEFT 与更强模型结构混为一谈，会忽略其成本动机。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "参数高效微调",
+        "机制判断"
+      ],
+      "sortOrder": 213
+    },
+    {
+      "id": "llm-basic-214",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「把 PEFT 与更强模型结构混为一谈，会忽略其成本动机」。为排除该误区，关于「参数高效微调」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "QLoRA 把 LoRA 权重永久量化到 1 位",
+        "PEFT 只训练少量新增或选定参数，并冻结大部分基座权重",
+        "只要提高 rank，LoRA 就能保证模型学会任何新知识",
+        "LoRA 权重可以在部署前合并进基座权重以简化推理",
+        "选择哪些线性层注入 LoRA 会影响容量和成本"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向微调、PEFT 与 LoRA的机制与边界。PEFT 的目标是在较低训练和存储成本下适配任务。LoRA、adapter 和 prefix tuning 都属于相关思路。 常见误区：把 PEFT 与更强模型结构混为一谈，会忽略其成本动机。【扩展】LoRA 参数量：rank×(d_in+d_out)。多模块和多层部署时还要乘以目标矩阵数量。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "参数高效微调",
+        "机制判断"
+      ],
+      "sortOrder": 214
+    },
+    {
+      "id": "llm-basic-215",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "PEFT 只训练少量新增或选定参数，并冻结大部分基座权重",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "PEFT 的目标是在较低训练和存储成本下适配任务。LoRA、adapter 和 prefix tuning 都属于相关思路。 常见误区：把 PEFT 与更强模型结构混为一谈，会忽略其成本动机。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "参数高效微调",
+        "正误辨析"
+      ],
+      "sortOrder": 215
+    },
+    {
+      "id": "llm-basic-216",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「LoRA 的低秩分解」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，QLoRA 把 LoRA 权重永久量化到 1 位，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，alpha 只控制学习率，和 LoRA 权重无关，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，LoRA 用两个低秩矩阵 A、B 表示权重增量，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，合并 adapter 后无法再切换其他任务适配器，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "增量权重可写成 ΔW=BA 或 AB，具体顺序依实现约定。基座权重保持冻结，只训练低秩矩阵。 常见误区：把 A、B 的维度写反，会导致参数量计算和实现不一致。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA 的低秩分解"
+      ],
+      "sortOrder": 216
+    },
+    {
+      "id": "llm-basic-217",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「LoRA 的低秩分解」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，LoRA 权重可以在部署前合并进基座权重以简化推理，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，rank 控制低秩增量的表达能力与可训练参数量，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，选择哪些线性层注入 LoRA 会影响容量和成本，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，LoRA 直接复制完整权重矩阵并永久冻结，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。把 A、B 的维度写反，会导致参数量计算和实现不一致 正确理解是：LoRA 用两个低秩矩阵 A、B 表示权重增量。增量权重可写成 ΔW=BA 或 AB，具体顺序依实现约定。基座权重保持冻结，只训练低秩矩阵。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA 的低秩分解"
+      ],
+      "sortOrder": 217
+    },
+    {
+      "id": "llm-basic-218",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：增量权重可写成 ΔW=BA 或 AB，具体顺序依实现约定。基座权重保持冻结，只训练低秩矩阵。 据此判断「LoRA 的低秩分解」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "PEFT 必须更新全部模型参数才能生效",
+        "LoRA 用两个低秩矩阵 A、B 表示权重增量",
+        "只要提高 rank，LoRA 就能保证模型学会任何新知识",
+        "在低比特量化的基座上训练 LoRA adapter",
+        "LoRA 权重可以在部署前合并进基座权重以简化推理"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向微调、PEFT 与 LoRA的机制与边界。增量权重可写成 ΔW=BA 或 AB，具体顺序依实现约定。基座权重保持冻结，只训练低秩矩阵。 常见误区：把 A、B 的维度写反，会导致参数量计算和实现不一致。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA 的低秩分解",
+        "机制判断"
+      ],
+      "sortOrder": 218
+    },
+    {
+      "id": "llm-basic-219",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「把 A、B 的维度写反，会导致参数量计算和实现不一致」。为排除该误区，关于「LoRA 的低秩分解」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "LoRA 用两个低秩矩阵 A、B 表示权重增量",
+        "只要提高 rank，LoRA 就能保证模型学会任何新知识",
+        "PEFT 必须更新全部模型参数才能生效",
+        "选择哪些线性层注入 LoRA 会影响容量和成本",
+        "QLoRA 把 LoRA 权重永久量化到 1 位"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          3
+        ]
+      },
+      "explain": "正确项共同指向微调、PEFT 与 LoRA的机制与边界。增量权重可写成 ΔW=BA 或 AB，具体顺序依实现约定。基座权重保持冻结，只训练低秩矩阵。 常见误区：把 A、B 的维度写反，会导致参数量计算和实现不一致。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA 的低秩分解",
+        "机制判断"
+      ],
+      "sortOrder": 219
+    },
+    {
+      "id": "llm-basic-220",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 3,
+      "question": "LoRA 用两个低秩矩阵 A、B 表示权重增量",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "增量权重可写成 ΔW=BA 或 AB，具体顺序依实现约定。基座权重保持冻结，只训练低秩矩阵。 常见误区：把 A、B 的维度写反，会导致参数量计算和实现不一致。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA 的低秩分解",
+        "正误辨析"
+      ],
+      "sortOrder": 220
+    },
+    {
+      "id": "llm-basic-221",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「LoRA rank」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，rank 控制低秩增量的表达能力与可训练参数量，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，QLoRA 把 LoRA 权重永久量化到 1 位，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，合并 adapter 后无法再切换其他任务适配器，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，alpha 只控制学习率，和 LoRA 权重无关，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "rank 增大通常提高表达能力，同时增加可训练参数和显存。需要根据任务复杂度和数据量选择。 常见误区：把 rank 当作固定最优值，会忽视任务差异。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA rank"
+      ],
+      "sortOrder": 221
+    },
+    {
+      "id": "llm-basic-222",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 3,
+      "question": "关于「LoRA rank」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，LoRA 权重可以在部署前合并进基座权重以简化推理，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，rank 越大参数越少，因此总是更省显存，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，选择哪些线性层注入 LoRA 会影响容量和成本，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，LoRA 用两个低秩矩阵 A、B 表示权重增量，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。把 rank 当作固定最优值，会忽视任务差异 正确理解是：rank 控制低秩增量的表达能力与可训练参数量。rank 增大通常提高表达能力，同时增加可训练参数和显存。需要根据任务复杂度和数据量选择。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA rank"
+      ],
+      "sortOrder": 222
+    },
+    {
+      "id": "llm-basic-223",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：rank 增大通常提高表达能力，同时增加可训练参数和显存。需要根据任务复杂度和数据量选择。 据此判断「LoRA rank」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "LoRA 权重可以在部署前合并进基座权重以简化推理",
+        "PEFT 必须更新全部模型参数才能生效",
+        "LoRA 直接复制完整权重矩阵并永久冻结",
+        "rank 控制低秩增量的表达能力与可训练参数量",
+        "只要提高 rank，LoRA 就能保证模型学会任何新知识"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          3
+        ]
+      },
+      "explain": "正确项共同指向微调、PEFT 与 LoRA的机制与边界。rank 增大通常提高表达能力，同时增加可训练参数和显存。需要根据任务复杂度和数据量选择。 常见误区：把 rank 当作固定最优值，会忽视任务差异。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA rank",
+        "机制判断"
+      ],
+      "sortOrder": 223
+    },
+    {
+      "id": "llm-basic-224",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「把 rank 当作固定最优值，会忽视任务差异」。为排除该误区，关于「LoRA rank」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "rank 控制低秩增量的表达能力与可训练参数量",
+        "LoRA 主要改变行为适配，不能自动补齐基座缺失的全部知识",
+        "PEFT 必须更新全部模型参数才能生效",
+        "LoRA 直接复制完整权重矩阵并永久冻结",
+        "在低比特量化的基座上训练 LoRA adapter"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          1,
+          4
+        ]
+      },
+      "explain": "正确项共同指向微调、PEFT 与 LoRA的机制与边界。rank 增大通常提高表达能力，同时增加可训练参数和显存。需要根据任务复杂度和数据量选择。 常见误区：把 rank 当作固定最优值，会忽视任务差异。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA rank",
+        "机制判断"
+      ],
+      "sortOrder": 224
+    },
+    {
+      "id": "llm-basic-225",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 2,
+      "question": "rank 越大参数越少，因此总是更省显存",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：rank 控制低秩增量的表达能力与可训练参数量。rank 增大通常提高表达能力，同时增加可训练参数和显存。需要根据任务复杂度和数据量选择。 常见误区：把 rank 当作固定最优值，会忽视任务差异。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA rank",
+        "正误辨析"
+      ],
+      "sortOrder": 225
+    },
+    {
+      "id": "llm-basic-226",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「LoRA alpha」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，QLoRA 把 LoRA 权重永久量化到 1 位，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，只要提高 rank，LoRA 就能保证模型学会任何新知识，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，alpha 常与 rank 一起缩放 LoRA 更新的有效强度，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，LoRA 只能注入 embedding 层，不能用于注意力投影，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "许多实现使用 alpha/r 或类似缩放控制增量影响。alpha 过低可能学不动，过高可能不稳定。 常见误区：只改 rank 不改缩放，会得到不可比较的训练强度。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA alpha"
+      ],
+      "sortOrder": 226
+    },
+    {
+      "id": "llm-basic-227",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「LoRA alpha」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，rank 控制低秩增量的表达能力与可训练参数量，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，选择哪些线性层注入 LoRA 会影响容量和成本，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，LoRA 用两个低秩矩阵 A、B 表示权重增量，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，alpha 只控制学习率，和 LoRA 权重无关，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。只改 rank 不改缩放，会得到不可比较的训练强度 正确理解是：alpha 常与 rank 一起缩放 LoRA 更新的有效强度。许多实现使用 alpha/r 或类似缩放控制增量影响。alpha 过低可能学不动，过高可能不稳定。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA alpha"
+      ],
+      "sortOrder": 227
+    },
+    {
+      "id": "llm-basic-228",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：许多实现使用 alpha/r 或类似缩放控制增量影响。alpha 过低可能学不动，过高可能不稳定。 据此判断「LoRA alpha」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "alpha 常与 rank 一起缩放 LoRA 更新的有效强度",
+        "PEFT 只训练少量新增或选定参数，并冻结大部分基座权重",
+        "LoRA 直接复制完整权重矩阵并永久冻结",
+        "rank 越大参数越少，因此总是更省显存",
+        "LoRA 主要改变行为适配，不能自动补齐基座缺失的全部知识"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          1,
+          4
+        ]
+      },
+      "explain": "正确项共同指向微调、PEFT 与 LoRA的机制与边界。许多实现使用 alpha/r 或类似缩放控制增量影响。alpha 过低可能学不动，过高可能不稳定。 常见误区：只改 rank 不改缩放，会得到不可比较的训练强度。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA alpha",
+        "机制判断"
+      ],
+      "sortOrder": 228
+    },
+    {
+      "id": "llm-basic-229",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「只改 rank 不改缩放，会得到不可比较的训练强度」。为排除该误区，关于「LoRA alpha」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "在低比特量化的基座上训练 LoRA adapter",
+        "rank 越大参数越少，因此总是更省显存",
+        "LoRA 直接复制完整权重矩阵并永久冻结",
+        "PEFT 必须更新全部模型参数才能生效",
+        "alpha 常与 rank 一起缩放 LoRA 更新的有效强度"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          4
+        ]
+      },
+      "explain": "正确项共同指向微调、PEFT 与 LoRA的机制与边界。许多实现使用 alpha/r 或类似缩放控制增量影响。alpha 过低可能学不动，过高可能不稳定。 常见误区：只改 rank 不改缩放，会得到不可比较的训练强度。【扩展】LoRA 参数量：rank×(d_in+d_out)。多模块和多层部署时还要乘以目标矩阵数量。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA alpha",
+        "机制判断"
+      ],
+      "sortOrder": 229
+    },
+    {
+      "id": "llm-basic-230",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "alpha 只控制学习率，和 LoRA 权重无关",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：alpha 常与 rank 一起缩放 LoRA 更新的有效强度。许多实现使用 alpha/r 或类似缩放控制增量影响。alpha 过低可能学不动，过高可能不稳定。 常见误区：只改 rank 不改缩放，会得到不可比较的训练强度。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA alpha",
+        "正误辨析"
+      ],
+      "sortOrder": 230
+    },
+    {
+      "id": "llm-basic-231",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「LoRA target modules」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，选择哪些线性层注入 LoRA 会影响容量和成本，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，QLoRA 把 LoRA 权重永久量化到 1 位，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，合并 adapter 后无法再切换其他任务适配器，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，alpha 只控制学习率，和 LoRA 权重无关，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "常见目标包括注意力和前馈层投影。更多模块增加参数，也未必都带来同等收益。 常见误区：默认所有模块效果相同，会浪费训练资源。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA target modules"
+      ],
+      "sortOrder": 231
+    },
+    {
+      "id": "llm-basic-232",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「LoRA target modules」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，LoRA 主要改变行为适配，不能自动补齐基座缺失的全部知识，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，LoRA 只能注入 embedding 层，不能用于注意力投影，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，alpha 常与 rank 一起缩放 LoRA 更新的有效强度，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，PEFT 只训练少量新增或选定参数，并冻结大部分基座权重，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。默认所有模块效果相同，会浪费训练资源 正确理解是：选择哪些线性层注入 LoRA 会影响容量和成本。常见目标包括注意力和前馈层投影。更多模块增加参数，也未必都带来同等收益。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA target modules"
+      ],
+      "sortOrder": 232
+    },
+    {
+      "id": "llm-basic-233",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见目标包括注意力和前馈层投影。更多模块增加参数，也未必都带来同等收益。 据此判断「LoRA target modules」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "选择哪些线性层注入 LoRA 会影响容量和成本",
+        "rank 越大参数越少，因此总是更省显存",
+        "alpha 只控制学习率，和 LoRA 权重无关",
+        "LoRA 主要改变行为适配，不能自动补齐基座缺失的全部知识",
+        "LoRA 直接复制完整权重矩阵并永久冻结"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          3
+        ]
+      },
+      "explain": "正确项共同指向微调、PEFT 与 LoRA的机制与边界。常见目标包括注意力和前馈层投影。更多模块增加参数，也未必都带来同等收益。 常见误区：默认所有模块效果相同，会浪费训练资源。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA target modules",
+        "机制判断"
+      ],
+      "sortOrder": 233
+    },
+    {
+      "id": "llm-basic-234",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「默认所有模块效果相同，会浪费训练资源」。为排除该误区，关于「LoRA target modules」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "PEFT 只训练少量新增或选定参数，并冻结大部分基座权重",
+        "rank 越大参数越少，因此总是更省显存",
+        "alpha 只控制学习率，和 LoRA 权重无关",
+        "选择哪些线性层注入 LoRA 会影响容量和成本",
+        "LoRA 用两个低秩矩阵 A、B 表示权重增量"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向微调、PEFT 与 LoRA的机制与边界。常见目标包括注意力和前馈层投影。更多模块增加参数，也未必都带来同等收益。 常见误区：默认所有模块效果相同，会浪费训练资源。【扩展】LoRA 参数量：rank×(d_in+d_out)。多模块和多层部署时还要乘以目标矩阵数量。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA target modules",
+        "机制判断"
+      ],
+      "sortOrder": 234
+    },
+    {
+      "id": "llm-basic-235",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "选择哪些线性层注入 LoRA 会影响容量和成本",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "常见目标包括注意力和前馈层投影。更多模块增加参数，也未必都带来同等收益。 常见误区：默认所有模块效果相同，会浪费训练资源。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA target modules",
+        "正误辨析"
+      ],
+      "sortOrder": 235
+    },
+    {
+      "id": "llm-basic-236",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「adapter 合并」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，QLoRA 把 LoRA 权重永久量化到 1 位，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，只要提高 rank，LoRA 就能保证模型学会任何新知识，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，LoRA 权重可以在部署前合并进基座权重以简化推理，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，alpha 只控制学习率，和 LoRA 权重无关，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "合并能减少运行时分支，但会失去动态切换能力。独立加载更适合多租户或多任务服务。 常见误区：把合并视为唯一正确部署方式，会忽略多 adapter 场景。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "adapter 合并"
+      ],
+      "sortOrder": 236
+    },
+    {
+      "id": "llm-basic-237",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「adapter 合并」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，rank 控制低秩增量的表达能力与可训练参数量，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，LoRA 用两个低秩矩阵 A、B 表示权重增量，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，选择哪些线性层注入 LoRA 会影响容量和成本，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，合并 adapter 后无法再切换其他任务适配器，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。把合并视为唯一正确部署方式，会忽略多 adapter 场景 正确理解是：LoRA 权重可以在部署前合并进基座权重以简化推理。合并能减少运行时分支，但会失去动态切换能力。独立加载更适合多租户或多任务服务。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "adapter 合并"
+      ],
+      "sortOrder": 237
+    },
+    {
+      "id": "llm-basic-238",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：合并能减少运行时分支，但会失去动态切换能力。独立加载更适合多租户或多任务服务。 据此判断「adapter 合并」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "LoRA 只能注入 embedding 层，不能用于注意力投影",
+        "rank 控制低秩增量的表达能力与可训练参数量",
+        "alpha 只控制学习率，和 LoRA 权重无关",
+        "LoRA 权重可以在部署前合并进基座权重以简化推理",
+        "LoRA 用两个低秩矩阵 A、B 表示权重增量"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          3,
+          4
+        ]
+      },
+      "explain": "正确项共同指向微调、PEFT 与 LoRA的机制与边界。合并能减少运行时分支，但会失去动态切换能力。独立加载更适合多租户或多任务服务。 常见误区：把合并视为唯一正确部署方式，会忽略多 adapter 场景。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "adapter 合并",
+        "机制判断"
+      ],
+      "sortOrder": 238
+    },
+    {
+      "id": "llm-basic-239",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 3,
+      "question": "背景：常见误区是「把合并视为唯一正确部署方式，会忽略多 adapter 场景」。为排除该误区，关于「adapter 合并」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "rank 越大参数越少，因此总是更省显存",
+        "PEFT 只训练少量新增或选定参数，并冻结大部分基座权重",
+        "LoRA 权重可以在部署前合并进基座权重以简化推理",
+        "LoRA 只能注入 embedding 层，不能用于注意力投影",
+        "alpha 只控制学习率，和 LoRA 权重无关"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          2
+        ]
+      },
+      "explain": "正确项共同指向微调、PEFT 与 LoRA的机制与边界。合并能减少运行时分支，但会失去动态切换能力。独立加载更适合多租户或多任务服务。 常见误区：把合并视为唯一正确部署方式，会忽略多 adapter 场景。【扩展】LoRA 参数量：rank×(d_in+d_out)。多模块和多层部署时还要乘以目标矩阵数量。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "adapter 合并",
+        "机制判断"
+      ],
+      "sortOrder": 239
+    },
+    {
+      "id": "llm-basic-240",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 1,
+      "question": "LoRA 权重可以在部署前合并进基座权重以简化推理",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": true
+      },
+      "explain": "合并能减少运行时分支，但会失去动态切换能力。独立加载更适合多租户或多任务服务。 常见误区：把合并视为唯一正确部署方式，会忽略多 adapter 场景。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "adapter 合并",
+        "正误辨析"
+      ],
+      "sortOrder": 240
+    },
+    {
+      "id": "llm-basic-241",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「QLoRA 的基本思路」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，在低比特量化的基座上训练 LoRA adapter，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，合并 adapter 后无法再切换其他任务适配器，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，alpha 只控制学习率，和 LoRA 权重无关，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，只要提高 rank，LoRA 就能保证模型学会任何新知识，并核对适用边界"
+      ],
+      "answer": {
+        "index": 0
+      },
+      "explain": "QLoRA 通过减少基座权重的存储占用降低微调门槛，同时保留 LoRA 的可训练增量。反量化和 kernel 支持会影响速度。 常见误区：把基座量化与 adapter 量化混为一谈，会误算显存和精度。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "QLoRA 的基本思路"
+      ],
+      "sortOrder": 241
+    },
+    {
+      "id": "llm-basic-242",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 2,
+      "question": "关于「QLoRA 的基本思路」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，rank 控制低秩增量的表达能力与可训练参数量，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，QLoRA 把 LoRA 权重永久量化到 1 位，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，LoRA 用两个低秩矩阵 A、B 表示权重增量，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，选择哪些线性层注入 LoRA 会影响容量和成本，并核对适用边界"
+      ],
+      "answer": {
+        "index": 1
+      },
+      "explain": "本题选择常见误区。把基座量化与 adapter 量化混为一谈，会误算显存和精度 正确理解是：在低比特量化的基座上训练 LoRA adapter。QLoRA 通过减少基座权重的存储占用降低微调门槛，同时保留 LoRA 的可训练增量。反量化和 kernel 支持会影响速度。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "QLoRA 的基本思路"
+      ],
+      "sortOrder": 242
+    },
+    {
+      "id": "llm-basic-243",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：QLoRA 通过减少基座权重的存储占用降低微调门槛，同时保留 LoRA 的可训练增量。反量化和 kernel 支持会影响速度。 据此判断「QLoRA 的基本思路」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "LoRA 只能注入 embedding 层，不能用于注意力投影",
+        "在低比特量化的基座上训练 LoRA adapter",
+        "合并 adapter 后无法再切换其他任务适配器",
+        "alpha 只控制学习率，和 LoRA 权重无关",
+        "LoRA 用两个低秩矩阵 A、B 表示权重增量"
+      ],
+      "answer": {
+        "indices": [
+          1,
+          4
+        ]
+      },
+      "explain": "正确项共同指向微调、PEFT 与 LoRA的机制与边界。QLoRA 通过减少基座权重的存储占用降低微调门槛，同时保留 LoRA 的可训练增量。反量化和 kernel 支持会影响速度。 常见误区：把基座量化与 adapter 量化混为一谈，会误算显存和精度。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "QLoRA 的基本思路",
+        "机制判断"
+      ],
+      "sortOrder": 243
+    },
+    {
+      "id": "llm-basic-244",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「把基座量化与 adapter 量化混为一谈，会误算显存和精度」。为排除该误区，关于「QLoRA 的基本思路」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "在低比特量化的基座上训练 LoRA adapter",
+        "rank 控制低秩增量的表达能力与可训练参数量",
+        "alpha 常与 rank 一起缩放 LoRA 更新的有效强度",
+        "LoRA 只能注入 embedding 层，不能用于注意力投影",
+        "合并 adapter 后无法再切换其他任务适配器"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          1,
+          2
+        ]
+      },
+      "explain": "正确项共同指向微调、PEFT 与 LoRA的机制与边界。QLoRA 通过减少基座权重的存储占用降低微调门槛，同时保留 LoRA 的可训练增量。反量化和 kernel 支持会影响速度。 常见误区：把基座量化与 adapter 量化混为一谈，会误算显存和精度。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "QLoRA 的基本思路",
+        "机制判断"
+      ],
+      "sortOrder": 244
+    },
+    {
+      "id": "llm-basic-245",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 3,
+      "question": "QLoRA 把 LoRA 权重永久量化到 1 位",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：在低比特量化的基座上训练 LoRA adapter。QLoRA 通过减少基座权重的存储占用降低微调门槛，同时保留 LoRA 的可训练增量。反量化和 kernel 支持会影响速度。 常见误区：把基座量化与 adapter 量化混为一谈，会误算显存和精度。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "QLoRA 的基本思路",
+        "正误辨析"
+      ],
+      "sortOrder": 245
+    },
+    {
+      "id": "llm-basic-246",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 1,
+      "question": "关于「LoRA 的能力边界」，下列哪项表述正确？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，合并 adapter 后无法再切换其他任务适配器，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，LoRA 只能注入 embedding 层，不能用于注意力投影，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，LoRA 主要改变行为适配，不能自动补齐基座缺失的全部知识，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，alpha 只控制学习率，和 LoRA 权重无关，并核对适用边界"
+      ],
+      "answer": {
+        "index": 2
+      },
+      "explain": "LoRA 的参数容量和数据质量仍有限制。对于知识更新，检索或更强的数据训练往往比盲目提高 rank 更有效。 常见误区：把微调当作知识库替代品，容易产生记忆和更新困难。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA 的能力边界"
+      ],
+      "sortOrder": 246
+    },
+    {
+      "id": "llm-basic-247",
+      "deckId": "llm-basic",
+      "type": "single",
+      "difficulty": 3,
+      "question": "关于「LoRA 的能力边界」，下列哪项属于常见误区？",
+      "code": null,
+      "options": [
+        "在不额外假设具体实现细节的前提下，PEFT 只训练少量新增或选定参数，并冻结大部分基座权重，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，LoRA 权重可以在部署前合并进基座权重以简化推理，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，alpha 常与 rank 一起缩放 LoRA 更新的有效强度，并核对适用边界",
+        "在不额外假设具体实现细节的前提下，只要提高 rank，LoRA 就能保证模型学会任何新知识，并核对适用边界"
+      ],
+      "answer": {
+        "index": 3
+      },
+      "explain": "本题选择常见误区。把微调当作知识库替代品，容易产生记忆和更新困难 正确理解是：LoRA 主要改变行为适配，不能自动补齐基座缺失的全部知识。LoRA 的参数容量和数据质量仍有限制。对于知识更新，检索或更强的数据训练往往比盲目提高 rank 更有效。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA 的能力边界"
+      ],
+      "sortOrder": 247
+    },
+    {
+      "id": "llm-basic-248",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 1,
+      "question": "背景：LoRA 的参数容量和数据质量仍有限制。对于知识更新，检索或更强的数据训练往往比盲目提高 rank 更有效。 据此判断「LoRA 的能力边界」的机制，下列哪些表述成立？",
+      "code": null,
+      "options": [
+        "选择哪些线性层注入 LoRA 会影响容量和成本",
+        "QLoRA 把 LoRA 权重永久量化到 1 位",
+        "LoRA 主要改变行为适配，不能自动补齐基座缺失的全部知识",
+        "合并 adapter 后无法再切换其他任务适配器",
+        "alpha 常与 rank 一起缩放 LoRA 更新的有效强度"
+      ],
+      "answer": {
+        "indices": [
+          0,
+          2,
+          4
+        ]
+      },
+      "explain": "正确项共同指向微调、PEFT 与 LoRA的机制与边界。LoRA 的参数容量和数据质量仍有限制。对于知识更新，检索或更强的数据训练往往比盲目提高 rank 更有效。 常见误区：把微调当作知识库替代品，容易产生记忆和更新困难。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA 的能力边界",
+        "机制判断"
+      ],
+      "sortOrder": 248
+    },
+    {
+      "id": "llm-basic-249",
+      "deckId": "llm-basic",
+      "type": "multi",
+      "difficulty": 2,
+      "question": "背景：常见误区是「把微调当作知识库替代品，容易产生记忆和更新困难」。为排除该误区，关于「LoRA 的能力边界」下列哪些原则应保留？",
+      "code": null,
+      "options": [
+        "LoRA 只能注入 embedding 层，不能用于注意力投影",
+        "合并 adapter 后无法再切换其他任务适配器",
+        "rank 控制低秩增量的表达能力与可训练参数量",
+        "LoRA 主要改变行为适配，不能自动补齐基座缺失的全部知识",
+        "QLoRA 把 LoRA 权重永久量化到 1 位"
+      ],
+      "answer": {
+        "indices": [
+          2,
+          3
+        ]
+      },
+      "explain": "正确项共同指向微调、PEFT 与 LoRA的机制与边界。LoRA 的参数容量和数据质量仍有限制。对于知识更新，检索或更强的数据训练往往比盲目提高 rank 更有效。 常见误区：把微调当作知识库替代品，容易产生记忆和更新困难。 判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA 的能力边界",
+        "机制判断"
+      ],
+      "sortOrder": 249
+    },
+    {
+      "id": "llm-basic-250",
+      "deckId": "llm-basic",
+      "type": "judge",
+      "difficulty": 2,
+      "question": "只要提高 rank，LoRA 就能保证模型学会任何新知识",
+      "code": null,
+      "options": null,
+      "answer": {
+        "value": false
+      },
+      "explain": "题干错误。正确表述是：LoRA 主要改变行为适配，不能自动补齐基座缺失的全部知识。LoRA 的参数容量和数据质量仍有限制。对于知识更新，检索或更强的数据训练往往比盲目提高 rank 更有效。 常见误区：把微调当作知识库替代品，容易产生记忆和更新困难。判断时应核对对象、条件、结果、失败边界和反例，不能只背术语。",
+      "tags": [
+        "微调、PEFT 与 LoRA",
+        "LoRA 的能力边界",
+        "正误辨析"
+      ],
+      "sortOrder": 250
+    }
+  ]
+}

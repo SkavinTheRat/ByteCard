@@ -1,6 +1,10 @@
 /// <reference types="jest" />
 
-import { buildUserPrompt, correctAnswerText } from '@/ai/prompts';
+import {
+  buildUserPrompt,
+  CARD_SYSTEM_PROMPT,
+  correctAnswerText,
+} from '@/ai/prompts';
 import type { AIRequest } from '@/ai/provider';
 import type { Card } from '@/types';
 
@@ -45,5 +49,11 @@ describe('AI prompts', () => {
       kind: 'example',
     });
     expect(prompt).toContain('不要超过 3 行');
+  });
+
+  it('出题 prompt 不再把 A 当作单选答案示例', () => {
+    expect(CARD_SYSTEM_PROMPT).not.toContain('"answer": { "index": 0 }');
+    expect(CARD_SYSTEM_PROMPT).toContain('"answer": { "index": -1 }');
+    expect(CARD_SYSTEM_PROMPT).toContain('正确项不得默认放在 A 或任何固定位置');
   });
 });

@@ -648,6 +648,378 @@
         "任务成功率、步骤数与成本指标",
         "可复现实验与轨迹评估"
       ]
+    },
+    {
+      "id": "llm-basic-attention",
+      "deckId": "llm-basic",
+      "name": "Transformer 与注意力基础",
+      "points": [
+        "token、embedding、hidden state 与 logits 的区别",
+        "Q、K、V 在缩放点积注意力中的角色",
+        "attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V 的矩阵形状",
+        "多头注意力与因果掩码的作用",
+        "绝对位置编码、相对位置编码与 RoPE 的使用目的",
+        "自注意力相对 RNN 的并行性与 O(n^2) 成本"
+      ]
+    },
+    {
+      "id": "llm-basic-pretraining",
+      "deckId": "llm-basic",
+      "name": "预训练与 Tokenization",
+      "points": [
+        "词表、token 与字符/词粒度的区别",
+        "BPE 如何通过合并高频符号形成子词",
+        "causal language model 的下一 token 训练目标",
+        "交叉熵损失与 next-token 概率的关系",
+        "训练数据重复、噪声与数据污染的基本影响",
+        "perplexity 的含义和不可直接跨 tokenizer 比较的原因"
+      ]
+    },
+    {
+      "id": "llm-basic-sft",
+      "deckId": "llm-basic",
+      "name": "SFT 与后训练流程",
+      "points": [
+        "预训练、SFT 与偏好优化的阶段差异",
+        "指令样本中的 system、user、assistant 角色",
+        "chat template 与训练/推理格式一致性的重要性",
+        "只在 assistant token 上计算损失的常见原因",
+        "SFT 数据规模、质量与多样性之间的取舍",
+        "SFT 过拟合和通用能力遗忘的识别方式"
+      ]
+    },
+    {
+      "id": "llm-basic-alignment",
+      "deckId": "llm-basic",
+      "name": "RLHF、奖励模型与 DPO",
+      "points": [
+        "偏好对的含义与 chosen/rejected 标签",
+        "奖励模型把回答质量映射为分数的基本思路",
+        "RLHF 的 SFT、奖励建模、策略优化三阶段",
+        "DPO 直接利用偏好数据优化策略的核心直觉",
+        "奖励黑客、过度优化与 KL 约束要解决的问题"
+      ]
+    },
+    {
+      "id": "llm-basic-inference",
+      "deckId": "llm-basic",
+      "name": "推理流程与采样参数",
+      "points": [
+        "logits、softmax 与 token 概率分布的关系",
+        "greedy decoding 与随机采样的差异",
+        "temperature 对概率分布尖锐程度的影响",
+        "top-k 与 top-p 如何限制候选 token",
+        "repetition penalty、max tokens 与 stop 条件",
+        "同一提示多次输出不同的来源以及可复现性"
+      ]
+    },
+    {
+      "id": "llm-basic-kv-serving",
+      "deckId": "llm-basic",
+      "name": "KV Cache 与推理服务入门",
+      "points": [
+        "KV Cache 复用了哪些已经计算过的张量",
+        "prefill 与 decode 两个阶段的请求特征",
+        "batch 推理为什么能提高吞吐",
+        "首 token 延迟 TTFT 与每 token 延迟的基本含义"
+      ]
+    },
+    {
+      "id": "llm-basic-quantization",
+      "deckId": "llm-basic",
+      "name": "量化与显存基础",
+      "points": [
+        "FP32、FP16、BF16、INT8 与 INT4 的主要差异",
+        "参数量与权重显存占用的近似估算",
+        "量化位宽、精度损失与推理速度之间不是单调关系",
+        "AI 回答为什么不能只看位数判断质量"
+      ]
+    },
+    {
+      "id": "llm-basic-peft",
+      "deckId": "llm-basic",
+      "name": "微调、PEFT 与 LoRA",
+      "points": [
+        "全量微调与参数高效微调的区别",
+        "LoRA 中低秩矩阵 A、B 与增量权重的关系",
+        "rank、alpha 与 target modules 的作用",
+        "SFT 数据格式与 loss mask 对训练结果的影响",
+        "adapter 合并和独立加载的部署取舍",
+        "LoRA 不能消除基础模型本身的偏见和知识缺口"
+      ]
+    },
+    {
+      "id": "llm-advanced-attention",
+      "deckId": "llm-advanced",
+      "name": "注意力机制与位置编码推导",
+      "points": [
+        "缩放点积注意力除以 sqrt(d_k) 的数值稳定性原因",
+        "QK^T、softmax 与 V 的 FLOPs 和显存量级",
+        "padding mask 与 causal mask 的区别",
+        "多头拆分、拼接与线性投影的维度守恒",
+        "RoPE 让相对位置信息进入注意力分数的基本方式",
+        "长上下文下注意力成本、FlashAttention 与近似方法的边界"
+      ]
+    },
+    {
+      "id": "llm-advanced-pretraining",
+      "deckId": "llm-advanced",
+      "name": "预训练数据与目标函数",
+      "points": [
+        "词表大小、序列长度与 embedding 参数量之间的权衡",
+        "BPE merge 顺序和 tokenizer 可逆性的边界",
+        "训练数据打包、跨文档注意力泄漏与 loss mask",
+        "去重、数据污染和 benchmark 分数虚高的常见来源",
+        "scaling law 中参数量、数据量与计算量的经验关系",
+        "next-token loss 下降不等于所有下游能力同步提升"
+      ]
+    },
+    {
+      "id": "llm-advanced-sft",
+      "deckId": "llm-advanced",
+      "name": "SFT 损失与数据工程",
+      "points": [
+        "token-level loss 与按样本平均 loss 的差异",
+        "system/user/assistant mask 写错导致的训练症状",
+        "多轮对话训练中的历史截断与角色一致性",
+        "SFT 数据配比、难例和拒答样本的影响"
+      ]
+    },
+    {
+      "id": "llm-advanced-alignment",
+      "deckId": "llm-advanced",
+      "name": "偏好优化：奖励模型、PPO 与 DPO",
+      "points": [
+        "Bradley-Terry 偏好模型与 pairwise ranking loss",
+        "RLHF 策略优化中的奖励、KL 正则与参考模型",
+        "PPO 的 clip 目标为什么限制策略更新幅度",
+        "DPO 损失如何隐式表达 chosen 相对 rejected 的优势",
+        "beta 参数对偏好约束和策略偏移的影响",
+        "奖励黑客、长度偏置和偏好数据偏见的识别"
+      ]
+    },
+    {
+      "id": "llm-advanced-inference",
+      "deckId": "llm-advanced",
+      "name": "解码策略与生成控制",
+      "points": [
+        "temperature 缩放 logits 后的概率变化",
+        "top-k 固定候选数与 top-p 动态候选集",
+        "beam search 的目标、成本与多样性损失",
+        "logprobs 的含义和不确定性判断的边界",
+        "streaming 输出、stop sequence 与结构化输出",
+        "采样参数组合造成的重复、跑题与格式失败"
+      ]
+    },
+    {
+      "id": "llm-advanced-kv-serving",
+      "deckId": "llm-advanced",
+      "name": "KV Cache、显存与推理调度",
+      "points": [
+        "KV cache bytes 与层数、头数、维度、序列长度的关系",
+        "MHA、MQA、GQA 的 KV 头数与显存差异",
+        "PagedAttention 如何降低碎片并支持非连续缓存",
+        "continuous batching 与静态 batching 的吞吐差异",
+        "prefill 与 decode 的计算密度和瓶颈不同",
+        "prefix caching 的复用条件与失效场景",
+        "并发数、序列长度和显存上限之间的约束",
+        "吞吐、TTFT、TPOT 与用户体验指标之间的取舍"
+      ]
+    },
+    {
+      "id": "llm-advanced-quantization",
+      "deckId": "llm-advanced",
+      "name": "量化误差、算法与性能",
+      "points": [
+        "affine quantization 的 scale 与 zero point",
+        "per-tensor、per-channel 与 group-wise 量化的粒度",
+        "outlier 对 INT8/INT4 精度和混合精度的影响",
+        "GPTQ 的逐层重建目标与 AWQ 的激活感知思路",
+        "权重显存下降不等于端到端延迟一定下降",
+        "反量化、kernel 支持与 batch 大小对吞吐的影响"
+      ]
+    },
+    {
+      "id": "llm-advanced-peft",
+      "deckId": "llm-advanced",
+      "name": "LoRA、QLoRA 与适配器部署",
+      "points": [
+        "LoRA 可训练参数量与 rank、输入输出维度、模块数量的关系",
+        "alpha/r 缩放对有效更新强度的影响",
+        "提高 rank 何时有帮助、何时只是增加成本",
+        "QLoRA 的 4-bit 基座权重、反量化与 LoRA 训练关系",
+        "多 adapter 服务、合并权重和回滚策略",
+        "训练集泄漏、模板错配和 adapter 评估缺口"
+      ]
+    },
+    {
+      "id": "agent-basic-rag",
+      "deckId": "agent-basic",
+      "name": "RAG、切分、Embedding、召回与重排",
+      "points": [
+        "RAG 的索引、检索、重排、生成基本链路",
+        "固定长度切分、语义切分与重叠窗口的用途",
+        "embedding 与 cosine similarity 的直觉",
+        "top-k 召回、元数据过滤与上下文预算",
+        "reranker 与向量召回的分工",
+        "引用来源、拒答和召回失败的基本降级",
+        "chunk 过大、过小以及 overlap 过多的症状",
+        "向量索引更新、删除与文档版本一致性问题",
+        "召回内容冲突时的处理原则",
+        "RAG 不等于微调：知识注入方式不同",
+        "query 改写与同义词扩展的简单场景",
+        "RAG 评测至少分别看检索与回答"
+      ]
+    },
+    {
+      "id": "agent-basic-tools",
+      "deckId": "agent-basic",
+      "name": "工具调用、Function Calling 与参数",
+      "points": [
+        "函数名、description 与参数 schema 的作用",
+        "JSON Schema 中 type、required、enum 与 additionalProperties",
+        "模型选择工具与真正执行工具的边界",
+        "参数校验失败和业务错误如何回传给模型",
+        "超时、重试、幂等性和副作用控制",
+        "工具结果过大时的截断、摘要与结构化返回",
+        "高风险操作为什么要人工确认和最小权限",
+        "function calling 与普通文本回答的区别",
+        "并行工具调用与依赖工具调用的调度",
+        "工具描述含糊导致的错选与参数错误"
+      ]
+    },
+    {
+      "id": "agent-basic-mcp",
+      "deckId": "agent-basic",
+      "name": "MCP、资源、工具与传输",
+      "points": [
+        "MCP host、client、server 的角色",
+        "tools、resources、prompts 的用途差异",
+        "stdio 与基于 HTTP 的传输选择",
+        "能力协商、请求与响应生命周期",
+        "资源读取和工具执行不是同一个动作",
+        "MCP server 的信任边界、授权和最小权限"
+      ]
+    },
+    {
+      "id": "agent-basic-memory",
+      "deckId": "agent-basic",
+      "name": "短期上下文、长期记忆与遗忘",
+      "points": [
+        "工作记忆、短期对话上下文与长期记忆的区别",
+        "哪些信息值得写入长期记忆",
+        "摘要、向量检索与结构化记忆的取舍",
+        "记忆召回过多造成的上下文污染",
+        "TTL、手动删除和遗忘策略的必要性",
+        "用户隐私、敏感信息与记忆授权"
+      ]
+    },
+    {
+      "id": "agent-basic-planning",
+      "deckId": "agent-basic",
+      "name": "规划、任务分解与 ReAct",
+      "points": [
+        "任务分解、依赖关系与可验证子目标",
+        "ReAct 的 thought-action-observation 循环",
+        "先规划后执行与边想边做的差异",
+        "观察结果触发重规划的条件",
+        "计划完成、失败和放弃的判定"
+      ]
+    },
+    {
+      "id": "agent-basic-loop",
+      "deckId": "agent-basic",
+      "name": "Agent 循环、终止与状态",
+      "points": [
+        "观察、决策、行动与状态更新的闭环",
+        "最大步数、预算和成功条件作为终止保护",
+        "工具失败后的重试、降级与人工接管"
+      ]
+    },
+    {
+      "id": "agent-advanced-rag",
+      "deckId": "agent-advanced",
+      "name": "RAG 检索质量、上下文与评测",
+      "points": [
+        "chunk 大小、重叠与召回/精度之间的权衡",
+        "query rewriting、multi-query 与 hybrid retrieval",
+        "embedding 模型、距离度量与归一化的匹配",
+        "hybrid score 融合和 reranker 的收益边界",
+        "context budget、去重与引用对齐",
+        "Recall@k、MRR、answer faithfulness 与 hallucination",
+        "知识库投毒、越权检索和提示注入风险"
+      ]
+    },
+    {
+      "id": "agent-advanced-tools",
+      "deckId": "agent-advanced",
+      "name": "工具契约、失败恢复与安全",
+      "points": [
+        "稳定工具 schema、版本兼容与错误码设计",
+        "幂等键、重试语义和事务/补偿的配合",
+        "并行调用中的依赖、限流与部分失败",
+        "不可信工具输出中的提示注入",
+        "工具调用链的可观测性、审计和回放",
+        "何时应该返回错误，何时应该给模型修复提示"
+      ]
+    },
+    {
+      "id": "agent-advanced-mcp",
+      "deckId": "agent-advanced",
+      "name": "MCP 协议生命周期与安全边界",
+      "points": [
+        "JSON-RPC 请求 id、方法、结果与错误结构",
+        "initialize、能力协商和协议版本不匹配",
+        "tools/list、tools/call 与 resources/read 的差异",
+        "stdio 与 Streamable HTTP 的生命周期差异",
+        "roots、sampling 等能力为何需要 host 授权",
+        "超时、取消、进度通知与断线恢复",
+        "恶意 server、工具混淆和权限扩散的防护"
+      ]
+    },
+    {
+      "id": "agent-advanced-memory",
+      "deckId": "agent-advanced",
+      "name": "长期记忆、检索与冲突处理",
+      "points": [
+        "相关度、时效性和重要性的联合排序",
+        "记忆写入去重、结构化与来源标记",
+        "新旧记忆冲突的优先级与人工确认",
+        "摘要压缩造成的信息损失与恢复策略",
+        "向量检索和关键词检索在记忆中的互补",
+        "遗忘、过期、删除请求与合规边界",
+        "记忆评测中的命中率、污染率和任务收益"
+      ]
+    },
+    {
+      "id": "agent-advanced-planning",
+      "deckId": "agent-advanced",
+      "name": "任务图、ReAct 与重规划",
+      "points": [
+        "任务 DAG、依赖边与可并行子任务",
+        "每个子目标的完成条件和验证证据",
+        "ReAct 循环中的观察质量与错误传播",
+        "计划失败后的局部修复、回溯与重规划",
+        "探索与利用、成本预算和风险预算",
+        "规划器与执行器分离的收益和额外状态",
+        "不确定环境中的恢复点和回滚策略",
+        "子任务并行时的共享状态与冲突",
+        "过度规划、循环规划和虚假完成信号",
+        "人类确认、审批和接管边界"
+      ]
+    },
+    {
+      "id": "agent-advanced-loop",
+      "deckId": "agent-advanced",
+      "name": "Agent 状态机、可靠性与终止条件",
+      "points": [
+        "显式状态机与隐式对话历史的状态差异",
+        "成功、失败、超预算和需要人工的终止类型",
+        "死循环、重复工具调用和状态不回退的检测",
+        "幂等执行、补偿动作和可恢复检查点",
+        "有副作用操作的人机确认与审计",
+        "轨迹级评测、步骤成本和可复现性"
+      ]
     }
   ]
 }

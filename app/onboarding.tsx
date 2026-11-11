@@ -2,6 +2,7 @@ import { useEffect, useState, type ComponentProps } from 'react';
 import {
   FlatList,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -28,14 +29,21 @@ export default function OnboardingScreen() {
   const setOnboarded = useSettingsStore((state) => state.setOnboarded);
   const [page, setPage] = useState(0);
   const [decks, setDecks] = useState<Deck[]>([]);
-  const [selected, setSelected] = useState<Set<string>>(
-    new Set(['ds', 'co', 'os', 'cn', 'ai', 'agent']),
-  );
+  const [selected, setSelected] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     void listDecks()
-      .then(setDecks)
+      .then((rows) => {
+        setDecks(rows);
+        setSelected(
+          new Set(
+            rows
+              .map((deck) => deck.id)
+              .filter((id) => ['ds', 'co', 'os', 'cn', 'ai', 'agent'].includes(id)),
+          ),
+        );
+      })
       .catch((error: unknown) => {
         console.warn('引导页学科读取失败', error);
       });
@@ -116,7 +124,10 @@ export default function OnboardingScreen() {
               </View>
             ) : null}
             {item === 'decks' ? (
-              <View style={styles.deckPage}>
+              <ScrollView
+                contentContainerStyle={styles.deckPage}
+                showsVerticalScrollIndicator={false}
+              >
                 <Text style={styles.heroSmall}>{zh.onboarding.deckTitle}</Text>
                 <Text style={styles.body}>{zh.onboarding.deckBody}</Text>
                 <View style={styles.deckGrid}>
@@ -143,7 +154,7 @@ export default function OnboardingScreen() {
                     );
                   })}
                 </View>
-              </View>
+              </ScrollView>
             ) : null}
           </View>
         )}

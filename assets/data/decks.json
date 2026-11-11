@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 6,
   "removed": [],
   "minAppVersion": "1.0.0",
   "decks": [
@@ -50,6 +50,38 @@
       "description": "Agent、工具调用、记忆与 RAG",
       "accent": "#60A5FA",
       "sortOrder": 6
+    },
+    {
+      "id": "llm-basic",
+      "name": "大模型初级",
+      "code": "LLM-BASE",
+      "description": "Transformer、预训练、SFT、采样、KV Cache 与 LoRA 基础",
+      "accent": "#F472B6",
+      "sortOrder": 7
+    },
+    {
+      "id": "llm-advanced",
+      "name": "大模型进阶",
+      "code": "LLM-PRO",
+      "description": "注意力推导、后训练、推理服务、量化与 PEFT 工程",
+      "accent": "#A78BFA",
+      "sortOrder": 8
+    },
+    {
+      "id": "agent-basic",
+      "name": "智能体初级",
+      "code": "AGENT-BASE",
+      "description": "RAG、工具调用、MCP、记忆、规划与 Agent 循环",
+      "accent": "#60A5FA",
+      "sortOrder": 9
+    },
+    {
+      "id": "agent-advanced",
+      "name": "智能体进阶",
+      "code": "AGENT-PRO",
+      "description": "检索质量、工具恢复、记忆冲突、重规划与可靠性",
+      "accent": "#34D399",
+      "sortOrder": 10
     }
   ]
 }

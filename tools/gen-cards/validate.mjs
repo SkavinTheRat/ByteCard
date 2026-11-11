@@ -9,7 +9,11 @@ import {
   relativeToRoot,
   root,
 } from './shared.mjs';
-import { difficultyWarnings, validateCard } from './validate-core.mjs';
+import {
+  answerDistributionIssues,
+  difficultyWarnings,
+  validateCard,
+} from './validate-core.mjs';
 
 const args = parseArgs(process.argv.slice(2));
 const deckFilter = args.values.get('deck');
@@ -67,11 +71,13 @@ for (const file of files) {
     card.tags = [card.sourcePoint ?? '知识点'];
     await writeFile(file, `${JSON.stringify(card, null, 2)}\n`, 'utf8');
   }
+  const existingWithoutSameId = allExisting.filter((item) => item.id !== card.id);
   const deckCards = accepted.filter((item) => item.deckId === deckId);
+  const mergedDeckCards = existingWithoutSameId.filter((item) => item.deckId === deckId);
   const report = validateCard(card, {
     file,
-    sameDeckCards: [...deckCards, ...(existingByDeck.get(deckId) ?? [])],
-    existingCards: allExisting,
+    sameDeckCards: [...deckCards, ...mergedDeckCards],
+    existingCards: existingWithoutSameId,
     globalTags,
   });
   const id = String(card?.id ?? basename(file, '.json'));
@@ -112,6 +118,8 @@ for (const deckId of decks) {
   }
 }
 
+const distributionIssues = answerDistributionIssues([...allExisting, ...accepted]);
+
 await mkdir(outDir, { recursive: true });
 const reasons = [...reasonCounts.entries()].sort((a, b) => b[1] - a[1]);
 const report = [
@@ -137,6 +145,12 @@ const report = [
   ...(warnings.length
     ? warnings.map((item) => `- \`${relativeToRoot(item.file)}\`：${item.warning}`)
     : ['- 无']),
+  '',
+  '## 答案位置分布',
+  '',
+  ...(distributionIssues.length
+    ? distributionIssues.map((issue) => `- ${issue}`)
+    : ['- 通过']),
   '',
 ].join('\n');
 await writeFile(join(outDir, 'report.md'), report, 'utf8');
@@ -169,3 +183,9 @@ if (reasons.length > 0) {
   );
 }
 if (rejected.length > 0) process.exitCode = 1;
+if (distributionIssues.length > 0) {
+  for (const issue of distributionIssues) {
+    console.error(`distribution: ${issue}`);
+  }
+  process.exitCode = 1;
+}

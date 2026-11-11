@@ -1,5 +1,5 @@
 {
-  "_note": "target 总和为 256。_calcTopics 中的 topic 必须单独生成、单独全量抽查。",
+  "_note": "原有 target 总和为 256；大模型与智能体扩充按覆盖驱动定稿为 1000，其中四个方向各 250，单方向容量上限 500。_calcTopics 中的 topic 必须单独生成、单独全量抽查。",
   "_calcTopics": [
     "co-cache-mapping",
     "co-cache-performance",
@@ -12,8 +12,239 @@
     "os-disk-scheduling",
     "cn-subnet",
     "cn-crc",
-    "ds-huffman"
+    "ds-huffman",
+    "llm-basic-attention",
+    "llm-advanced-attention",
+    "llm-advanced-kv-serving",
+    "llm-advanced-quantization",
+    "llm-advanced-peft-lora",
+    "agent-advanced-rag",
+    "agent-advanced-planning",
+    "agent-advanced-loop"
   ],
+  "_expansion": {
+    "status": "confirmed",
+    "newCards": 1000,
+    "existingCardsExcluded": 26,
+    "batchSize": 25,
+    "batchesPerDeck": 10,
+    "typeQuota": {
+      "single": 400,
+      "multi": 400,
+      "judge": 200
+    },
+    "typeQuotaPerDeck": {
+      "single": 100,
+      "multi": 100,
+      "judge": 50
+    },
+    "difficultyQuota": {
+      "1": 400,
+      "2": 400,
+      "3": 200
+    },
+    "difficultyQuotaPerDeck": {
+      "1": 100,
+      "2": 100,
+      "3": 50
+    },
+    "domainModuleQuota": {
+      "llm": {
+        "transformer-attention": 85,
+        "pretraining-tokenization": 65,
+        "sft-post-training": 50,
+        "alignment-rlhf-dpo": 55,
+        "inference-sampling": 65,
+        "kv-cache-serving": 65,
+        "quantization": 45,
+        "peft-lora": 70
+      },
+      "agent": {
+        "rag": 105,
+        "tool-calling": 95,
+        "mcp": 75,
+        "memory": 75,
+        "planning-react": 85,
+        "agent-loop-reliability": 65
+      }
+    },
+    "answerPositionPolicy": {
+      "targetSharePerOption": 0.25,
+      "maximumSharePerOption": 0.35,
+      "minimumSingleSample": 16
+    },
+    "reviewManifest": "tools/gen-cards/manifests/ai-expansion.json",
+    "cardExtensionPolicy": "来源与人工抽查信息只写外部 manifest，不写入 Card；公式和代码放在 explain/code 的纯文本中。",
+    "sources": {
+      "attention": {
+        "kind": "paper",
+        "title": "Attention Is All You Need",
+        "locator": "https://arxiv.org/abs/1706.03762"
+      },
+      "d2l": {
+        "kind": "textbook",
+        "title": "Dive into Deep Learning",
+        "locator": "https://d2l.ai/"
+      },
+      "bpe": {
+        "kind": "paper",
+        "title": "Neural Machine Translation of Rare Words with Subword Units",
+        "locator": "https://arxiv.org/abs/1508.07909"
+      },
+      "gpt3": {
+        "kind": "paper",
+        "title": "Language Models are Few-Shot Learners",
+        "locator": "https://arxiv.org/abs/2005.14165"
+      },
+      "instructgpt": {
+        "kind": "paper",
+        "title": "Training language models to follow instructions with human feedback",
+        "locator": "https://arxiv.org/abs/2203.02155"
+      },
+      "rlhf": {
+        "kind": "paper",
+        "title": "Deep Reinforcement Learning from Human Preferences",
+        "locator": "https://arxiv.org/abs/1706.03741"
+      },
+      "dpo": {
+        "kind": "paper",
+        "title": "Direct Preference Optimization",
+        "locator": "https://arxiv.org/abs/2305.18290"
+      },
+      "nucleus": {
+        "kind": "paper",
+        "title": "The Curious Case of Neural Text Degeneration",
+        "locator": "https://arxiv.org/abs/1904.09751"
+      },
+      "paged": {
+        "kind": "paper",
+        "title": "Efficient Memory Management for Large Language Model Serving with PagedAttention",
+        "locator": "https://arxiv.org/abs/2309.06180"
+      },
+      "mqa": {
+        "kind": "paper",
+        "title": "Fast Transformer Decoding: One Write-Head is All You Need",
+        "locator": "https://arxiv.org/abs/1911.02150"
+      },
+      "gqa": {
+        "kind": "paper",
+        "title": "GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints",
+        "locator": "https://arxiv.org/abs/2305.13245"
+      },
+      "gptq": {
+        "kind": "paper",
+        "title": "GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers",
+        "locator": "https://arxiv.org/abs/2210.17323"
+      },
+      "llm-int8": {
+        "kind": "paper",
+        "title": "LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale",
+        "locator": "https://arxiv.org/abs/2208.07339"
+      },
+      "lora": {
+        "kind": "paper",
+        "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+        "locator": "https://arxiv.org/abs/2106.09685"
+      },
+      "qlora": {
+        "kind": "paper",
+        "title": "QLoRA: Efficient Finetuning of Quantized LLMs",
+        "locator": "https://arxiv.org/abs/2305.14314"
+      },
+      "hf-generation": {
+        "kind": "official-doc",
+        "title": "Hugging Face Text Generation Strategies",
+        "locator": "https://huggingface.co/docs/transformers/main/en/generation_strategies"
+      },
+      "hf-transformers": {
+        "kind": "official-doc",
+        "title": "Hugging Face Transformers Documentation",
+        "locator": "https://huggingface.co/docs/transformers/"
+      },
+      "hf-peft": {
+        "kind": "official-doc",
+        "title": "Hugging Face PEFT Documentation",
+        "locator": "https://huggingface.co/docs/peft/"
+      },
+      "vllm": {
+        "kind": "official-doc",
+        "title": "vLLM Documentation",
+        "locator": "https://docs.vllm.ai/"
+      },
+      "scaling": {
+        "kind": "paper",
+        "title": "Scaling Laws for Neural Language Models",
+        "locator": "https://arxiv.org/abs/2001.08361"
+      },
+      "rag": {
+        "kind": "paper",
+        "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+        "locator": "https://arxiv.org/abs/2005.11401"
+      },
+      "dpr": {
+        "kind": "paper",
+        "title": "Dense Passage Retrieval for Open-Domain Question Answering",
+        "locator": "https://arxiv.org/abs/2004.04906"
+      },
+      "sentence-bert": {
+        "kind": "paper",
+        "title": "Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks",
+        "locator": "https://arxiv.org/abs/1908.10084"
+      },
+      "ragas": {
+        "kind": "paper",
+        "title": "RAGAS: Automated Evaluation of Retrieval Augmented Generation",
+        "locator": "https://arxiv.org/abs/2309.15217"
+      },
+      "react": {
+        "kind": "paper",
+        "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+        "locator": "https://arxiv.org/abs/2210.03629"
+      },
+      "toolformer": {
+        "kind": "paper",
+        "title": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+        "locator": "https://arxiv.org/abs/2302.04761"
+      },
+      "reflexion": {
+        "kind": "paper",
+        "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+        "locator": "https://arxiv.org/abs/2303.11366"
+      },
+      "json-schema": {
+        "kind": "standard",
+        "title": "JSON Schema Specification",
+        "locator": "https://json-schema.org/specification"
+      },
+      "openai-tools": {
+        "kind": "official-doc",
+        "title": "OpenAI Function Calling Guide",
+        "locator": "https://platform.openai.com/docs/guides/function-calling"
+      },
+      "mcp-spec": {
+        "kind": "standard",
+        "title": "Model Context Protocol Specification",
+        "locator": "https://modelcontextprotocol.io/specification/"
+      },
+      "memgpt": {
+        "kind": "paper",
+        "title": "MemGPT: Towards LLMs as Operating Systems",
+        "locator": "https://arxiv.org/abs/2310.08560"
+      },
+      "plan-solve": {
+        "kind": "paper",
+        "title": "Plan-and-Solve Prompting",
+        "locator": "https://arxiv.org/abs/2305.04091"
+      },
+      "langgraph": {
+        "kind": "official-doc",
+        "title": "LangGraph Documentation",
+        "locator": "https://docs.langchain.com/oss/python/langgraph/overview"
+      }
+    },
+    "capacityPerDeck": 500,
+    "targetCardsPerDeck": 250
+  },
   "decks": {
     "ds": {
       "name": "数据结构",
@@ -21,114 +252,240 @@
         {
           "id": "ds-linear-list",
           "name": "顺序表与链表",
-          "points": ["顺序表插入与删除的平均移动次数", "头结点、头指针与首元结点的区别"],
+          "points": [
+            "顺序表插入与删除的平均移动次数",
+            "头结点、头指针与首元结点的区别"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "ds-stack-queue",
           "name": "栈与队列",
-          "points": ["合法出栈序列的判定", "循环队列队空与队满条件"],
+          "points": [
+            "合法出栈序列的判定",
+            "循环队列队空与队满条件"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "ds-string-array",
           "name": "串与数组",
-          "points": ["KMP 的 next 数组含义", "特殊矩阵压缩存储的下标换算"],
+          "points": [
+            "KMP 的 next 数组含义",
+            "特殊矩阵压缩存储的下标换算"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "ds-tree-basic",
           "name": "二叉树性质",
-          "points": ["叶子结点与度为 2 结点的关系", "完全二叉树高度与结点编号性质"],
+          "points": [
+            "叶子结点与度为 2 结点的关系",
+            "完全二叉树高度与结点编号性质"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "ds-tree-traverse",
           "name": "树与二叉树遍历",
-          "points": ["由中序与先序序列还原二叉树", "二叉树的线索化与遍历线索"],
+          "points": [
+            "由中序与先序序列还原二叉树",
+            "二叉树的线索化与遍历线索"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "ds-huffman",
           "name": "哈夫曼树与编码",
-          "points": ["哈夫曼树的构造过程", "带权路径长度 WPL 的计算"],
+          "points": [
+            "哈夫曼树的构造过程",
+            "带权路径长度 WPL 的计算"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "ds-graph-storage",
           "name": "图的存储",
-          "points": ["邻接矩阵与邻接表的空间复杂度", "有向图出度与入度的存储差异"],
+          "points": [
+            "邻接矩阵与邻接表的空间复杂度",
+            "有向图出度与入度的存储差异"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "ds-graph-traverse",
           "name": "图的遍历",
-          "points": ["BFS 与 DFS 的访问序列", "图的连通分量与生成树计数"],
+          "points": [
+            "BFS 与 DFS 的访问序列",
+            "图的连通分量与生成树计数"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "ds-mst",
           "name": "最小生成树",
-          "points": ["Prim 算法每轮选点的依据", "Kruskal 算法与并查集的配合"],
+          "points": [
+            "Prim 算法每轮选点的依据",
+            "Kruskal 算法与并查集的配合"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "ds-shortest-path",
           "name": "最短路径",
-          "points": ["Dijkstra 不适用于负权边的原因", "Floyd 算法的状态转移与复杂度"],
+          "points": [
+            "Dijkstra 不适用于负权边的原因",
+            "Floyd 算法的状态转移与复杂度"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "ds-sort-basic",
           "name": "插入类与交换类排序",
-          "points": ["直接插入排序最好与最坏情况", "冒泡排序一趟后的确定位置"],
+          "points": [
+            "直接插入排序最好与最坏情况",
+            "冒泡排序一趟后的确定位置"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "ds-sort-divide",
           "name": "快速排序与归并排序",
-          "points": ["快速排序划分后枢轴的位置", "归并排序的空间复杂度"],
+          "points": [
+            "快速排序划分后枢轴的位置",
+            "归并排序的空间复杂度"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "ds-sort-select",
           "name": "选择类排序与堆排序",
-          "points": ["堆排序建堆的时间复杂度", "稳定性判断"],
+          "points": [
+            "堆排序建堆的时间复杂度",
+            "稳定性判断"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "ds-search",
           "name": "查找与散列",
-          "points": ["折半查找的判定树与比较次数", "开放定址法的探测序列"],
+          "points": [
+            "折半查找的判定树与比较次数",
+            "开放定址法的探测序列"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         }
       ]
     },
@@ -138,114 +495,240 @@
         {
           "id": "co-data-representation",
           "name": "数据表示与运算",
-          "points": ["补码表示范围与符号扩展", "溢出判断与算术移位"],
+          "points": [
+            "补码表示范围与符号扩展",
+            "溢出判断与算术移位"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "co-alu",
           "name": "运算器与 ALU",
-          "points": ["行波进位加法器的进位传播", "标志寄存器中 CF 与 OF 的区别"],
+          "points": [
+            "行波进位加法器的进位传播",
+            "标志寄存器中 CF 与 OF 的区别"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "co-cache-mapping",
           "name": "Cache 映射",
-          "points": ["直接映射的主存块号拆分", "组相联映射的组号计算"],
+          "points": [
+            "直接映射的主存块号拆分",
+            "组相联映射的组号计算"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "co-cache-performance",
           "name": "Cache 命中率",
-          "points": ["命中率、缺失率与平均访问时间", "写直达与写回策略的流量差异"],
+          "points": [
+            "命中率、缺失率与平均访问时间",
+            "写直达与写回策略的流量差异"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "co-main-memory",
           "name": "主存与存储器扩展",
-          "points": ["位扩展与字扩展的芯片数量", "存储容量与地址线数量换算"],
+          "points": [
+            "位扩展与字扩展的芯片数量",
+            "存储容量与地址线数量换算"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "co-instruction",
           "name": "指令系统",
-          "points": ["指令字长与操作码扩展", "寻址方式的有效地址计算"],
+          "points": [
+            "指令字长与操作码扩展",
+            "寻址方式的有效地址计算"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "co-pipeline",
           "name": "指令流水线",
-          "points": ["流水线吞吐率与加速比计算", "流水线周期与总执行时间"],
+          "points": [
+            "流水线吞吐率与加速比计算",
+            "流水线周期与总执行时间"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "co-hazards",
           "name": "流水线冒险",
-          "points": ["数据冒险的转发解决", "控制冒险的延迟槽与预测"],
+          "points": [
+            "数据冒险的转发解决",
+            "控制冒险的延迟槽与预测"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "co-cpu",
           "name": "CPU 与控制器",
-          "points": ["指令周期、机器周期与时钟周期", "微程序控制与硬布线控制"],
+          "points": [
+            "指令周期、机器周期与时钟周期",
+            "微程序控制与硬布线控制"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "co-bus",
           "name": "总线",
-          "points": ["总线带宽与传输周期计算", "同步总线与异步总线的握手"],
+          "points": [
+            "总线带宽与传输周期计算",
+            "同步总线与异步总线的握手"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "co-interrupt",
           "name": "中断与异常",
-          "points": ["中断响应过程与断点保存", "中断优先级与中断屏蔽"],
+          "points": [
+            "中断响应过程与断点保存",
+            "中断优先级与中断屏蔽"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "co-dma",
           "name": "DMA 与 I/O",
-          "points": ["DMA 与中断方式的 CPU 开销差异", "DMA 传送过程的所有权转移"],
+          "points": [
+            "DMA 与中断方式的 CPU 开销差异",
+            "DMA 传送过程的所有权转移"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "co-storage",
           "name": "磁盘与 RAID",
-          "points": ["磁盘容量、寻道与传输时间", "RAID 0、1、5 的冗余与容量"],
+          "points": [
+            "磁盘容量、寻道与传输时间",
+            "RAID 0、1、5 的冗余与容量"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "co-multicore",
           "name": "多核与并行体系结构",
-          "points": ["Cache 一致性的写无效协议", "SIMD 与多核并行的区别"],
+          "points": [
+            "Cache 一致性的写无效协议",
+            "SIMD 与多核并行的区别"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         }
       ]
     },
@@ -255,114 +738,240 @@
         {
           "id": "os-process-thread",
           "name": "进程与线程",
-          "points": ["进程与线程的地址空间与资源差异", "进程状态转换的合法边"],
+          "points": [
+            "进程与线程的地址空间与资源差异",
+            "进程状态转换的合法边"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "os-scheduling",
           "name": "处理机调度",
-          "points": ["FCFS、SJF、RR 的周转时间计算", "抢占式与非抢占式调度差异"],
+          "points": [
+            "FCFS、SJF、RR 的周转时间计算",
+            "抢占式与非抢占式调度差异"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "os-sync",
           "name": "同步与互斥",
-          "points": ["临界区三条件的含义", " Peterson 算法的进入与退出"],
+          "points": [
+            "临界区三条件的含义",
+            " Peterson 算法的进入与退出"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "os-semaphore",
           "name": "信号量",
-          "points": ["P、V 操作对信号量值的影响", "生产者消费者信号量的初值设置"],
+          "points": [
+            "P、V 操作对信号量值的影响",
+            "生产者消费者信号量的初值设置"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "os-deadlock",
           "name": "死锁",
-          "points": ["死锁四个必要条件", "资源分配图中的环与死锁关系"],
+          "points": [
+            "死锁四个必要条件",
+            "资源分配图中的环与死锁关系"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "os-banker",
           "name": "银行家算法",
-          "points": ["Need、Available 与 Work 的关系", "安全序列的逐步判定"],
+          "points": [
+            "Need、Available 与 Work 的关系",
+            "安全序列的逐步判定"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "os-memory",
           "name": "连续内存管理",
-          "points": ["首次适应与最佳适应的空闲区选择", "内部碎片与外部碎片的来源"],
+          "points": [
+            "首次适应与最佳适应的空闲区选择",
+            "内部碎片与外部碎片的来源"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "os-paging",
           "name": "分页与地址转换",
-          "points": ["页号与页内偏移的位数拆分", "二级页表的地址转换过程"],
+          "points": [
+            "页号与页内偏移的位数拆分",
+            "二级页表的地址转换过程"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "os-page-replacement",
           "name": "虚拟内存与页面置换",
-          "points": ["FIFO、LRU、OPT 的缺页次数", "Belady 异常的出现条件"],
+          "points": [
+            "FIFO、LRU、OPT 的缺页次数",
+            "Belady 异常的出现条件"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "os-file-system",
           "name": "文件系统",
-          "points": ["索引结点的作用与文件打开过程", "目录项与索引结点的关系"],
+          "points": [
+            "索引结点的作用与文件打开过程",
+            "目录项与索引结点的关系"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "os-disk-scheduling",
           "name": "磁盘调度",
-          "points": ["FCFS、SSTF、SCAN 的磁头移动量", "磁盘访问时间三段构成"],
+          "points": [
+            "FCFS、SSTF、SCAN 的磁头移动量",
+            "磁盘访问时间三段构成"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "os-io",
           "name": "I/O 管理",
-          "points": ["缓冲技术减少等待的原因", "SPOOLing 的输入井与输出井"],
+          "points": [
+            "缓冲技术减少等待的原因",
+            "SPOOLing 的输入井与输出井"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "os-protection",
           "name": "保护与安全",
-          "points": ["用户态与内核态切换", "访问控制矩阵与能力表"],
+          "points": [
+            "用户态与内核态切换",
+            "访问控制矩阵与能力表"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "os-virtualization",
           "name": "虚拟化与容器",
-          "points": ["虚拟机与容器的隔离边界", "系统调用与硬件虚拟化支持"],
+          "points": [
+            "虚拟机与容器的隔离边界",
+            "系统调用与硬件虚拟化支持"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         }
       ]
     },
@@ -372,114 +981,240 @@
         {
           "id": "cn-model",
           "name": "分层模型",
-          "points": ["OSI 与 TCP/IP 层的对应", "每层协议数据单元名称"],
+          "points": [
+            "OSI 与 TCP/IP 层的对应",
+            "每层协议数据单元名称"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "cn-physical",
           "name": "物理层与传输介质",
-          "points": ["奈奎斯特与香农公式的适用条件", "基带传输与频带传输"],
+          "points": [
+            "奈奎斯特与香农公式的适用条件",
+            "基带传输与频带传输"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "cn-framing",
           "name": "数据链路层组帧",
-          "points": ["字符填充与比特填充", "透明传输的含义"],
+          "points": [
+            "字符填充与比特填充",
+            "透明传输的含义"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "cn-crc",
           "name": "差错控制",
-          "points": ["CRC 生成多项式的模 2 除法", "海明码校验位数量与纠错范围"],
+          "points": [
+            "CRC 生成多项式的模 2 除法",
+            "海明码校验位数量与纠错范围"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "cn-ethernet",
           "name": "以太网与交换",
-          "points": ["CSMA/CD 的最短帧长与争用期", "交换机自学习转发表"],
+          "points": [
+            "CSMA/CD 的最短帧长与争用期",
+            "交换机自学习转发表"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "cn-network-layer",
           "name": "网络层与 IPv4",
-          "points": ["IPv4 首部字段与分片偏移", "TTL 与首部校验和"],
+          "points": [
+            "IPv4 首部字段与分片偏移",
+            "TTL 与首部校验和"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "cn-subnet",
           "name": "子网划分与 CIDR",
-          "points": ["子网掩码、网络地址与广播地址", "可用主机数与子网数计算"],
+          "points": [
+            "子网掩码、网络地址与广播地址",
+            "可用主机数与子网数计算"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "cn-routing",
           "name": "路由协议",
-          "points": ["距离向量算法的收敛问题", "OSPF 链路状态与区域"],
+          "points": [
+            "距离向量算法的收敛问题",
+            "OSPF 链路状态与区域"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "cn-transport",
           "name": "UDP 与 TCP",
-          "points": ["TCP 三次握手的序号与确认号", "UDP 首部与无连接特性"],
+          "points": [
+            "TCP 三次握手的序号与确认号",
+            "UDP 首部与无连接特性"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "cn-congestion",
           "name": "TCP 可靠传输与拥塞控制",
-          "points": ["慢开始、拥塞避免与快恢复", "滑动窗口与超时重传"],
+          "points": [
+            "慢开始、拥塞避免与快恢复",
+            "滑动窗口与超时重传"
+          ],
           "target": 4,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "cn-application",
           "name": "应用层协议",
-          "points": ["DNS 递归查询与迭代查询", "HTTP 请求响应与持久连接"],
+          "points": [
+            "DNS 递归查询与迭代查询",
+            "HTTP 请求响应与持久连接"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "cn-security",
           "name": "网络安全",
-          "points": ["对称加密与非对称加密的密钥用途", "数字证书与数字签名"],
+          "points": [
+            "对称加密与非对称加密的密钥用途",
+            "数字证书与数字签名"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "cn-wireless",
           "name": "无线网络",
-          "points": ["CSMA/CA 与 CSMA/CD 的差异", "802.11 帧与接入点"],
+          "points": [
+            "CSMA/CA 与 CSMA/CD 的差异",
+            "802.11 帧与接入点"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "cn-http",
           "name": "Web 与 CDN",
-          "points": ["Cookie 与 Session 的存储位置", "CDN 就近访问与 DNS 调度"],
+          "points": [
+            "Cookie 与 Session 的存储位置",
+            "CDN 就近访问与 DNS 调度"
+          ],
           "target": 4,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         }
       ]
     },
@@ -489,66 +1224,138 @@
         {
           "id": "ai-ml-basics",
           "name": "机器学习基本范式",
-          "points": ["监督、无监督与强化学习的信号差异", "训练集、验证集与测试集的职责"],
+          "points": [
+            "监督、无监督与强化学习的信号差异",
+            "训练集、验证集与测试集的职责"
+          ],
           "target": 2,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "ai-metrics",
           "name": "分类评价指标",
-          "points": ["精确率、召回率与 F1 的计算", "混淆矩阵中假阳性与假阴性"],
+          "points": [
+            "精确率、召回率与 F1 的计算",
+            "混淆矩阵中假阳性与假阴性"
+          ],
           "target": 2,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "ai-regression",
           "name": "回归与损失",
-          "points": ["均方误差的梯度形式", "线性回归的正则化"],
+          "points": [
+            "均方误差的梯度形式",
+            "线性回归的正则化"
+          ],
           "target": 2,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "ai-regularization",
           "name": "过拟合与正则化",
-          "points": ["L1、L2 正则对参数的影响", "训练误差下降但验证误差上升的含义"],
+          "points": [
+            "L1、L2 正则对参数的影响",
+            "训练误差下降但验证误差上升的含义"
+          ],
           "target": 2,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "ai-neural-net",
           "name": "神经网络基础",
-          "points": ["反向传播的链式法则", "激活函数与非线性表达"],
+          "points": [
+            "反向传播的链式法则",
+            "激活函数与非线性表达"
+          ],
           "target": 2,
-          "types": ["single", "fill"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "fill"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "ai-attention",
           "name": "注意力与 Transformer",
-          "points": ["缩放点积注意力的 Q、K、V 角色", "多头注意力与位置编码"],
+          "points": [
+            "缩放点积注意力的 Q、K、V 角色",
+            "多头注意力与位置编码"
+          ],
           "target": 2,
-          "types": ["single", "multi"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "ai-llm",
           "name": "大语言模型",
-          "points": ["预训练与指令微调的目标差异", "上下文窗口与事实储存的边界"],
+          "points": [
+            "预训练与指令微调的目标差异",
+            "上下文窗口与事实储存的边界"
+          ],
           "target": 2,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "ai-evaluation",
           "name": "模型评估与偏差",
-          "points": ["数据泄漏的典型来源", "类别不平衡下只看准确率的风险"],
+          "points": [
+            "数据泄漏的典型来源",
+            "类别不平衡下只看准确率的风险"
+          ],
           "target": 2,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         }
       ]
     },
@@ -558,68 +1365,1455 @@
         {
           "id": "agent-loop",
           "name": "Agent 基本循环",
-          "points": ["观察、思考、行动的闭环", "终止条件与最大步数保护"],
+          "points": [
+            "观察、思考、行动的闭环",
+            "终止条件与最大步数保护"
+          ],
           "target": 2,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "agent-tools",
           "name": "工具调用",
-          "points": ["工具 schema 与参数校验", "工具结果回填与错误恢复"],
+          "points": [
+            "工具 schema 与参数校验",
+            "工具结果回填与错误恢复"
+          ],
           "target": 2,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "agent-memory",
           "name": "Agent 记忆",
-          "points": ["短期上下文与长期记忆的区别", "记忆写入、检索与遗忘策略"],
+          "points": [
+            "短期上下文与长期记忆的区别",
+            "记忆写入、检索与遗忘策略"
+          ],
           "target": 2,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "agent-planning",
           "name": "规划与任务分解",
-          "points": ["ReAct 循环中的推理与行动", "计划重排与子任务依赖"],
+          "points": [
+            "ReAct 循环中的推理与行动",
+            "计划重排与子任务依赖"
+          ],
           "target": 2,
-          "types": ["single", "multi"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "agent-rag",
           "name": "RAG",
-          "points": ["文档切分、向量检索与生成", "召回率与上下文噪声的权衡"],
+          "points": [
+            "文档切分、向量检索与生成",
+            "召回率与上下文噪声的权衡"
+          ],
           "target": 2,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "agent-multi",
           "name": "多 Agent 协作",
-          "points": ["角色分工与消息传递", "集中协调与去中心化协作"],
+          "points": [
+            "角色分工与消息传递",
+            "集中协调与去中心化协作"
+          ],
           "target": 2,
-          "types": ["single", "multi"],
-          "difficulty": [1, 2]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            1,
+            2
+          ]
         },
         {
           "id": "agent-safety",
           "name": "Agent 安全",
-          "points": ["最小权限与工具白名单", "提示注入与不可信工具输出"],
+          "points": [
+            "最小权限与工具白名单",
+            "提示注入与不可信工具输出"
+          ],
           "target": 2,
-          "types": ["single", "multi"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         },
         {
           "id": "agent-evaluation",
           "name": "Agent 评估",
-          "points": ["任务成功率、步骤数与成本指标", "可复现实验与轨迹评估"],
+          "points": [
+            "任务成功率、步骤数与成本指标",
+            "可复现实验与轨迹评估"
+          ],
           "target": 2,
-          "types": ["single", "multi"],
-          "difficulty": [2, 3]
+          "types": [
+            "single",
+            "multi"
+          ],
+          "difficulty": [
+            2,
+            3
+          ]
         }
       ]
+    },
+    "llm-basic": {
+      "name": "大模型初级",
+      "domain": "llm",
+      "level": "basic",
+      "typeQuota": {
+        "single": 100,
+        "multi": 100,
+        "judge": 50
+      },
+      "difficultyQuota": {
+        "1": 100,
+        "2": 100,
+        "3": 50
+      },
+      "prerequisites": [
+        "ai-attention"
+      ],
+      "topics": [
+        {
+          "id": "llm-basic-attention",
+          "name": "Transformer 与注意力基础",
+          "module": "transformer-attention",
+          "sortOrder": 1,
+          "target": 45,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 18,
+            "multi": 18,
+            "judge": 9
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 18,
+            "2": 18,
+            "3": 9
+          },
+          "points": [
+            "token、embedding、hidden state 与 logits 的区别",
+            "Q、K、V 在缩放点积注意力中的角色",
+            "attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V 的矩阵形状",
+            "多头注意力与因果掩码的作用",
+            "绝对位置编码、相对位置编码与 RoPE 的使用目的",
+            "自注意力相对 RNN 的并行性与 O(n^2) 成本"
+          ],
+          "prerequisites": [],
+          "sourceRefs": [
+            "attention",
+            "d2l"
+          ],
+          "factCount": 9
+        },
+        {
+          "id": "llm-basic-pretraining",
+          "name": "预训练与 Tokenization",
+          "module": "pretraining-tokenization",
+          "sortOrder": 2,
+          "target": 35,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 14,
+            "multi": 14,
+            "judge": 7
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 14,
+            "2": 14,
+            "3": 7
+          },
+          "points": [
+            "词表、token 与字符/词粒度的区别",
+            "BPE 如何通过合并高频符号形成子词",
+            "causal language model 的下一 token 训练目标",
+            "交叉熵损失与 next-token 概率的关系",
+            "训练数据重复、噪声与数据污染的基本影响",
+            "perplexity 的含义和不可直接跨 tokenizer 比较的原因"
+          ],
+          "prerequisites": [
+            "llm-basic-attention"
+          ],
+          "sourceRefs": [
+            "bpe",
+            "gpt3",
+            "hf-transformers"
+          ],
+          "factCount": 7
+        },
+        {
+          "id": "llm-basic-sft",
+          "name": "SFT 与后训练流程",
+          "module": "sft-post-training",
+          "sortOrder": 3,
+          "target": 30,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 12,
+            "multi": 12,
+            "judge": 6
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 12,
+            "2": 12,
+            "3": 6
+          },
+          "points": [
+            "预训练、SFT 与偏好优化的阶段差异",
+            "指令样本中的 system、user、assistant 角色",
+            "chat template 与训练/推理格式一致性的重要性",
+            "只在 assistant token 上计算损失的常见原因",
+            "SFT 数据规模、质量与多样性之间的取舍",
+            "SFT 过拟合和通用能力遗忘的识别方式"
+          ],
+          "prerequisites": [
+            "llm-basic-pretraining"
+          ],
+          "sourceRefs": [
+            "instructgpt",
+            "hf-transformers"
+          ],
+          "factCount": 6
+        },
+        {
+          "id": "llm-basic-alignment",
+          "name": "RLHF、奖励模型与 DPO",
+          "module": "alignment-rlhf-dpo",
+          "sortOrder": 4,
+          "target": 20,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 8,
+            "multi": 8,
+            "judge": 4
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 8,
+            "2": 8,
+            "3": 4
+          },
+          "points": [
+            "偏好对的含义与 chosen/rejected 标签",
+            "奖励模型把回答质量映射为分数的基本思路",
+            "RLHF 的 SFT、奖励建模、策略优化三阶段",
+            "DPO 直接利用偏好数据优化策略的核心直觉",
+            "奖励黑客、过度优化与 KL 约束要解决的问题"
+          ],
+          "prerequisites": [
+            "llm-basic-sft"
+          ],
+          "sourceRefs": [
+            "rlhf",
+            "instructgpt",
+            "dpo"
+          ],
+          "factCount": 4
+        },
+        {
+          "id": "llm-basic-inference",
+          "name": "推理流程与采样参数",
+          "module": "inference-sampling",
+          "sortOrder": 5,
+          "target": 35,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 14,
+            "multi": 14,
+            "judge": 7
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 14,
+            "2": 14,
+            "3": 7
+          },
+          "points": [
+            "logits、softmax 与 token 概率分布的关系",
+            "greedy decoding 与随机采样的差异",
+            "temperature 对概率分布尖锐程度的影响",
+            "top-k 与 top-p 如何限制候选 token",
+            "repetition penalty、max tokens 与 stop 条件",
+            "同一提示多次输出不同的来源以及可复现性"
+          ],
+          "prerequisites": [
+            "llm-basic-pretraining"
+          ],
+          "sourceRefs": [
+            "nucleus",
+            "hf-generation"
+          ],
+          "factCount": 7
+        },
+        {
+          "id": "llm-basic-kv-serving",
+          "name": "KV Cache 与推理服务入门",
+          "module": "kv-cache-serving",
+          "sortOrder": 6,
+          "target": 25,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 10,
+            "multi": 10,
+            "judge": 5
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 10,
+            "2": 10,
+            "3": 5
+          },
+          "points": [
+            "KV Cache 复用了哪些已经计算过的张量",
+            "prefill 与 decode 两个阶段的请求特征",
+            "batch 推理为什么能提高吞吐",
+            "首 token 延迟 TTFT 与每 token 延迟的基本含义"
+          ],
+          "prerequisites": [
+            "llm-basic-attention",
+            "llm-basic-inference"
+          ],
+          "sourceRefs": [
+            "paged",
+            "vllm"
+          ],
+          "factCount": 5
+        },
+        {
+          "id": "llm-basic-quantization",
+          "name": "量化与显存基础",
+          "module": "quantization",
+          "sortOrder": 7,
+          "target": 20,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 8,
+            "multi": 8,
+            "judge": 4
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 8,
+            "2": 8,
+            "3": 4
+          },
+          "points": [
+            "FP32、FP16、BF16、INT8 与 INT4 的主要差异",
+            "参数量与权重显存占用的近似估算",
+            "量化位宽、精度损失与推理速度之间不是单调关系",
+            "AI 回答为什么不能只看位数判断质量"
+          ],
+          "prerequisites": [
+            "llm-basic-pretraining"
+          ],
+          "sourceRefs": [
+            "llm-int8",
+            "gptq"
+          ],
+          "factCount": 4
+        },
+        {
+          "id": "llm-basic-peft",
+          "name": "微调、PEFT 与 LoRA",
+          "module": "peft-lora",
+          "sortOrder": 8,
+          "target": 40,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 16,
+            "multi": 16,
+            "judge": 8
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 16,
+            "2": 16,
+            "3": 8
+          },
+          "points": [
+            "全量微调与参数高效微调的区别",
+            "LoRA 中低秩矩阵 A、B 与增量权重的关系",
+            "rank、alpha 与 target modules 的作用",
+            "SFT 数据格式与 loss mask 对训练结果的影响",
+            "adapter 合并和独立加载的部署取舍",
+            "LoRA 不能消除基础模型本身的偏见和知识缺口"
+          ],
+          "prerequisites": [
+            "llm-basic-sft"
+          ],
+          "sourceRefs": [
+            "lora",
+            "hf-peft"
+          ],
+          "factCount": 8
+        }
+      ],
+      "targetCards": 250,
+      "capacityCards": 500
+    },
+    "llm-advanced": {
+      "name": "大模型进阶",
+      "domain": "llm",
+      "level": "advanced",
+      "typeQuota": {
+        "single": 100,
+        "multi": 100,
+        "judge": 50
+      },
+      "difficultyQuota": {
+        "1": 100,
+        "2": 100,
+        "3": 50
+      },
+      "prerequisites": [
+        "llm-basic"
+      ],
+      "topics": [
+        {
+          "id": "llm-advanced-attention",
+          "name": "注意力机制与位置编码推导",
+          "module": "transformer-attention",
+          "sortOrder": 1,
+          "target": 40,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 16,
+            "multi": 16,
+            "judge": 8
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 16,
+            "2": 16,
+            "3": 8
+          },
+          "points": [
+            "缩放点积注意力除以 sqrt(d_k) 的数值稳定性原因",
+            "QK^T、softmax 与 V 的 FLOPs 和显存量级",
+            "padding mask 与 causal mask 的区别",
+            "多头拆分、拼接与线性投影的维度守恒",
+            "RoPE 让相对位置信息进入注意力分数的基本方式",
+            "长上下文下注意力成本、FlashAttention 与近似方法的边界"
+          ],
+          "prerequisites": [
+            "llm-basic-attention"
+          ],
+          "sourceRefs": [
+            "attention",
+            "d2l"
+          ],
+          "factCount": 8
+        },
+        {
+          "id": "llm-advanced-pretraining",
+          "name": "预训练数据与目标函数",
+          "module": "pretraining-tokenization",
+          "sortOrder": 2,
+          "target": 30,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 12,
+            "multi": 12,
+            "judge": 6
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 12,
+            "2": 12,
+            "3": 6
+          },
+          "points": [
+            "词表大小、序列长度与 embedding 参数量之间的权衡",
+            "BPE merge 顺序和 tokenizer 可逆性的边界",
+            "训练数据打包、跨文档注意力泄漏与 loss mask",
+            "去重、数据污染和 benchmark 分数虚高的常见来源",
+            "scaling law 中参数量、数据量与计算量的经验关系",
+            "next-token loss 下降不等于所有下游能力同步提升"
+          ],
+          "prerequisites": [
+            "llm-basic-pretraining"
+          ],
+          "sourceRefs": [
+            "bpe",
+            "gpt3",
+            "scaling"
+          ],
+          "factCount": 6
+        },
+        {
+          "id": "llm-advanced-sft",
+          "name": "SFT 损失与数据工程",
+          "module": "sft-post-training",
+          "sortOrder": 3,
+          "target": 20,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 8,
+            "multi": 8,
+            "judge": 4
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 8,
+            "2": 8,
+            "3": 4
+          },
+          "points": [
+            "token-level loss 与按样本平均 loss 的差异",
+            "system/user/assistant mask 写错导致的训练症状",
+            "多轮对话训练中的历史截断与角色一致性",
+            "SFT 数据配比、难例和拒答样本的影响"
+          ],
+          "prerequisites": [
+            "llm-basic-sft"
+          ],
+          "sourceRefs": [
+            "instructgpt",
+            "hf-transformers"
+          ],
+          "factCount": 4
+        },
+        {
+          "id": "llm-advanced-alignment",
+          "name": "偏好优化：奖励模型、PPO 与 DPO",
+          "module": "alignment-rlhf-dpo",
+          "sortOrder": 4,
+          "target": 35,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 14,
+            "multi": 14,
+            "judge": 7
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 14,
+            "2": 14,
+            "3": 7
+          },
+          "points": [
+            "Bradley-Terry 偏好模型与 pairwise ranking loss",
+            "RLHF 策略优化中的奖励、KL 正则与参考模型",
+            "PPO 的 clip 目标为什么限制策略更新幅度",
+            "DPO 损失如何隐式表达 chosen 相对 rejected 的优势",
+            "beta 参数对偏好约束和策略偏移的影响",
+            "奖励黑客、长度偏置和偏好数据偏见的识别"
+          ],
+          "prerequisites": [
+            "llm-basic-alignment",
+            "llm-basic-sft"
+          ],
+          "sourceRefs": [
+            "rlhf",
+            "instructgpt",
+            "dpo"
+          ],
+          "factCount": 7
+        },
+        {
+          "id": "llm-advanced-inference",
+          "name": "解码策略与生成控制",
+          "module": "inference-sampling",
+          "sortOrder": 5,
+          "target": 30,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 12,
+            "multi": 12,
+            "judge": 6
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 12,
+            "2": 12,
+            "3": 6
+          },
+          "points": [
+            "temperature 缩放 logits 后的概率变化",
+            "top-k 固定候选数与 top-p 动态候选集",
+            "beam search 的目标、成本与多样性损失",
+            "logprobs 的含义和不确定性判断的边界",
+            "streaming 输出、stop sequence 与结构化输出",
+            "采样参数组合造成的重复、跑题与格式失败"
+          ],
+          "prerequisites": [
+            "llm-basic-inference"
+          ],
+          "sourceRefs": [
+            "nucleus",
+            "hf-generation"
+          ],
+          "factCount": 6
+        },
+        {
+          "id": "llm-advanced-kv-serving",
+          "name": "KV Cache、显存与推理调度",
+          "module": "kv-cache-serving",
+          "sortOrder": 6,
+          "target": 40,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 16,
+            "multi": 16,
+            "judge": 8
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 16,
+            "2": 16,
+            "3": 8
+          },
+          "points": [
+            "KV cache bytes 与层数、头数、维度、序列长度的关系",
+            "MHA、MQA、GQA 的 KV 头数与显存差异",
+            "PagedAttention 如何降低碎片并支持非连续缓存",
+            "continuous batching 与静态 batching 的吞吐差异",
+            "prefill 与 decode 的计算密度和瓶颈不同",
+            "prefix caching 的复用条件与失效场景",
+            "并发数、序列长度和显存上限之间的约束",
+            "吞吐、TTFT、TPOT 与用户体验指标之间的取舍"
+          ],
+          "prerequisites": [
+            "llm-basic-kv-serving",
+            "llm-advanced-attention"
+          ],
+          "sourceRefs": [
+            "paged",
+            "mqa",
+            "gqa",
+            "vllm"
+          ],
+          "factCount": 8
+        },
+        {
+          "id": "llm-advanced-quantization",
+          "name": "量化误差、算法与性能",
+          "module": "quantization",
+          "sortOrder": 7,
+          "target": 25,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 10,
+            "multi": 10,
+            "judge": 5
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 10,
+            "2": 10,
+            "3": 5
+          },
+          "points": [
+            "affine quantization 的 scale 与 zero point",
+            "per-tensor、per-channel 与 group-wise 量化的粒度",
+            "outlier 对 INT8/INT4 精度和混合精度的影响",
+            "GPTQ 的逐层重建目标与 AWQ 的激活感知思路",
+            "权重显存下降不等于端到端延迟一定下降",
+            "反量化、kernel 支持与 batch 大小对吞吐的影响"
+          ],
+          "prerequisites": [
+            "llm-basic-quantization"
+          ],
+          "sourceRefs": [
+            "gptq",
+            "llm-int8"
+          ],
+          "factCount": 5
+        },
+        {
+          "id": "llm-advanced-peft",
+          "name": "LoRA、QLoRA 与适配器部署",
+          "module": "peft-lora",
+          "sortOrder": 8,
+          "target": 30,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 12,
+            "multi": 12,
+            "judge": 6
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 12,
+            "2": 12,
+            "3": 6
+          },
+          "points": [
+            "LoRA 可训练参数量与 rank、输入输出维度、模块数量的关系",
+            "alpha/r 缩放对有效更新强度的影响",
+            "提高 rank 何时有帮助、何时只是增加成本",
+            "QLoRA 的 4-bit 基座权重、反量化与 LoRA 训练关系",
+            "多 adapter 服务、合并权重和回滚策略",
+            "训练集泄漏、模板错配和 adapter 评估缺口"
+          ],
+          "prerequisites": [
+            "llm-basic-peft"
+          ],
+          "sourceRefs": [
+            "lora",
+            "qlora",
+            "hf-peft"
+          ],
+          "factCount": 6
+        }
+      ],
+      "targetCards": 250,
+      "capacityCards": 500
+    },
+    "agent-basic": {
+      "name": "智能体初级",
+      "domain": "agent",
+      "level": "basic",
+      "typeQuota": {
+        "single": 100,
+        "multi": 100,
+        "judge": 50
+      },
+      "difficultyQuota": {
+        "1": 100,
+        "2": 100,
+        "3": 50
+      },
+      "prerequisites": [
+        "agent-loop",
+        "agent-rag",
+        "agent-tools"
+      ],
+      "topics": [
+        {
+          "id": "agent-basic-rag",
+          "name": "RAG、切分、Embedding、召回与重排",
+          "module": "rag",
+          "sortOrder": 1,
+          "target": 60,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 24,
+            "multi": 24,
+            "judge": 12
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 24,
+            "2": 24,
+            "3": 12
+          },
+          "points": [
+            "RAG 的索引、检索、重排、生成基本链路",
+            "固定长度切分、语义切分与重叠窗口的用途",
+            "embedding 与 cosine similarity 的直觉",
+            "top-k 召回、元数据过滤与上下文预算",
+            "reranker 与向量召回的分工",
+            "引用来源、拒答和召回失败的基本降级",
+            "chunk 过大、过小以及 overlap 过多的症状",
+            "向量索引更新、删除与文档版本一致性问题",
+            "召回内容冲突时的处理原则",
+            "RAG 不等于微调：知识注入方式不同",
+            "query 改写与同义词扩展的简单场景",
+            "RAG 评测至少分别看检索与回答"
+          ],
+          "prerequisites": [],
+          "sourceRefs": [
+            "rag",
+            "dpr",
+            "sentence-bert"
+          ],
+          "factCount": 12
+        },
+        {
+          "id": "agent-basic-tools",
+          "name": "工具调用、Function Calling 与参数",
+          "module": "tool-calling",
+          "sortOrder": 2,
+          "target": 50,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 20,
+            "multi": 20,
+            "judge": 10
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 20,
+            "2": 20,
+            "3": 10
+          },
+          "points": [
+            "函数名、description 与参数 schema 的作用",
+            "JSON Schema 中 type、required、enum 与 additionalProperties",
+            "模型选择工具与真正执行工具的边界",
+            "参数校验失败和业务错误如何回传给模型",
+            "超时、重试、幂等性和副作用控制",
+            "工具结果过大时的截断、摘要与结构化返回",
+            "高风险操作为什么要人工确认和最小权限",
+            "function calling 与普通文本回答的区别",
+            "并行工具调用与依赖工具调用的调度",
+            "工具描述含糊导致的错选与参数错误"
+          ],
+          "prerequisites": [
+            "agent-basic-rag"
+          ],
+          "sourceRefs": [
+            "json-schema",
+            "openai-tools",
+            "toolformer"
+          ],
+          "factCount": 10
+        },
+        {
+          "id": "agent-basic-mcp",
+          "name": "MCP、资源、工具与传输",
+          "module": "mcp",
+          "sortOrder": 3,
+          "target": 35,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 14,
+            "multi": 14,
+            "judge": 7
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 14,
+            "2": 14,
+            "3": 7
+          },
+          "points": [
+            "MCP host、client、server 的角色",
+            "tools、resources、prompts 的用途差异",
+            "stdio 与基于 HTTP 的传输选择",
+            "能力协商、请求与响应生命周期",
+            "资源读取和工具执行不是同一个动作",
+            "MCP server 的信任边界、授权和最小权限"
+          ],
+          "prerequisites": [
+            "agent-basic-tools"
+          ],
+          "sourceRefs": [
+            "mcp-spec"
+          ],
+          "factCount": 7
+        },
+        {
+          "id": "agent-basic-memory",
+          "name": "短期上下文、长期记忆与遗忘",
+          "module": "memory",
+          "sortOrder": 4,
+          "target": 35,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 14,
+            "multi": 14,
+            "judge": 7
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 14,
+            "2": 14,
+            "3": 7
+          },
+          "points": [
+            "工作记忆、短期对话上下文与长期记忆的区别",
+            "哪些信息值得写入长期记忆",
+            "摘要、向量检索与结构化记忆的取舍",
+            "记忆召回过多造成的上下文污染",
+            "TTL、手动删除和遗忘策略的必要性",
+            "用户隐私、敏感信息与记忆授权"
+          ],
+          "prerequisites": [
+            "agent-basic-rag"
+          ],
+          "sourceRefs": [
+            "memgpt",
+            "rag"
+          ],
+          "factCount": 7
+        },
+        {
+          "id": "agent-basic-planning",
+          "name": "规划、任务分解与 ReAct",
+          "module": "planning-react",
+          "sortOrder": 5,
+          "target": 35,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 14,
+            "multi": 14,
+            "judge": 7
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 14,
+            "2": 14,
+            "3": 7
+          },
+          "points": [
+            "任务分解、依赖关系与可验证子目标",
+            "ReAct 的 thought-action-observation 循环",
+            "先规划后执行与边想边做的差异",
+            "观察结果触发重规划的条件",
+            "计划完成、失败和放弃的判定"
+          ],
+          "prerequisites": [
+            "agent-basic-tools"
+          ],
+          "sourceRefs": [
+            "react",
+            "plan-solve",
+            "reflexion"
+          ],
+          "factCount": 7
+        },
+        {
+          "id": "agent-basic-loop",
+          "name": "Agent 循环、终止与状态",
+          "module": "agent-loop-reliability",
+          "sortOrder": 6,
+          "target": 35,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 14,
+            "multi": 14,
+            "judge": 7
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 14,
+            "2": 14,
+            "3": 7
+          },
+          "points": [
+            "观察、决策、行动与状态更新的闭环",
+            "最大步数、预算和成功条件作为终止保护",
+            "工具失败后的重试、降级与人工接管"
+          ],
+          "prerequisites": [
+            "agent-basic-planning"
+          ],
+          "sourceRefs": [
+            "react",
+            "langgraph"
+          ],
+          "factCount": 7
+        }
+      ],
+      "targetCards": 250,
+      "capacityCards": 500
+    },
+    "agent-advanced": {
+      "name": "智能体进阶",
+      "domain": "agent",
+      "level": "advanced",
+      "typeQuota": {
+        "single": 100,
+        "multi": 100,
+        "judge": 50
+      },
+      "difficultyQuota": {
+        "1": 100,
+        "2": 100,
+        "3": 50
+      },
+      "prerequisites": [
+        "agent-basic"
+      ],
+      "topics": [
+        {
+          "id": "agent-advanced-rag",
+          "name": "RAG 检索质量、上下文与评测",
+          "module": "rag",
+          "sortOrder": 1,
+          "target": 45,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 18,
+            "multi": 18,
+            "judge": 9
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 18,
+            "2": 18,
+            "3": 9
+          },
+          "points": [
+            "chunk 大小、重叠与召回/精度之间的权衡",
+            "query rewriting、multi-query 与 hybrid retrieval",
+            "embedding 模型、距离度量与归一化的匹配",
+            "hybrid score 融合和 reranker 的收益边界",
+            "context budget、去重与引用对齐",
+            "Recall@k、MRR、answer faithfulness 与 hallucination",
+            "知识库投毒、越权检索和提示注入风险"
+          ],
+          "prerequisites": [
+            "agent-basic-rag"
+          ],
+          "sourceRefs": [
+            "rag",
+            "dpr",
+            "ragas"
+          ],
+          "factCount": 9
+        },
+        {
+          "id": "agent-advanced-tools",
+          "name": "工具契约、失败恢复与安全",
+          "module": "tool-calling",
+          "sortOrder": 2,
+          "target": 45,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 18,
+            "multi": 18,
+            "judge": 9
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 18,
+            "2": 18,
+            "3": 9
+          },
+          "points": [
+            "稳定工具 schema、版本兼容与错误码设计",
+            "幂等键、重试语义和事务/补偿的配合",
+            "并行调用中的依赖、限流与部分失败",
+            "不可信工具输出中的提示注入",
+            "工具调用链的可观测性、审计和回放",
+            "何时应该返回错误，何时应该给模型修复提示"
+          ],
+          "prerequisites": [
+            "agent-basic-tools"
+          ],
+          "sourceRefs": [
+            "json-schema",
+            "openai-tools",
+            "toolformer"
+          ],
+          "factCount": 9
+        },
+        {
+          "id": "agent-advanced-mcp",
+          "name": "MCP 协议生命周期与安全边界",
+          "module": "mcp",
+          "sortOrder": 3,
+          "target": 40,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 16,
+            "multi": 16,
+            "judge": 8
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 16,
+            "2": 16,
+            "3": 8
+          },
+          "points": [
+            "JSON-RPC 请求 id、方法、结果与错误结构",
+            "initialize、能力协商和协议版本不匹配",
+            "tools/list、tools/call 与 resources/read 的差异",
+            "stdio 与 Streamable HTTP 的生命周期差异",
+            "roots、sampling 等能力为何需要 host 授权",
+            "超时、取消、进度通知与断线恢复",
+            "恶意 server、工具混淆和权限扩散的防护"
+          ],
+          "prerequisites": [
+            "agent-basic-mcp"
+          ],
+          "sourceRefs": [
+            "mcp-spec",
+            "json-schema"
+          ],
+          "factCount": 8
+        },
+        {
+          "id": "agent-advanced-memory",
+          "name": "长期记忆、检索与冲突处理",
+          "module": "memory",
+          "sortOrder": 4,
+          "target": 40,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 16,
+            "multi": 16,
+            "judge": 8
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 16,
+            "2": 16,
+            "3": 8
+          },
+          "points": [
+            "相关度、时效性和重要性的联合排序",
+            "记忆写入去重、结构化与来源标记",
+            "新旧记忆冲突的优先级与人工确认",
+            "摘要压缩造成的信息损失与恢复策略",
+            "向量检索和关键词检索在记忆中的互补",
+            "遗忘、过期、删除请求与合规边界",
+            "记忆评测中的命中率、污染率和任务收益"
+          ],
+          "prerequisites": [
+            "agent-basic-memory"
+          ],
+          "sourceRefs": [
+            "memgpt",
+            "rag"
+          ],
+          "factCount": 8
+        },
+        {
+          "id": "agent-advanced-planning",
+          "name": "任务图、ReAct 与重规划",
+          "module": "planning-react",
+          "sortOrder": 5,
+          "target": 50,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 20,
+            "multi": 20,
+            "judge": 10
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 20,
+            "2": 20,
+            "3": 10
+          },
+          "points": [
+            "任务 DAG、依赖边与可并行子任务",
+            "每个子目标的完成条件和验证证据",
+            "ReAct 循环中的观察质量与错误传播",
+            "计划失败后的局部修复、回溯与重规划",
+            "探索与利用、成本预算和风险预算",
+            "规划器与执行器分离的收益和额外状态",
+            "不确定环境中的恢复点和回滚策略",
+            "子任务并行时的共享状态与冲突",
+            "过度规划、循环规划和虚假完成信号",
+            "人类确认、审批和接管边界"
+          ],
+          "prerequisites": [
+            "agent-basic-planning"
+          ],
+          "sourceRefs": [
+            "react",
+            "plan-solve",
+            "reflexion"
+          ],
+          "factCount": 10
+        },
+        {
+          "id": "agent-advanced-loop",
+          "name": "Agent 状态机、可靠性与终止条件",
+          "module": "agent-loop-reliability",
+          "sortOrder": 6,
+          "target": 30,
+          "types": [
+            "single",
+            "multi",
+            "judge"
+          ],
+          "typeQuota": {
+            "single": 12,
+            "multi": 12,
+            "judge": 6
+          },
+          "difficulty": [
+            1,
+            2,
+            3
+          ],
+          "difficultyQuota": {
+            "1": 12,
+            "2": 12,
+            "3": 6
+          },
+          "points": [
+            "显式状态机与隐式对话历史的状态差异",
+            "成功、失败、超预算和需要人工的终止类型",
+            "死循环、重复工具调用和状态不回退的检测",
+            "幂等执行、补偿动作和可恢复检查点",
+            "有副作用操作的人机确认与审计",
+            "轨迹级评测、步骤成本和可复现性"
+          ],
+          "prerequisites": [
+            "agent-basic-loop",
+            "agent-advanced-planning"
+          ],
+          "sourceRefs": [
+            "react",
+            "reflexion",
+            "langgraph"
+          ],
+          "factCount": 6
+        }
+      ],
+      "targetCards": 250,
+      "capacityCards": 500
     }
   }
 }

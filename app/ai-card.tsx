@@ -1,15 +1,23 @@
-import { useCallback, useEffect, useRef, useState, type ComponentRef } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ComponentRef,
+} from 'react';
 import { KeyboardAvoidingView, ScrollView, Text, View, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { getCardDef } from '@/cards';
+import { getCardDef, type RawAnswer } from '@/cards';
 import { generateCard, type GenerateResult, type GenerateUsage } from '@/ai/generateCard';
 import { getExistingQuestions, listDecks, recordAIGeneration } from '@/db/repository';
 import { insertVerifiedAICard, getAIGenerationUsage } from '@/db/repository';
 import type { DraftCard } from '@/utils/cardValidate';
 import { draftToCard } from '@/utils/cardValidate';
 import { questionSimilarity } from '@/utils/similarity';
+import { useSingleOptionOrder } from '@/hooks/useSingleOptionOrder';
 import { zh } from '@/i18n/zh';
 import { colors, space } from '@/theme';
 import { KnowledgeCard } from '@/components/KnowledgeCard';
@@ -123,14 +131,28 @@ export default function AICardScreen() {
     return () => abortRef.current?.abort();
   }, [run]);
 
-  const viewCard = ready ? draftToCard(ready.card, 'ai-draft') : null;
+  const viewCard = useMemo(
+    () => (ready ? draftToCard(ready.card, 'ai-draft') : null),
+    [ready],
+  );
+  const {
+    order: singleOrder,
+    displayCard: displayViewCard,
+    originalIndexForDisplay,
+  } = useSingleOptionOrder(viewCard);
   const definition = viewCard ? getCardDef(viewCard.type) : undefined;
 
-  function submit(raw: Parameters<NonNullable<typeof definition>['grade']>[0]['raw']) {
+  function submit(raw: RawAnswer) {
     if (!viewCard || !definition || phase === 'revealed') return;
+    let gradedRaw = raw;
+    if (viewCard.type === 'single' && singleOrder && raw.kind === 'index') {
+      const originalIndex = originalIndexForDisplay(raw.value);
+      if (originalIndex === undefined) return;
+      gradedRaw = { kind: 'index', value: originalIndex };
+    }
     const result = definition.grade({
       card: viewCard,
-      raw,
+      raw: gradedRaw,
       elapsedMs: Math.max(0, Date.now() - startedAt.current),
     });
     setGrade(result);
@@ -161,7 +183,7 @@ export default function AICardScreen() {
     return <AICardLoading slow={slow} onClose={leave} />;
   }
 
-  if (error || !ready || !viewCard || !definition) {
+  if (error || !ready || !viewCard || !displayViewCard || !definition) {
     const isUncertain = error?.reason === 'skipped' || error?.reason === 'low_confidence';
     return (
       <AICardFailure
@@ -194,13 +216,13 @@ export default function AICardScreen() {
           <KnowledgeCard
             accent={deck?.accent ?? colors.primary}
             badge={zh.aiCard.badge}
-            card={viewCard}
+            card={displayViewCard}
             deckCode={deck?.code ?? deckId.toUpperCase()}
             position={1}
             total={1}
           />
           <definition.AnswerView
-            card={viewCard}
+            card={displayViewCard}
             draft={draft}
             phase={phase}
             result={grade}

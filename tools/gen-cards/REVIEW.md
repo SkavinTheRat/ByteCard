@@ -20,13 +20,21 @@ node tools/gen-cards/validate.mjs
 
 | 批次 | 日期 | deck | 生成数 | 校验通过 | 抽查数 | 抽查发现错误 | 处理 |
 | --- | --- | --- | ---: | ---: | ---: | ---: | --- |
-| 待填写 | - | - | 0 | 0 | 0 | 0 | - |
+| B01-B40 | 2026-11-11 | llm/agent 四方向 | 1000 | 1000 | 0 | 0 | 待抽查；见 `out/ai-expansion-review.md` |
 
 ## 发布热更新
 
 ```bash
 node tools/gen-cards/merge.mjs --deck ds
 node tools/gen-cards/publish.mjs --out dist/
+```
+
+扩充批次可用下列命令复现：
+
+```bash
+npm run cards:expansion:generate
+npm run cards:expansion:report
+npm run cards:validate
 ```
 
 `publish.mjs` 只生成本地文件，不上传、不读取任何部署 token。上传 `dist/` 后，把

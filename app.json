@@ -2,7 +2,7 @@
   "expo": {
     "name": "ByteCard",
     "slug": "bytecard",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -12,7 +12,7 @@
     },
     "android": {
       "package": "com.bytecard.app",
-      "versionCode": 1,
+      "versionCode": 2,
       "softwareKeyboardLayoutMode": "resize",
       "allowBackup": false,
       "permissions": [

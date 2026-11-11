@@ -97,8 +97,11 @@ export function validateCard(card, context = {}) {
     warnings.push('题干长度不在 8~120 字（含 code 可到 200）');
   }
   const explainLength = countChars(card.explain);
-  if (explainLength < 40 || explainLength > 200) {
-    warnings.push(`解析长度 ${explainLength}，要求 40~200 字`);
+  const maximumExplain = card.difficulty === 3 ? 600 : 250;
+  if (explainLength < 80 || explainLength > maximumExplain) {
+    warnings.push(
+      `解析长度 ${explainLength}，要求 80~${maximumExplain} 字${card.difficulty === 3 ? '（含紧凑扩展）' : ''}`,
+    );
   }
   if (typeof card.explain === 'string') {
     if (card.explain.startsWith('这道题')) {
@@ -178,4 +181,39 @@ export function difficultyWarnings(cards) {
     }
   });
   return warnings;
+}
+
+export function answerDistributionIssues(cards, { minimumSample = 16 } = {}) {
+  const positions = cards
+    .filter(
+      (card) =>
+        card?.type === 'single' &&
+        Array.isArray(card.options) &&
+        card.options.length === 4 &&
+        Number.isInteger(card.answer?.index) &&
+        card.answer.index >= 0 &&
+        card.answer.index < 4,
+    )
+    .map((card) => card.answer.index);
+  if (positions.length < minimumSample) {
+    return [];
+  }
+
+  const counts = [0, 1, 2, 3].map(
+    (position) => positions.filter((index) => index === position).length,
+  );
+  const labels = ['A', 'B', 'C', 'D'];
+  const distribution = counts
+    .map((count, index) => `${labels[index]}=${count}`)
+    .join('，');
+  const maximumAllowed = Math.floor(positions.length * 0.35);
+  const minimumExpected = Math.max(1, Math.floor(positions.length * 0.1));
+  const issues = [];
+  if (Math.max(...counts) > maximumAllowed) {
+    issues.push(`单选正确项位置过于集中（${distribution}）`);
+  }
+  if (counts.some((count) => count < minimumExpected)) {
+    issues.push(`单选正确项位置覆盖不足（${distribution}）`);
+  }
+  return issues;
 }

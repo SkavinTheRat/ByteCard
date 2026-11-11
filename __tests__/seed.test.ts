@@ -2,10 +2,14 @@
 
 import deckData from '../assets/data/decks.json';
 import agentCards from '../assets/data/cards/agent.json';
+import agentAdvancedCards from '../assets/data/cards/agent-advanced.json';
+import agentBasicCards from '../assets/data/cards/agent-basic.json';
 import aiCards from '../assets/data/cards/ai.json';
 import cnCards from '../assets/data/cards/cn.json';
 import coCards from '../assets/data/cards/co.json';
 import dsCards from '../assets/data/cards/ds.json';
+import llmAdvancedCards from '../assets/data/cards/llm-advanced.json';
+import llmBasicCards from '../assets/data/cards/llm-basic.json';
 import osCards from '../assets/data/cards/os.json';
 import { loadBundledDeck } from '@/db/seed';
 import { validateDecks } from '@/db/validateDecks';
@@ -26,7 +30,11 @@ function bundledInput(): MutableBundle {
       ...cnCards.cards,
       ...aiCards.cards,
       ...agentCards.cards,
-    ],
+      ...llmBasicCards.cards,
+      ...llmAdvancedCards.cards,
+      ...agentBasicCards.cards,
+      ...agentAdvancedCards.cards,
+    ].map((card) => JSON.parse(JSON.stringify(card)) as Record<string, unknown>),
   } as unknown as MutableBundle;
 }
 
@@ -66,5 +74,33 @@ describe('validateDecks', () => {
     }
     (answer as { index: number }).index = options.length;
     expect(validateDecks(input).some((error) => error.includes('越界'))).toBe(true);
+  });
+
+  it('内置单选正确项在 A/B/C/D 上保持均衡', () => {
+    const singles = loadBundledDeck().cards.filter(
+      (card) => card.type === 'single' && card.options.length === 4,
+    );
+    const counts = [0, 1, 2, 3].map(
+      (position) =>
+        singles.filter(
+          (card) => card.type === 'single' && card.answer.index === position,
+        ).length,
+    );
+
+    expect(singles.length).toBeGreaterThanOrEqual(100);
+    expect(Math.max(...counts) / singles.length).toBeLessThanOrEqual(0.35);
+  });
+
+  it('绝大多数正确项集中在 A 时会被题库审计报告', () => {
+    const input = bundledInput();
+    for (const card of input.cards) {
+      if (card.type === 'single' && typeof card.answer === 'object' && card.answer) {
+        (card.answer as { index: number }).index = 0;
+      }
+    }
+
+    expect(
+      validateDecks(input).some((error) => error.includes('正确项位置过于集中')),
+    ).toBe(true);
   });
 });

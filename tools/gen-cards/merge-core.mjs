@@ -28,6 +28,8 @@ export function cleanCard(card, deckId) {
   delete result.source;
   delete result.sortOrder;
   delete result.sourceFile;
+  delete result.sourcePoint;
+  delete result.sourceRefs;
   return result;
 }
 

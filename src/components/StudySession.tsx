@@ -25,6 +25,8 @@ import type { Card, Deck } from '@/types';
 import { zh } from '@/i18n/zh';
 import { useSessionStore } from '@/store/sessionStore';
 import { colors, space } from '@/theme';
+import { formatUserAnswer } from '@/utils/formatUserAnswer';
+import { useSingleOptionOrder } from '@/hooks/useSingleOptionOrder';
 import { AnswerPanel } from './AnswerPanel';
 import { EndSessionSheet } from './EndSessionSheet';
 import { KnowledgeCard } from './KnowledgeCard';
@@ -38,24 +40,6 @@ type StudySessionProps = {
   onFinish: () => void;
   onExit: () => void;
 };
-
-function formatUserAnswer(card: Card, draft: unknown): string {
-  if (typeof draft === 'string') {
-    return draft;
-  }
-  if (!Array.isArray(draft)) {
-    return '';
-  }
-  const options = card.options;
-  if (!options) {
-    return '';
-  }
-  return draft
-    .filter((item): item is number => typeof item === 'number')
-    .map((index) => options[index])
-    .filter((item): item is string => Boolean(item))
-    .join('；');
-}
 
 export function StudySession({ deck, onFinish, onExit }: StudySessionProps) {
   const insets = useSafeAreaInsets();
@@ -77,6 +61,11 @@ export function StudySession({ deck, onFinish, onExit }: StudySessionProps) {
   const cardY = useSharedValue(0);
   const cardOpacity = useSharedValue(1);
   const currentCard = queue[index];
+  const {
+    order: singleOrder,
+    displayCard: orderedCard,
+    originalIndexForDisplay,
+  } = useSingleOptionOrder(currentCard);
 
   useEffect(() => {
     if (phase !== 'revealed') {
@@ -151,8 +140,22 @@ export function StudySession({ deck, onFinish, onExit }: StudySessionProps) {
   if (!currentCard) {
     return null;
   }
-  const definition = getCardDef(currentCard.type);
+  const originalCard = currentCard;
+  const displayCard: Card = orderedCard ?? originalCard;
+  const definition = getCardDef(originalCard.type);
   const isLast = index + 1 >= queue.length;
+
+  function submitFromDisplay(raw: RawAnswer) {
+    if (originalCard.type === 'single' && singleOrder && raw.kind === 'index') {
+      const originalIndex = originalIndexForDisplay(raw.value);
+      if (originalIndex === undefined) {
+        return;
+      }
+      void submit({ kind: 'index', value: originalIndex });
+      return;
+    }
+    void submit(raw);
+  }
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
@@ -173,7 +176,7 @@ export function StudySession({ deck, onFinish, onExit }: StudySessionProps) {
           <Animated.View style={animatedCardStyle}>
             <KnowledgeCard
               accent={deck.accent}
-              card={currentCard}
+              card={displayCard}
               deckCode={deck.code}
               position={index + 1}
               total={queue.length}
@@ -181,12 +184,12 @@ export function StudySession({ deck, onFinish, onExit }: StudySessionProps) {
           </Animated.View>
           {definition ? (
             <definition.AnswerView
-              card={currentCard}
+              card={displayCard}
               phase={phase}
               draft={draft}
               result={result}
               onDraftChange={setDraft}
-              onSubmit={(raw: RawAnswer) => void submit(raw)}
+              onSubmit={submitFromDisplay}
               onInputFocus={() => {
                 setTimeout(() => {
                   scrollRef.current?.scrollToEnd({ animated: true });
@@ -213,7 +216,7 @@ export function StudySession({ deck, onFinish, onExit }: StudySessionProps) {
               explain={currentCard.explain}
               result={result}
               tags={currentCard.tags}
-              userAnswer={formatUserAnswer(currentCard, draft)}
+              userAnswer={formatUserAnswer(displayCard, draft)}
             />
           ) : null}
         </ScrollView>

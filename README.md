@@ -2,6 +2,8 @@
 
 ByteCard 是一个面向 408 与 AI/Agent 学习的移动端知识卡片 App。本仓库已完成阶段 00–10，并实现阶段 11 的题库快照合并、热更新与电脑端导入导出、阶段 12 的 Android/ColorOS 配置。
 
+当前源码版本：**v1.1.0**。
+
 ## 下载与安装
 
 ### 直接安装 Android APK
@@ -64,6 +66,8 @@ npm test
 
 ```bash
 npm run cards:topics
+npm run cards:expansion:generate
+npm run cards:expansion:report
 node tools/gen-cards/generate.mjs --deck ds --only-calc
 npm run cards:validate
 node tools/gen-cards/merge.mjs --deck ds --dry-run

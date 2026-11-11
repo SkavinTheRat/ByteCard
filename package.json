@@ -1,6 +1,6 @@
 {
   "name": "bytecard",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "expo-router/entry",
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.2",
@@ -46,6 +46,9 @@
     "typecheck": "tsc --noEmit",
     "test": "jest --runInBand",
     "cards:topics": "node tools/gen-cards/build-topics.mjs",
+    "cards:balance-single": "node tools/gen-cards/balance-single-answers.mjs",
+    "cards:expansion:generate": "node tools/gen-cards/generate-expansion.mjs",
+    "cards:expansion:report": "node tools/gen-cards/report-expansion.mjs",
     "cards:validate": "node tools/gen-cards/validate.mjs",
     "cards:publish": "node tools/gen-cards/publish.mjs --out dist/"
   },
